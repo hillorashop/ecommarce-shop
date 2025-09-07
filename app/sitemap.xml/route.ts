@@ -2,14 +2,29 @@ import { getCategories } from "@/actions/category";
 import { getProducts } from "@/actions/product";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
- const {data:products} = await getProducts()
- const { data: categories } = await getCategories();
+  let products: any[] = [];
+  let categories: any[] = [];
 
-  // Static pages
-  const staticPages = ["", "/about", "/faq", ];
+  try {
+    const productsRes = await getProducts();
+    products = productsRes?.data || [];
+  } catch (err) {
+    console.error("Failed to load products:", err);
+  }
+
+  try {
+    const categoriesRes = await getCategories();
+    categories = categoriesRes?.data || [];
+  } catch (err) {
+    console.error("Failed to load categories:", err);
+  }
+
+  const staticPages = ["", "/about", "/faq"];
 
   const urls = staticPages
     .map(
@@ -33,7 +48,7 @@ export async function GET() {
     )
     .join("");
 
-      const categoryUrls = categories
+  const categoryUrls = categories
     .map(
       (c) => `
       <url>
@@ -48,6 +63,7 @@ export async function GET() {
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${urls}
     ${productUrls}
+    ${categoryUrls}
   </urlset>`;
 
   return new NextResponse(sitemap, {

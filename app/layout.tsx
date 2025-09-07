@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     default: `${siteMeta.siteName} | Your Trust`,
     template: `%s | ${siteMeta.siteName}`,
   },
+  icons:[{url:process.env.NEXT_PUBLIC_BASE_URL!, href:"/logo.svg"}],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),

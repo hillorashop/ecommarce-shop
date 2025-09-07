@@ -99,7 +99,7 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
             <h3 style={{ margin: 0, fontSize: "16px" }}>Invoice</h3>
-            <p style={{ margin: "4px 0" }}>Order No: <strong>{order.id}</strong></p>
+            <p style={{ margin: "4px 0" }}>Order No: <strong>{order.orderId}</strong></p>
             <p style={{ margin: "4px 0" }}>Date: {formatDate(new Date(order.createdAt))}</p>
           </div>
           <div style={{ textAlign: "right" }}>

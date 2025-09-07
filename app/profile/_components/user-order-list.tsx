@@ -67,7 +67,7 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
                 <AccordionItem key={order.id} value={`order-${order.id}`}>
                   <AccordionTrigger>
                     <div className="flex flex-col text-left">
-                      <p className="font-semibold">Order No: #{order.id}</p>
+                      <p className="font-semibold">Order No: {order.orderId}</p>
                       <p className="text-sm text-muted-foreground">
                         Placed on {formatDate(new Date(order.createdAt))}
                       </p>

@@ -13,8 +13,7 @@ import { Button } from "@/components/ui/button";
 import { navLinks, siteMeta } from "@/data";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart, useOpenStore } from "@/hooks/use-store";
-import { Badge } from "../ui/badge";
+
 import { Input } from "../ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -30,8 +29,7 @@ export function MobileHeader() {
   const [productName, setProductName] = useState("");
   const [searchResults, setSearchResults] = useState<dbProduct[]>([]);
   const router = useRouter();
-  const { setOpen } = useOpenStore();
-  const { cartItems } = useCart();
+ 
    const { data: products, isLoading } = useProducts();
    const {user} = useUser()
 
@@ -137,14 +135,7 @@ export function MobileHeader() {
 
           {/* === Cart + Search Button === */}
           <div className="flex items-center gap-x-2">
-            <button onClick={() => setOpen(true)} className="relative">
-              <ShoppingCart className="size-6" />
-              {cartItems && cartItems.length > 0 && (
-                <Badge className="absolute -top-1 -right-2 size-4 rounded-full text-xs flex items-center justify-center p-0">
-                  {cartItems.length}
-                </Badge>
-              )}
-            </button>
+        
 
             <Button
               variant="ghost"

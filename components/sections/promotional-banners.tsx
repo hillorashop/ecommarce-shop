@@ -12,7 +12,7 @@ export function PromotionalBanners() {
 
           {/* === Left Hero Banner === */}
           <motion.div
-            className="w-full relative aspect-[9/7] rounded-lg overflow-hidden shadow-lg"
+            className="w-full relative aspect-[11/7] lg:aspect-[9/7] rounded-lg overflow-hidden shadow-lg"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -33,7 +33,7 @@ export function PromotionalBanners() {
 
             {/* Top Banner */}
             <motion.div
-              className="w-full relative aspect-[32/6]  rounded-lg overflow-hidden shadow-md"
+              className="w-full relative aspect-[18/4] lg:aspect-[32/6]  rounded-lg overflow-hidden shadow-md"
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -51,7 +51,7 @@ export function PromotionalBanners() {
 
             {/* Bottom Banner */}
             <motion.div
-              className="w-full relative aspect-[32/6]  rounded-lg overflow-hidden shadow-md"
+              className="w-full relative aspect-[18/4]  lg:aspect-[32/6]  rounded-lg overflow-hidden shadow-md"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}

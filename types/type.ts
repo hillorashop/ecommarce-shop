@@ -46,6 +46,7 @@ export type dbComment = {
 export type dbOrder = {
   id: string;
   paymentMethod: string;
+  orderId:string;
   isPaid: boolean;
   name: string;
   mobileNumber: string;

@@ -249,8 +249,8 @@ const ProfilePage = () => {
               </Card>
             </TabsContent>
                 
-            <UserOrderList tabValue="orders" userId={user.id}/>
-            <PasswordMangement tabValue="password" disable={user.role !== "USER"} userId={user.id}/>
+            <UserOrderList tabValue="orders" userId={user.id!}/>
+            <PasswordMangement tabValue="password" disable={user.role !== "USER"} userId={user.id!}/>
      
           </Tabs>
         </CardContent>

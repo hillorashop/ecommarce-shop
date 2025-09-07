@@ -53,7 +53,7 @@ export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
 
 export const getOrders = async (
   page = 1,
-  pageSize = 20,
+  pageSize:number,
   userId?: string
 ): Promise<GetOrdersResponse> => {
   try {

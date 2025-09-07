@@ -7,7 +7,6 @@ import { title } from "process";
 export const navLinks = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/products" },
-  { name: "All Categories", href: "/categories" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
 ];
@@ -106,3 +105,8 @@ export const siteMetaAbout = {
   desc:"Discover Hillora, Bangladesh's unique online shopping platform offering organic food, fashionable clothing, and modern daily essentials with convenient delivery.",
   image:"/about.png"
 }
+
+
+export const  ONE_DAY = 24 * 60 * 60 * 1000
+export const  TWODAY = 48 * 60 * 60 * 1000
+export const  THREEDAY = 72 * 60 * 60 * 1000

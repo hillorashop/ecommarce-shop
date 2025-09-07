@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/carousel";
 import { HeadingTitle } from "../heading-title";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function NewProducts() {
   const { data: products, isLoading } = useProducts({page:1});
+   const [isClient, setIsClient] = useState(false);
+     useEffect(() => setIsClient(true), []);
 
   // ✅ Autoplay plugin
   const plugin = useRef(
@@ -24,10 +26,10 @@ export function NewProducts() {
   );
 
   return (
-    <div className="py-16 bg-gray-50 mt-8 lg:mt-10 relative">
+    <div className="py-4 lg:py-16 bg-gray-50  lg:mt-10 relative">
       <HeadingTitle title="New Products" />
 
-      {isLoading ? (
+      {!isClient || isLoading ? (
         <div className="grid grid-flow-col auto-cols-[12rem] gap-4 px-4 sm:px-8 lg:px-14 overflow-x-auto mt-8">
           {[...Array(6)].map((_, i) => (
             <Skeleton key={i} className="h-64 w-full rounded-xl" />

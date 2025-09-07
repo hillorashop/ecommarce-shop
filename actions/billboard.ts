@@ -8,9 +8,6 @@ export type BillboardsResponse = {
 export const getBillboards = async (): Promise<BillboardsResponse> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/billboards`,
-    {
-     next:{revalidate:120}
-    }
   );
 
   if (!res.ok) throw new Error("Failed to load billboard");

@@ -52,18 +52,18 @@ export function MobileHeader() {
               side="left"
               className="w-[80%] max-w-sm overflow-y-auto px-2"
             >
-              <SheetHeader>
+              <SheetHeader className="p-0">
                 <SheetTitle className="sr-only"> Mobile Header</SheetTitle>
                 <Image
-                  src={"/logo.jpg"}
+                  src={"/logo.svg"}
                   alt={`${siteMeta.siteName}`}
-                  width={100}
+                  width={130}
                   height={60}
                   className="object-contain overflow-hidden"
                 />
               </SheetHeader>
 
-              <div className="mt-8 space-y-6">
+              <div className="space-y-6">
                 {/* === Menu Section === */}
                 <div>
                   <h3 className="font-semibold text-white mb-3 w-full bg-primary p-2">
@@ -126,10 +126,10 @@ export function MobileHeader() {
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
 
             <Image
-              src="/logo.jpg"
+              src="/logo.svg"
               alt={`${siteMeta.siteName}`}
-              width={100}
-              height={60}
+              width={200}
+              height={80}
               onClick={()=> router.push("/")}
               className="object-contain overflow-hidden"
             />

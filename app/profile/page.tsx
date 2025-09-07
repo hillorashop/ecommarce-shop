@@ -27,10 +27,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/contexts/UserContext";
 import z from "zod";
 import { PasswordMangement } from "./_components/password-mangement";
+import { useUpdateUser } from "@/hooks/use-user";
 
 
 const ProfilePage = () => {
-  const [pending, setPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
   const { user, loaded, setUser, logout } = useUser();
@@ -44,11 +44,12 @@ const ProfilePage = () => {
     },
   });
 
-  // ✅ Redirect immediately if not logged in
+  const { mutate: updateProfile, isPending } = useUpdateUser();
+
   useEffect(() => {
     if (!loaded) return;
     if (!user) {
-      router.replace("/sign-up"); // replace so user can’t go back
+      router.replace("/sign-up");
     } else {
       profileForm.reset({
         name: user.name ?? "",
@@ -58,25 +59,9 @@ const ProfilePage = () => {
     }
   }, [user, loaded, profileForm, router]);
 
-  const handleProfile = async (data: userInput) => {
-    try {
-      setPending(true);
-      const updatedUser = await updateUser(data);
-      if (!updatedUser.success) {
-        toast.error(updatedUser.error);
-        return;
-      }
-      setUser(updatedUser.user!);
-      toast.success(updatedUser.message);
-      setIsEdit(false);
-    } catch (err) {
-      console.error(err);
-      toast.error("Update user failed");
-    } finally {
-      setPending(false);
-    }
+  const handleProfile = (data: userInput) => {
+    updateProfile(data, { onSuccess: () => setIsEdit(false) });
   };
-
   const handleLogout = () => {
     logout();
     toast.success("You have been logged out");
@@ -199,9 +184,9 @@ const ProfilePage = () => {
                           <Button
                             className=""
                             type="submit"
-                            disabled={pending}
+                            disabled={isPending}
                           >
-                            {pending ? (
+                            {isPending ? (
                               <div className="flex items-center gap-2">
                                 <Zap className="w-4 h-4 animate-spin" />
                                 Saving...

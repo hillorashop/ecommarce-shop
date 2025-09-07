@@ -1,25 +1,22 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { dbBillboard } from "@/types/type"
-import { getBillboards } from "@/actions/billboard"
+import { useQuery } from "@tanstack/react-query";
+import { dbBillboard } from "@/types/type";
+import { getBillboards } from "@/actions/billboard";
+import { THREEDAY } from "@/data";
 
 export type BillboardsResponse = {
-  data: dbBillboard[]
-}
+  data: dbBillboard[];
+};
 
+/* ✅ Custom hook for billboards */
 export function useBillboards() {
-  const [data, setData] = useState<BillboardsResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-        setLoading(true)
-        getBillboards()
-        .then(setData)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [])
-
-  return { data, loading, error }
+  return useQuery<BillboardsResponse, Error>({
+    queryKey: ["billboards"], // unique cache key
+    queryFn: getBillboards,   // fetch function
+    staleTime: THREEDAY,      // cache validity
+    gcTime: THREEDAY,         // garbage collection time
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 }

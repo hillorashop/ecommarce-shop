@@ -3,6 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { FAQITEMS, siteMeta, siteMetaFaq } from "@/data";
 import { MailOpen } from "lucide-react";
 import Script from "next/script";
+import { HeadingTitle } from "@/components/heading-title";
 
 export const metadata: Metadata = {
   title: `FAQ | ${siteMeta.siteName}`,
@@ -51,7 +52,7 @@ const FaqPage = () => {
 
   return (
     <main className="p-4 lg:px-8 flex flex-col items-center gap-y-6 max-w-7xl mx-auto">
-      <h1 className="text-4xl lg:text-5xl font-bold text-center">FAQ</h1>
+      <HeadingTitle title="FAQ"/>
 
       <Accordion
         type="multiple"

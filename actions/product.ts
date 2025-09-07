@@ -8,7 +8,7 @@ export type ProductsResponse = {
   totalPages: number;
 };
 
-// Updated function with sorting, search, price & category filter
+
 export const getProducts = async (
   page?: number,
   sortBy?: "price" | "category" | "createdAt",
@@ -33,7 +33,7 @@ export const getProducts = async (
 
   if ([...params].length > 0) url += `?${params.toString()}`;
 
-  const res = await fetch(url, { next: { revalidate: 480 } });
+  const res = await fetch(url);
 
   if (!res.ok) throw new Error("Failed to load Products");
 

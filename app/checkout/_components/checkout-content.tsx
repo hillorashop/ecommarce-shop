@@ -16,6 +16,9 @@ import { Form, FormField } from "@/components/ui/form";
 import { CustomForm } from "@/components/ui/custom-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
+import { useCustomMutation } from "@/hooks/use-custom-query";
+import { GetOrdersResponse, postOrder } from "@/actions/order";
+import { queryClient } from "@/provider/queryClient-provider";
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -42,14 +45,13 @@ interface Props {
   productId?: string;
 }
 
+
 export const  CheckoutContent = ({ productId }: Props) => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<any>(null);
-  const { submitOrder, isLoading: placingOrder, error } = usePostOrder();
   const {user} = useUser()
-
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
       const found = products.data.find((p) => p.id === productId);
@@ -57,6 +59,20 @@ export const  CheckoutContent = ({ productId }: Props) => {
     }
     return cartItems;
   }, [productId, products, cartItems]);
+
+  
+
+const { mutate: submitOrder, isPending, error } = useCustomMutation(
+  ["post-order"],
+  postOrder,
+  ["ordersByUser", user?.id], // ✅ root key (all pages for this user)
+  (newOrder) => {
+    setOrderResponse(newOrder.data);
+  }
+);
+
+
+
 
   const subTotal = checkoutItems.reduce(
     (acc, item) => acc + item.price * item.cartQuantity,
@@ -95,12 +111,13 @@ export const  CheckoutContent = ({ productId }: Props) => {
     };
 
     try {
-      const res = await submitOrder(orderData);
-      setOrderResponse(res.data);
+      submitOrder(orderData);
     } catch (err) {
       console.error("Order failed:", err);
     }
   };
+
+
 
   if (orderResponse) return <InvoiceOrder order={orderResponse} />;
 
@@ -251,9 +268,9 @@ export const  CheckoutContent = ({ productId }: Props) => {
               <Button
                 type="submit"
                 className="w-full mt-4"
-                disabled={!selectedPayment || checkoutItems.length === 0 || placingOrder}
+                disabled={!selectedPayment || checkoutItems.length === 0 || isPending}
               >
-                {placingOrder ? (
+                {isPending ? (
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 animate-spin" /> Placing Order...
                   </div>

@@ -11,9 +11,8 @@ import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
-import { useCategories } from "@/hooks/use-categories"
-import Image from "next/image"
+
+
 
 
 export function Navigation() {
@@ -22,7 +21,7 @@ export function Navigation() {
   const { setOpen } = useOpenStore()
   const { cartItems} = useCart();
   const {user}= useUser()
-  const {data:categories, isLoading} = useCategories()
+
    
 
     useEffect(() => {
@@ -42,42 +41,13 @@ export function Navigation() {
 >
       <div className="px-4 sm:px-6 lg:px-8 lg:py-4 max-w-[120rem] mx-auto">
         <div className="flex items-center justify-between">
-<Accordion type="single" collapsible className="relative">
-  <AccordionItem value="categories">
-    <AccordionTrigger className="flex items-center gap-x-0.5 text-sm font-semibold text-gray-700">
-      <BiCategory className="mr-2 size-4" />
+
+    <Link href={'/categories'} className="flex gap-x-2 items-center text-gray-600 font-semibold hover:underline text-base">
+         <BiCategory className="size-4" />
       Categories
-    </AccordionTrigger>
-    <AccordionContent
-      className="absolute left-0 mt-2 w-56 rounded-md bg-white shadow-lg border z-50"
-    >
-      <div className="p-2 space-y-2">
-        {categories?.data.map(({id, categoryImage, name})=> (
- <Link href={`/products?categoryId=${id}`} className="w-full flex items-center gap-x-2 group" key={id}>
-            <Image
-              src={categoryImage}
-              alt={name}
-              width={50}
-              height={50}
-           
-              className="object-cover overflow-hidden"
-              loading="lazy"
-            />
-       
-          <p
-            className=" font-semibold text-gray-700 
-                       group-hover:text-primary group-hover:underline transition-colors"
-          >
-            {name}
-          </p>
-   
     </Link>
-        ))}
  
-      </div>
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
+ 
 
 
           <nav className="flex space-x-8">
@@ -85,7 +55,7 @@ export function Navigation() {
               <Link
                 key={index}
                 href={link.href}
-                className="text-gray-700 hover:text-primary font-medium"
+                className="text-gray-700 hover:text-primary font-medium hover:underline"
               >
                 {link.name}
               </Link>

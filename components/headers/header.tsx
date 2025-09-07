@@ -65,10 +65,10 @@ useEffect(() => {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Image
-                src={"/logo.jpg"}
+                src={"/logo.svg"}
                 alt={siteMeta.siteName}
-                width={100}
-                height={60}
+                width={230}
+                height={120}
                 className="object-contain overflow-hidden"
               />
             </div>

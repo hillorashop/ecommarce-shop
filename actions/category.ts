@@ -16,9 +16,7 @@ export const getCategories = async (page?: number): Promise<CategoriesResponse> 
     url.searchParams.set("page", page.toString());
   }
 
-  const res = await fetch(url.toString(), {
-      next:{revalidate:120}
-  });
+  const res = await fetch(url.toString());
 
   if (!res.ok) throw new Error("Failed to load categories");
   return await res.json();

@@ -1,3 +1,4 @@
+import { HeadingTitle } from "@/components/heading-title";
 import { siteMeta, siteMetaAbout } from "@/data";
 import type { Metadata } from "next";
 
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 const AboutPage = () => {
   return (
     <main className="p-4 flex flex-col items-center gap-y-6 max-w-7xl mx-auto">
-      <h1 className="text-4xl lg:text-5xl font-bold text-center">About Us</h1>
+      <HeadingTitle title="About Us"/>
 
       <section className="lg:px-10 p-4 text-gray-700 leading-relaxed text-justify space-y-6">
         <p>

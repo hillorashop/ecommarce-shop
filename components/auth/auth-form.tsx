@@ -24,6 +24,7 @@ import { Label } from "../ui/label"
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
+import { siteMeta } from "@/data";
 
 export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +35,7 @@ export function AuthForm() {
   const [registerError, setRegisterError] = useState("")
   const [loadProvider, setLoadProvider] = useState(false)
   const router = useRouter()
-  const {setUser, refreshUser} = useUser()
+   const { setUser } = useUser();
 
 
 
@@ -66,7 +67,7 @@ export function AuthForm() {
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
-        await refreshUser(res.data.token);
+        setUser({ ...res.data.user, token: res.data.token });
         router.push("/");
         toast.success("Logged in successfully!");
       } else {
@@ -130,7 +131,7 @@ const registerSubmit = async (values: z.infer<typeof registerSchema>) => {
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
-         await refreshUser(res.data.token);
+        setUser({ ...res.data.user, token: res.data.token });
         router.push("/");
         toast.success("Email verified & logged in!");
       }
@@ -171,8 +172,8 @@ const providerSubmit = (provider: "google" | "facebook") => {
         <div className="text-center mb-6 lg:mb-8">
           <div className="flex items-center justify-center gap-3 mb-4 lg:mb-6">
                <Image
-                         src={"/logo.jpg"}
-                         alt="Hillora"
+                         src={"/logo.svg"}
+                         alt={siteMeta.siteName}
                          width={100}
                          height={60}
                          className="object-contain overflow-hidden"

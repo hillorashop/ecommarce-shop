@@ -145,3 +145,15 @@
   font-size: 1rem;
 }
 
+#nprogress .bar {
+  background: #ebbf12 !important;
+  height: 4px !important;        
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #ebbf12, 0 0 5px #ebbf12!important; 
+}
+
+#nprogress .spinner {
+  display: none !important; 
+}

@@ -1,45 +1,74 @@
+"use client";
+
+import { siteMeta } from "@/data";
+import { ShieldCheck, Headphones, Truck } from "lucide-react";
+import Image from "next/image";
 
 export function FeaturesSection() {
-
   const features = [
-  {
-    title: "MONEY BACK GUARANTEE",
-    description: "Try Us Risk-Free with Our Money Back Guarantee!",
-    icon: "shield-check", // You can label or map icons however you prefer
-  },
-  {
-    title: "24/7 CUSTOMER SUPPORT",
-    description: "Always here to help you, anytime & anywhere!",
-    icon: "support", // Label representing icon type
-  },
-  {
-    title: "FAST AND LOW COST DELIVERY",
-    description: "Fast, reliable, and budget-friendly delivery",
-    icon: "fast-delivery",
-  },
-];
-
+    {
+      title: "Authentic Local Products",
+      description:
+        "Experience the true essence of Khagrachari with our carefully selected traditional goods crafted by local artisans.",
+      icon: ShieldCheck,
+    },
+    {
+      title: "Friendly Support",
+      description:
+        "Have questions? Our dedicated Hellora support team is always here to guide you with care and respect.",
+      icon: Headphones,
+    },
+    {
+      title: "Fast & Affordable Delivery",
+      description:
+        "Get Khagrachari’s finest products delivered straight to your doorstep quickly and affordably.",
+      icon: Truck,
+    },
+  ];
 
   return (
-    <div className="py-16 bg-gray-100">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center space-x-4">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center">
-                  {/* Replace with actual SVGs or icons mapped from icon name */}
-                  <span className="text-white">{/* icon placeholder */}</span>
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-6 text-center">
+        {/* Section Heading */}
+<h2 className="relative flex flex-col lg:flex-row items-center justify-center text-lg md:text-xl lg:text-2xl font-bold text-gray-800">
+  <span className="text-gray-700">Welcome to</span>
+  <Image
+    src="/logo.svg"
+    alt={siteMeta.siteName}
+    width={200}
+    height={100}
+    className="object-contain w-36 drop-shadow-sm lg:absolute  lg:translate-x-28  lg:top-6 lg:-translate-y-1/2 overflow-hidden"
+  />
+</h2>
+
+
+        <p className="mt-3 text-muted-foreground max-w-2xl mx-auto text-base">
+          Your trusted marketplace for <span className="font-semibold">Khagrachari traditional goods</span> and cultural products — connecting heritage with modern shopping convenience.
+        </p>
+
+        {/* Features */}
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={index}
+                className="p-8 rounded-2xl shadow-lg bg-white border border-gray-100 hover:scale-105 hover:shadow-2xl transition-all duration-300"
+              >
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-yellow-400 text-gray-900 mb-6 shadow-md">
+                  <Icon className="w-8 h-8" />
                 </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <div>
-                <h4 className="text-lg font-bold text-gray-800">{feature.title}</h4>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,7 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { siteMeta } from "@/data";
 
 export function Footer() {
@@ -27,120 +25,121 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { href: "#", hover: "hover:text-blue-600" },
-    { href: "#", hover: "hover:text-blue-800" },
-    { href: "#", hover: "hover:text-pink-600" },
-    { href: "#", hover: "hover:text-red-600" },
-    { href: "#", hover: "hover:text-blue-600" },
+    { href: "#", label: "Facebook", hover: "hover:text-blue-600" },
+    { href: "#", label: "Twitter", hover: "hover:text-blue-500" },
+    { href: "#", label: "Instagram", hover: "hover:text-pink-600" },
+    { href: "#", label: "YouTube", hover: "hover:text-red-600" },
   ];
 
   return (
-    <footer className="bg-gray-200 border-t border-gray-200">
-
-      {/* Main Footer Content */}
-      <div className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Logo and Description */}
+    <footer className="bg-gray-200 border-t border-gray-100">
+      <div className="max-w-7xl mx-auto py-12 px-6">
+        {/* Main content */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Logo + description */}
           <div>
-         <Image
-                   src={"/logo.jpg"}
-                   alt={`${siteMeta.siteName}`}
-                   width={100}
-                   height={60}
-                   className="object-contain overflow-hidden"
-                   />
-                          
-            <p className="text-sm text-gray-600 leading-relaxed">
-             Hillora is directly involved with marginal farmers living in hills and agriculture.
-              We work for the overall development of tribal and non-tribal people.
+            <Image
+              src="/logo.svg"
+              alt={siteMeta.siteName}
+              width={180}
+              height={70}
+              className="object-contain mb-4"
+            />
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Hellora works directly with local farmers and artisans in
+              Khagrachari, bringing you authentic traditional goods while
+              supporting the community.
             </p>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-bold text-gray-800 mb-4">CONTACT INFO</h4>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p><span className="font-medium">Address:</span></p>
-              <p>1st Floor, 441 Plot, Road 4, Maitranga Bazar,</p>
-              <p>Khagrachari, Bangladesh</p>
-
-              <p className="mt-3"><span className="font-medium">Email:</span></p>
-              <p>mail@epahar.com</p>
-
-              <p className="mt-3"><span className="font-medium">Phone Number:</span></p>
-              <p>(+88) 09613821316</p>
-            </div>
+            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+              Contact Info
+            </h4>
+            <ul className="space-y-1 text-sm text-gray-700">
+              <li>
+                <span className="font-medium">Address:</span> Maitranga Bazar,
+                Khagrachari, Bangladesh
+              </li>
+              <li>
+                <span className="font-medium">Email:</span> mail@epahar.com
+              </li>
+              <li>
+                <span className="font-medium">Phone:</span> (+88) 09613821316
+              </li>
+            </ul>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-bold text-gray-800 mb-4">QUICK LINKS</h4>
-            <div className="space-y-2">
+            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+              Quick Links
+            </h4>
+            <ul className="space-y-1 text-sm">
               {quickLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="block text-sm text-gray-600 hover:text-amber-600 hover:underline"
-                >
-                  {link.label}
-                </Link>
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-700 hover:text-yellow-600 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* My Account */}
           <div>
-            <h4 className="text-lg font-bold text-gray-800 mb-4">MY ACCOUNT</h4>
-            <div className="space-y-2">
+            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+              My Account
+            </h4>
+            <ul className="space-y-1 text-sm">
               {myAccount.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="block text-base font-semibold text-gray-600 hover:text-amber-600 hover:underline"
-                >
-                  {link.label}
-                </Link>
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-700 hover:text-yellow-600 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-300 mt-8 pt-8">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Left - copyright */}
-            <div className="text-sm text-gray-600 text-center lg:text-left">
-              ©{year} - ${siteMeta.siteName}. All rights reserved.
-            </div>
+        {/* Bottom bar */}
+        <div className="border-t border-gray-400 mt-10 pt-6 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <p className="text-sm text-gray-700 text-center lg:text-left">
+            © {year} {siteMeta.siteName}. All rights reserved.
+          </p>
 
-            {/* Center - Payment Methods */}
-            <div className="flex justify-center gap-x-5 flex-wrap">
-              {payments.map((p, index) => (
-                <Image
-                  key={index}
-                  src={p}
-                  alt={`${siteMeta.siteName}`}
-                  width={100}
-                  height={40}
-                  className="object-contain size-16 lg:size-24"
-                />
-              ))}
-            </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {payments.map((p, index) => (
+              <Image
+                key={index}
+                src={p}
+                alt="Payment method"
+                width={70}
+                height={40}
+                className="object-contain"
+              />
+            ))}
+          </div>
 
-            {/* Right - Social Media */}
-            <div className="flex justify-center lg:justify-end space-x-3">
-              {socialLinks.map((s, i) => (
-                <a
-                  key={i}
-                  href={s.href}
-                  className={`text-gray-400 ${s.hover}`}
-                  target="_blank"
-                >
-                  {/* Replace with actual icons as needed */}
-                  <span className="w-5 h-5 inline-block bg-gray-300 rounded-full" />
-                </a>
-              ))}
-            </div>
+          <div className="flex space-x-4">
+            {socialLinks.map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                className={`text-gray-600 ${s.hover} transition-colors`}
+              >
+                <span className="sr-only">{s.label}</span>
+                <span className="w-5 h-5 inline-block bg-gray-500 rounded-full" />
+              </a>
+            ))}
           </div>
         </div>
       </div>

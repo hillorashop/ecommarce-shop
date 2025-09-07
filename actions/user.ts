@@ -1,6 +1,3 @@
-import axios from "axios";
-import { GetOrdersResponse } from "./order";
-
 export type userInput = {
   name?: string;
   mobileNumber?: string;
@@ -24,85 +21,63 @@ export type UserResponse = {
   error?: string;
 };
 
-// 🔹 cache store
-let cachedUser: User | null = null;
-let cacheTimestamp: number | null = null;
-const CACHE_TTL = 20 * 60 * 1000; // 20 minutes
-
-export const getUser = async (forceRefresh = false): Promise<UserResponse> => {
+// ✅ Fetch user profile
+export const getUser = async (token?:string): Promise<UserResponse> => {
   try {
-    const token = localStorage.getItem("auth_token");
-    if (!token) {
-      return { success: false, error: "No token found" };
-    }
 
-    const now = Date.now();
+    if (!token) return { success: false, error: "No token found" };
 
-    // ✅ Return cached value if still valid
-    if (
-      !forceRefresh &&
-      cachedUser &&
-      cacheTimestamp &&
-      now - cacheTimestamp < CACHE_TTL
-    ) {
-      return { success: true, user: cachedUser };
-    }
-
-    // ✅ Otherwise, fetch fresh user
-    const res = await axios.get(
+    const res = await fetch(
       `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/get-profile`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
 
-    cachedUser = res.data.user;
-    cacheTimestamp = now;
+    if (!res.ok) {
+      const errorData = await res.json();
+      return { success: false, error: errorData.error || "Failed to fetch user" };
+    }
 
-    return { success: true, user: res.data.user };
+    const data = await res.json();
+    return { success: true, user: data.user };
   } catch (err: any) {
-    console.error("Get user error:", err.response?.data || err.message);
-    return {
-      success: false,
-      error: err.response?.data?.error || "Failed to fetch user",
-    };
+    console.error("Get user error:", err.message);
+    return { success: false, error: "Failed to fetch user" };
   }
 };
 
-
-export const updateUser = async (
-  data: userInput
-): Promise<UserResponse> => {
+// ✅ Update user profile
+export const updateUser = async (data: userInput): Promise<UserResponse> => {
   try {
     const token = localStorage.getItem("auth_token");
-    if (!token) {
-      return { success: false, error: "No token found" };
-    }
+    if (!token) return { success: false, error: "No token found" };
 
-    const res = await axios.put(
+    const res = await fetch(
       `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/update-profile`,
-      data,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
       }
     );
 
-    // ✅ update cache after profile update
-    cachedUser = res.data.user;
-    cacheTimestamp = Date.now();
+    if (!res.ok) {
+      const errorData = await res.json();
+      return { success: false, error: errorData.error || "Failed to update user" };
+    }
 
+    const resData = await res.json();
     return {
       success: true,
-      user: res.data.user,
-      message: res.data.message,
+      user: resData.user,
+      message: resData.message,
     };
   } catch (err: any) {
-    console.error("Update user error:", err.response?.data || err.message);
-    return {
-      success: false,
-      error: err.response?.data?.error || "Failed to update user",
-    };
+    console.error("Update user error:", err.message);
+    return { success: false, error: "Failed to update user" };
   }
 };
-
-

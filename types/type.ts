@@ -1,9 +1,7 @@
 export type dbBillboard = {
   id: string;
   billboardImage: string;
-  title: string;
   productLink: string;
-  description?: string;
 };
 
 export type dbCategory = {

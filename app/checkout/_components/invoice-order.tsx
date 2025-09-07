@@ -88,7 +88,7 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
       >
         {/* BRAND HEADER */}
         <div style={{ textAlign: "center", marginBottom: "10px", display:"flex", flexDirection:"column", alignItems:"center"  }}>
-          <img src={`${process.env.NEXT_PUBLIC_BASE_URL}/logo.jpg`} alt={siteMeta.siteName} width={120} height={120} style={{ marginBottom: "12px" }} />
+          <img src={`${process.env.NEXT_PUBLIC_BASE_URL}/logo.svg`} alt={siteMeta.siteName} width={120} height={120} style={{ marginBottom: "12px" }} />
           <p style={{ margin: "4px 0", fontSize: "12px" }}>KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar</p>
           <p style={{ margin: "4px 0", fontSize: "12px" }}>📞 +880 1519558558 | 🌐 www.yourshop.com</p>
         </div>
@@ -132,7 +132,7 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
           </div>
           <div>
             <h4 style={{ fontWeight: "bold", marginBottom: "6px" }}>Payment</h4>
-            <p>Method: <strong>{order.paymentMethod.toUpperCase()}</strong></p>
+            <p>Method: <strong>{order?.paymentMethod?.toUpperCase()}</strong></p>
             <p>
               Status:{" "}
               <span
@@ -166,7 +166,7 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
             </tr>
           </thead>
           <tbody>
-            {order.orderItems.map((item: dbOrderItem) => {
+            {order?.orderItems?.map((item: dbOrderItem) => {
               const product = products?.data.find((p: dbProduct) => p.id === item.productId);
               if (!product) return null;
 

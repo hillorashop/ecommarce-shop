@@ -15,9 +15,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useOrdersByUser } from "@/hooks/use-user-order";
+
 import { InvoiceOrder } from "@/app/checkout/_components/invoice-order";
 import { formatDate } from "@/lib/utils";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getOrders } from "@/actions/order";
+import { useState } from "react";
 
 interface Props {
   tabValue: string;
@@ -25,11 +28,13 @@ interface Props {
 }
 
 export const UserOrderList = ({ tabValue, userId }: Props) => {
-  const { data:orders, isLoading, error } = useOrdersByUser({
-    userId,
-    page: 1,
-    pageSize: 10,
-  });
+  const [page,setPage] = useState(1)
+  const { data: orders, isLoading, error } = useCustomQuery(
+    ["ordersByUser", userId, { page: page, pageSize: 10 }],
+    () => getOrders(page, 10, userId),
+  );
+
+  
 
   return (
     <TabsContent value={tabValue} className="space-y-4">
@@ -49,7 +54,6 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
             </div>
           )}
 
-       
           {!isLoading && !error && orders?.data?.length === 0 && (
             <p className="text-sm text-muted-foreground">
               You don’t have any orders yet.
@@ -57,24 +61,46 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
           )}
 
           {!isLoading && orders?.data && orders.data.length > 0 && (
-            <Accordion type="single" collapsible className="w-full  lg:p-1">
-              {orders?.data?.map((order: any) => (
+            <>
+            <Accordion type="single" collapsible className="w-full lg:p-1">
+              {orders.data.map((order: any) => (
                 <AccordionItem key={order.id} value={`order-${order.id}`}>
                   <AccordionTrigger>
                     <div className="flex flex-col text-left">
-                      <p className="font-semibold">Order No:  #{order.id}</p>
+                      <p className="font-semibold">Order No: #{order.id}</p>
                       <p className="text-sm text-muted-foreground">
-                        Placed on{" "}
-                       {formatDate(new Date(order.createdAt))}
+                        Placed on {formatDate(new Date(order.createdAt))}
                       </p>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                 <InvoiceOrder order={order} hideButton/>
+                    <InvoiceOrder order={order} hideButton />
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
+         <div className="flex items-center justify-between mt-4 text-gray-700 text-sm font-semibold">
+                <Button
+                  onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                  disabled={page === 1}
+                >
+                  Previous Page
+                </Button>
+
+                <span>
+                  Page {orders?.pagination.currentPage || page} of {orders?.pagination.totalPages || 1}
+                </span>
+
+                <Button
+                  onClick={() => setPage(prev => Math.min(prev + 1, orders?.pagination.totalPages || 1))}
+                  disabled={page === orders?.pagination.totalPages}
+                >
+                  Next Page
+                </Button>
+              </div>
+
+       
+            </>
           )}
         </CardContent>
       </Card>

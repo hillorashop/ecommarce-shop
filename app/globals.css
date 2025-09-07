@@ -157,3 +157,33 @@
 #nprogress .spinner {
   display: none !important; 
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #invoice-printable, #invoice-printable * {
+    visibility: visible;
+  }
+  #invoice-printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;  /* A4 width */
+    min-height: 297mm; /* A4 height */
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    padding: 20mm; /* optional margin */
+    background: #fff;
+  }
+  #invoice-printable .no-print {
+    display: none !important;
+  }
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+  }
+  @page {
+    size: A4; /* forces A4 page size */
+    margin: 0;
+  }
+}

@@ -33,7 +33,7 @@ export const MobileFooterNavbar = () => {
                     <button onClick={() => setOpen(true)} className="relative">
               <ShoppingCart className="size-6 text-white" />
               {cartItems && cartItems.length > 0 && (
-                <Badge className="absolute -top-1 -right-2 size-4 rounded-full text-xs flex items-center justify-center p-0">
+                <Badge className="absolute -top-1 bg-gray-800 -right-2 size-4 rounded-full text-xs flex items-center justify-center p-0">
                   {cartItems.length}
                 </Badge>
               )}

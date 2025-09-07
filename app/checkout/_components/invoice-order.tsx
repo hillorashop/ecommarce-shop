@@ -72,6 +72,10 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
 
   };
 
+    const handlePrint = () => {
+    window.print(); // triggers print dialog
+  };
+
   return (
     <div style={{fontFamily: "Arial, sans-serif" }} className="mt-8">
       {/* INVOICE FULL PAGE */}
@@ -223,6 +227,9 @@ export const InvoiceOrder = ({ order, hideButton=false }: Props) => {
                       </div>
           ) : " Download PDF"}
          
+          </Button>
+            <Button variant="secondary" onClick={handlePrint}>
+            Print Invoice
           </Button>
       </div>}
     

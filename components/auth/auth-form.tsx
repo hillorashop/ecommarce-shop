@@ -35,7 +35,7 @@ export function AuthForm() {
   const [registerError, setRegisterError] = useState("")
   const [loadProvider, setLoadProvider] = useState(false)
   const router = useRouter()
-   const { setUser } = useUser();
+   const {refreshUser } = useUser();
 
 
 
@@ -67,7 +67,7 @@ export function AuthForm() {
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
-        setUser({ ...res.data.user, token: res.data.token });
+        await refreshUser(res.data.token);
         router.push("/");
         toast.success("Logged in successfully!");
       } else {
@@ -131,7 +131,9 @@ const registerSubmit = async (values: z.infer<typeof registerSchema>) => {
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
-        setUser({ ...res.data.user, token: res.data.token });
+
+         await refreshUser(res.data.token);
+    
         router.push("/");
         toast.success("Email verified & logged in!");
       }

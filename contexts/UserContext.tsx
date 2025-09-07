@@ -1,76 +1,75 @@
 "use client";
 
-import React, { createContext, useContext, ReactNode, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { User } from "@/actions/user";
-import { useUserQuery } from "@/hooks/use-user";
+import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
- refreshUser: (token: string) => Promise<void>;
+import { getUser, User, UserResponse } from "@/actions/user";
+import { useUserQuery } from "@/hooks/use-user";
+
+// allow partial token-based data
+type PartialUser = Partial<User>;
+
 interface UserContextType {
-  user: User | null;
+  user: User | PartialUser | null;
   loaded: boolean;
+  setUser: React.Dispatch<React.SetStateAction<User | PartialUser | null>>;
   logout: () => void;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-   refreshUser: (token: string) => Promise<void>;
+  refreshUser: (newToken: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loaded, setLoaded] = useState(false);
-
   const queryClient = useQueryClient();
   const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
 
-  // React Query fetch
-const { data: fetchedUser } = useUserQuery(token!);
-
-  // Merge decoded token immediately + backend user later
-  useEffect(() => {
-    if (!token) {
-      setLoaded(true);
-      setUser(null);
-      return;
-    }
-
-    let decoded: Partial<User> | null = null;
+  // Decode token for immediate data (can be partial)
+  const [user, setUser] = useState<User | PartialUser | null>(() => {
+    if (!token) return null;
     try {
-      decoded = jwtDecode<Partial<User>>(token);
-      // show decoded token immediately
-      setUser(decoded as User);
-      setLoaded(true);
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload as PartialUser;
     } catch {
-      localStorage.removeItem("auth_token");
-      setUser(null);
-      setLoaded(true);
-      return;
+      return null;
     }
-  }, [token]);
+  });
 
-  // Merge backend user once fetched
+  const [loaded, setLoaded] = useState(true);
+
+  // Fetch backend user and merge with token data
+  const { data: fetchedUser } = useUserQuery(token || undefined);
+
   useEffect(() => {
     if (fetchedUser) {
-      setUser(prev => ({ ...prev, ...fetchedUser }));
+      setUser(prev => ({ ...(prev ?? {}), ...fetchedUser }));
     }
   }, [fetchedUser]);
 
-
-    const refreshUser = async (newToken: string) => {
+  // Refresh user manually
+  const refreshUser = async (newToken: string) => {
     localStorage.setItem("auth_token", newToken);
-    const { data } = await useUserQuery(newToken).refetch();
-    if (data) setUser(data);
+
+    try {
+      const response: UserResponse = await getUser(newToken);
+      if (response.success && response.user) {
+        setUser(prev => ({ ...(prev ?? {}), ...response.user }));
+      }
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+    }
+
+    queryClient.setQueryData(["user", newToken], () =>
+      getUser(newToken).then(res => res.user!)
+    );
   };
 
   const logout = () => {
     localStorage.removeItem("auth_token");
     setUser(null);
-
     queryClient.removeQueries({ queryKey: ["user"], exact: false });
   };
 
   return (
-    <UserContext.Provider value={{ user, loaded, logout, setUser , refreshUser}}>
+    <UserContext.Provider value={{ user, loaded, setUser, logout, refreshUser }}>
       {children}
     </UserContext.Provider>
   );

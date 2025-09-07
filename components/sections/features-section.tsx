@@ -27,7 +27,7 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-4 lg:py-10 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6 text-center">
         {/* Section Heading */}
 <h2 className="relative flex flex-col lg:flex-row items-center justify-center text-lg md:text-xl lg:text-2xl font-bold text-gray-800">

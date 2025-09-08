@@ -13,7 +13,6 @@ import Link from "next/link";
 import { useBillboards } from "@/hooks/use-billboards";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteMeta } from "@/data";
-import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
   const { data: billboards, isLoading } = useBillboards();
@@ -33,7 +32,7 @@ export const HeroSection = () => {
 
   return (
     <section className="w-full">
-      <div className="w-full lg:pt-2">
+      <div className="w-full lg:pt-4">
         <Carousel className="w-full" plugins={[plugin.current]} setApi={setApi}>
           <CarouselContent>
             {isLoading

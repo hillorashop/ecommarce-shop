@@ -58,7 +58,7 @@ export function FeaturesSection() {
                 <div className="flex items-center justify-center size-12 rounded-full bg-yellow-400 text-white mb-6 shadow-md">
                   <Icon className="size-6" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
                   {feature.title}
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">

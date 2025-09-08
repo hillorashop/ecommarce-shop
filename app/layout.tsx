@@ -73,6 +73,7 @@ export default function RootLayout({
     <html lang="bn" suppressHydrationWarning>
       <head>
         {/* ✅ Bangladesh SEO specific */}
+        <meta name="google-site-verification" content="WjC9PZ6_fnkB0mYfs3I9mr3CVQgeauW-japi-LW31cM" />
         <meta name="geo.region" content="BD" />
         <meta name="geo.placename" content="Khagrachari" />
         <meta name="geo.position" content="23.1193;91.9847" />

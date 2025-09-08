@@ -25,25 +25,25 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { href: "#", label: "Facebook", hover: "hover:text-blue-600" },
-    { href: "#", label: "Twitter", hover: "hover:text-blue-500" },
-    { href: "#", label: "Instagram", hover: "hover:text-pink-600" },
-    { href: "#", label: "YouTube", hover: "hover:text-red-600" },
+    { href: "#", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
+    { href: "#", Icon: "/icons/instagram.svg", bg:"#be123c",},
+    { href: "#", Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+   
   ];
 
   return (
     <footer className="bg-gray-200 border-t border-gray-100">
-      <div className="max-w-7xl mx-auto py-12 px-6">
+      <div className="py-12 px-6">
         {/* Main content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-20">
           {/* Logo + description */}
-          <div>
+          <div className="relative mt-8">
             <Image
               src="/logo.svg"
               alt={siteMeta.siteName}
               width={180}
               height={70}
-              className="object-contain mb-4"
+              className="object-contain  absolute -translate-20 left-8"
             />
             <p className="text-sm text-gray-700 leading-relaxed">
               Hellora works directly with local farmers and artisans in
@@ -59,14 +59,13 @@ export function Footer() {
             </h4>
             <ul className="space-y-1 text-sm text-gray-700">
               <li>
-                <span className="font-medium">Address:</span> Maitranga Bazar,
-                Khagrachari, Bangladesh
+                <span className="font-medium">Address: </span>KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar
               </li>
               <li>
-                <span className="font-medium">Email:</span> mail@epahar.com
+                <span className="font-medium">Email:</span> mail@hillora.com
               </li>
               <li>
-                <span className="font-medium">Phone:</span> (+88) 09613821316
+                <span className="font-medium">Mobile:</span> +880 1519558558
               </li>
             </ul>
           </div>
@@ -90,33 +89,17 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* My Account */}
-          <div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-3">
-              My Account
-            </h4>
-            <ul className="space-y-1 text-sm">
-              {myAccount.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-700 hover:text-yellow-600 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+    
+
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-gray-400 mt-10 pt-6 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-gray-700 text-center lg:text-left">
+        <div className="border-t border-gray-400 my-10 pt-6 flex flex-col-reverse lg:flex-row items-center justify-between gap-x-6 ">
+          <p className="text-xs lg:text-sm text-muted-foreground text-center lg:text-left">
             © {year} {siteMeta.siteName}. All rights reserved.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-x-4">
             {payments.map((p, index) => (
               <Image
                 key={index}
@@ -124,7 +107,7 @@ export function Footer() {
                 alt="Payment method"
                 width={70}
                 height={40}
-                className="object-contain"
+                className="object-contain w-12 md:w-18"
               />
             ))}
           </div>
@@ -134,10 +117,18 @@ export function Footer() {
               <a
                 key={i}
                 href={s.href}
-                className={`text-gray-600 ${s.hover} transition-colors`}
+                target="_blank"
+                className="relative"
               >
-                <span className="sr-only">{s.label}</span>
-                <span className="w-5 h-5 inline-block bg-gray-500 rounded-full" />
+                <Image
+                src={s.Icon}
+                alt={siteMeta.siteName}
+                width={30}
+                height={30}
+                className="rounded-full  overflow-hidden"
+                />
+                <div className="absolute inset-0 border-2 rounded-full pb-4 animate-ping" style={{borderColor:s.bg}}/>
+             
               </a>
             ))}
           </div>

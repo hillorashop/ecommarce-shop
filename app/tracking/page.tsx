@@ -35,6 +35,8 @@ const TrackingPage = () => {
     setIsLoading(true);
     setOrder(null);
 
+   
+
     try {
       let page = 1;
       let found = false;
@@ -42,7 +44,7 @@ const TrackingPage = () => {
 
       while (!found) {
         const res = await getOrders(page, 20); // pageSize = 20
-        fetchedOrder = res.data.find((o) => o.orderId === values.orderId) || null;
+        fetchedOrder = res.data.find((o) => o.orderId === values.orderId.trim()) || null;
 
         if (fetchedOrder) {
           found = true;

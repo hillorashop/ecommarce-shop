@@ -28,16 +28,16 @@ export function FeaturesSection() {
 
   return (
     <section className="py-4 lg:py-10 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6 text-center">
+      <div className=" px-6 text-center">
         {/* Section Heading */}
 <h2 className="relative flex flex-col lg:flex-row items-center justify-center text-lg md:text-xl lg:text-2xl font-bold text-gray-800">
-  <span className="text-gray-700">Welcome to</span>
+  <span className="text-gray-700 mb-6">Welcome to</span>
   <Image
     src="/logo.svg"
     alt={siteMeta.siteName}
     width={200}
     height={100}
-    className="object-contain w-36 drop-shadow-sm lg:absolute  lg:translate-x-28  lg:top-6 lg:-translate-y-1/2 overflow-hidden"
+    className="object-contain w-36 drop-shadow-sm -top-0.5 absolute  lg:translate-x-28  lg:top-6 lg:-translate-y-1/2 overflow-hidden"
   />
 </h2>
 
@@ -47,7 +47,7 @@ export function FeaturesSection() {
         </p>
 
         {/* Features */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (

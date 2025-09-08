@@ -79,7 +79,7 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
                 </AccordionItem>
               ))}
             </Accordion>
-         <div className="flex items-center justify-between mt-4 text-gray-700 text-sm font-semibold">
+         <div className="flex items-center justify-between mt-4 text-gray-700 text-xs font-semibold">
                 <Button
                   onClick={() => setPage(prev => Math.max(prev - 1, 1))}
                   disabled={page === 1}

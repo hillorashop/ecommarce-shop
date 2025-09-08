@@ -7,8 +7,8 @@ export function useCategories(page?: number) {
   return useQuery<CategoriesResponse, Error>({
     queryKey: ["categories", page], // cache key depends on page
     queryFn: () => getCategories(page),
-    staleTime: THREEDAY,  
-    gcTime: THREEDAY,
+    staleTime: ONE_DAY,  
+    gcTime: ONE_DAY,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,   
 

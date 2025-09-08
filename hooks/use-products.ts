@@ -25,8 +25,8 @@ export const useProducts = (options: UseProductsOptions = {}) => {
         options.maxPrice,
         options.categoryIds
       ),
-    staleTime:TWODAY ,    
-    gcTime: TWODAY,
+    staleTime:ONE_DAY ,    
+    gcTime: ONE_DAY,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,     
 

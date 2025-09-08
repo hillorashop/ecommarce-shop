@@ -35,7 +35,7 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
     persistQueryClient({
       queryClient,
       persister,
-      maxAge: THREEDAY,
+      maxAge: ONE_DAY,
     });
 
     setHydrated(true);

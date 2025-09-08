@@ -171,16 +171,16 @@ const providerSubmit = (provider: "google" | "facebook") => {
       <div className="w-full max-w-xl">
 
 
-        <div className="text-center mb-6 lg:mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4 lg:mb-6">
+        <div className="text-center mb-6 lg:mb-8 relative mt-9">
+         
                <Image
                          src={"/logo.svg"}
                          alt={siteMeta.siteName}
-                         width={100}
-                         height={60}
-                         className="object-contain overflow-hidden"
+                         width={150}
+                         height={80}
+                         className="object-contain overflow-hidden absolute top-0 translate-x-28 md:translate-x-36  lg:translate-x-52 -translate-y-18 "
                          /> 
-          </div>
+          
           <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome Back</h2>
           <p className="text-gray-600 font-medium text-sm">Sign in to your account or create a new one</p>
         </div>

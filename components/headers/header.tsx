@@ -162,7 +162,7 @@ export function Header() {
                 {/* Emergency Contact */}
                 <div className="flex flex-col items-center gap-x-4">
                   <p className="text-xs text-muted-foreground font-semibold text-center max-w-lg">
-                    জরুরি প্রয়োজনীয় পণ্য বা অর্ডার সম্পর্কিত তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন অথবা কল করুন +8801519558558।
+                    জরুরি প্রয়োজনীয় পণ্য বা অর্ডার সম্পর্কিত তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন অথবা কল করুন +8801519558558
                   </p>
 
                   <div className="flex items-center justify-center gap-x-8 mt-2">

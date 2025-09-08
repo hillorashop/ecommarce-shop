@@ -46,7 +46,7 @@ export function Footer() {
               className="object-contain  absolute -translate-20 left-8"
             />
             <p className="text-sm text-gray-700 leading-relaxed">
-              Hellora works directly with local farmers and artisans in
+              Hillora works directly with local farmers and artisans in
               Khagrachari, bringing you authentic traditional goods while
               supporting the community.
             </p>

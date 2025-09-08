@@ -15,7 +15,7 @@ export function FeaturesSection() {
     {
       title: "Friendly Support",
       description:
-        "Have questions? Our dedicated Hellora support team is always here to guide you with care and respect.",
+        "Have questions? Our dedicated Hillora support team is always here to guide you with care and respect.",
       icon: Headphones,
     },
     {

@@ -176,7 +176,11 @@ const ProfilePage = () => {
                         <div className="flex items-center justify-between w-full">
                           <Button
                             type="button"
-                            onClick={() => setIsEdit(false)}
+                            onClick={() =>{
+                              setIsEdit(false)
+                              profileForm.reset()
+
+                              }}
                             variant="outline"
                           >
                             Cancel

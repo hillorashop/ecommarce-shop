@@ -32,6 +32,9 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
   const { data: orders, isLoading, error } = useCustomQuery(
     ["ordersByUser", userId, { page: page, pageSize: 10 }],
     () => getOrders(page, 10, userId),
+      {
+    staleTime: 2 * 60 * 60 * 1000, // 2 hour
+  }
   );
 
   

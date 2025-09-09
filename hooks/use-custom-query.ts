@@ -14,9 +14,10 @@ export const useCustomQuery = <
 >(
   queryKey: QueryKey,
   queryFunction: QueryFunction<TQueryFnData>,
-  options?: UseQueryOptions<TQueryFnData, TError, TQueryFnData, QueryKey> & {
-    initialData?: TQueryFnData;
-  }
+  options?: Omit<
+    UseQueryOptions<TQueryFnData, TError, TQueryFnData, QueryKey>,
+    "queryKey" | "queryFn"
+  > & { initialData?: TQueryFnData }
 ): UseQueryResult<TQueryFnData, TError> => {
   return useQuery<TQueryFnData, TError>({
     queryKey,
@@ -24,11 +25,10 @@ export const useCustomQuery = <
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false, // ❌ no auto refetch on reconnect
-    ...options,
+    refetchOnReconnect: false,
+    ...options, // now you can safely override staleTime
   });
-};
-
+}
 
 
 

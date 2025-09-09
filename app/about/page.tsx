@@ -41,7 +41,7 @@ const AboutPage = () => {
           Welcome to <strong>Hillora</strong>, a unique online shopping platform
           that offers a vast array of high-quality products to meet your needs.
           Whether you're seeking nutritious organic food, fashionable clothing,
-          or modern daily essentials, ePahar has got you covered. Our dedicated
+          or modern daily essentials, Hillora has got you covered. Our dedicated
           team of conscious farmers and skilled professionals work tirelessly to
           bring you the best products, ensuring quality and customer satisfaction.
         </p>
@@ -50,7 +50,7 @@ const AboutPage = () => {
           Our extensive selection of organic food promotes a healthy lifestyle,
           from fresh produce to pantry staples. We also offer fashionable
           clothing that combines style with comfort, catering to diverse tastes
-          and preferences. Stay ahead of trends with ePahar's curated collections.
+          and preferences. Stay ahead of trends with Hillora's curated collections.
         </p>
 
         <p>

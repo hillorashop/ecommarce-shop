@@ -11,6 +11,7 @@ import { MobileFooterNavbar } from "@/components/footer/mobile-footer-navbar";
 import { siteMeta } from "@/data";
 import { ReactQueryClientProvider } from "@/provider/queryClient-provider";
 import TopLoadingBar from "@/components/top-loading-bar";
+import Script from "next/script";
 
 
 const geistSans = Geist({
@@ -78,6 +79,16 @@ export default function RootLayout({
         <meta name="geo.placename" content="Khagrachari" />
         <meta name="geo.position" content="23.1193;91.9847" />
         <meta name="ICBM" content="23.1193, 91.9847" />
+          <Script id="gtm" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id=${process.env.NEXT_PUBLIC_GTM_ID}'+dl;
+            f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+          `}
+        </Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

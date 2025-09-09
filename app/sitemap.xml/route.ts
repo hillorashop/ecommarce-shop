@@ -24,7 +24,7 @@ export async function GET() {
     console.error("Failed to load categories:", err);
   }
 
-  const staticPages = ["", "/about", "/faq"];
+  const staticPages = ["", "/about", "/faq","/categories"];
 
   const urls = staticPages
     .map(
@@ -41,7 +41,7 @@ export async function GET() {
     .map(
       (p) => `
       <url>
-        <loc>${baseUrl}/product/${p.id}</loc>
+        <loc>${baseUrl}/products/${p.id}</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>`
@@ -52,7 +52,7 @@ export async function GET() {
     .map(
       (c) => `
       <url>
-        <loc>${baseUrl}/category/${c.id}</loc>
+        <loc>${baseUrl}/products?categoryId=${c.id}</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
       </url>`

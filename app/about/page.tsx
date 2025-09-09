@@ -3,7 +3,7 @@ import { siteMeta, siteMetaAbout } from "@/data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `About Us | ${siteMeta.siteName}`,
+  title: `About Us`,
   description:
     "",
   openGraph: {

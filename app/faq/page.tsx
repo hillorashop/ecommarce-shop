@@ -6,7 +6,7 @@ import Script from "next/script";
 import { HeadingTitle } from "@/components/heading-title";
 
 export const metadata: Metadata = {
-  title: `FAQ | ${siteMeta.siteName}`,
+  title: `FAQ`,
   description:
     "",
   openGraph: {

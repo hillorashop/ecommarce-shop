@@ -50,11 +50,11 @@ export const TopCategories = () => {
             </CarouselContent>
 
             {/* Navigation Arrows */}
-            <CarouselPrevious className="absolute left-2 md:left-4 lg:-left-4 top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg rounded-full p-2 transition">
+            <CarouselPrevious className="absolute left-2 md:left-4 lg:left-2 top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg rounded-full p-2 transition">
               <ChevronLeft className="h-5 w-5 fill-primary" />
             </CarouselPrevious>
 
-            <CarouselNext className="absolute right-2 md:right-4 lg:-right-4 top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg rounded-full p-2 transition">
+            <CarouselNext className="absolute right-2 md:right-4 lg:right-2 top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg rounded-full p-2 transition">
               <ChevronRight className="h-5 w-5 fill-primary" />
             </CarouselNext>
           </Carousel>

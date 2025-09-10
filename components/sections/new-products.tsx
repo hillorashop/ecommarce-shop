@@ -30,7 +30,7 @@ export function NewProducts() {
       <HeadingTitle title="New Products" />
 
       {!isClient || isLoading ? (
-        <div className="grid grid-flow-col auto-cols-[12rem] gap-4 px-4 sm:px-8 lg:px-14 overflow-x-auto mt-8">
+        <div className="grid grid-flow-col auto-cols-[12rem] gap-4 px-4 sm:px-8 lg:px-10 overflow-x-auto mt-8">
           {[...Array(6)].map((_, i) => (
             <Skeleton key={i} className="h-64 w-full rounded-xl" />
           ))}
@@ -38,13 +38,23 @@ export function NewProducts() {
       ) : products?.data && products.data.length > 0 ? (
         <div className="relative mt-8">
           <Carousel className="w-full" plugins={[plugin.current]}>
-            <CarouselContent className="grid grid-flow-col auto-cols-[calc(50%-0.5rem)] sm:auto-cols-[calc(33.333%-0.75rem)] lg:auto-cols-[calc(16.666%-1rem)] gap-4 px-4 sm:px-8 lg:px-14 py-2">
-              {products.data.map((product) => (
-                <CarouselItem key={product.id} className="w-full">
-                  <ProductCard product={product} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+       <CarouselContent
+  className="
+    grid grid-flow-col 
+    auto-cols-[calc(50%-0.5rem)]     /* 2 cols → same as grid-cols-2 */
+    md:auto-cols-[calc(33.333%-0.67rem)] /* 3 cols → same as md:grid-cols-3 */
+    lg:auto-cols-[calc(20%-0.8rem)]  /* 5 cols → same as lg:grid-cols-5 */
+    gap-4 
+    px-4 sm:px-8 lg:px-10 
+    py-2
+  "
+>
+  {products.data.map((product) => (
+    <CarouselItem key={product.id} className="w-full">
+      <ProductCard product={product} />
+    </CarouselItem>
+  ))}
+</CarouselContent>
 
             {/* Optional Navigation Arrows */}
             <CarouselPrevious className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg rounded-full p-2 transition">

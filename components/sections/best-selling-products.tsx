@@ -24,9 +24,9 @@ export function BestSelling() {
              grid 
                 grid-cols-2
                 md:grid-cols-3
-                lg:grid-cols-6
+                lg:grid-cols-5
                 gap-4 
-                px-4 sm:px-8 lg:px-14
+                px-4 sm:px-8 lg:px-10
                 mb-8"
           >
             {[...Array(8)].map((_, i) => (
@@ -41,9 +41,9 @@ export function BestSelling() {
                 grid 
                 grid-cols-2
                 md:grid-cols-3
-                lg:grid-cols-6
+                lg:grid-cols-5
                 gap-4 
-                px-4 sm:px-8 lg:px-14
+                px-4 sm:px-8 lg:px-10
                 mb-8"
             >
               {products.data.slice(0, 8).map((product, index) => (

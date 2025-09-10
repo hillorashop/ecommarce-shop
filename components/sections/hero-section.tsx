@@ -32,7 +32,7 @@ export const HeroSection = () => {
 
   return (
     <section className="w-full">
-      <div className="w-full lg:pt-6">
+      <div className="w-full lg:pt-2">
         <Carousel className="w-full" plugins={[plugin.current]} setApi={setApi}>
           <CarouselContent>
             {isLoading

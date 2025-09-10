@@ -50,14 +50,14 @@ export function MobileHeader() {
               side="left"
               className="w-[80%] max-w-sm overflow-y-auto px-2"
             >
-              <SheetHeader className="p-0">
+              <SheetHeader className="p-0 relative mb-14">
                 <SheetTitle className="sr-only"> Mobile Header</SheetTitle>
                 <Image
                   src={"/logo.svg"}
                   alt={`${siteMeta.siteName}`}
                   width={130}
                   height={60}
-                  className="object-contain overflow-hidden"
+                  className="object-contain overflow-hidden absolute -top-2 -left-6"
                 />
               </SheetHeader>
 

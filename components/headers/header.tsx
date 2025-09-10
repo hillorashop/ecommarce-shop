@@ -56,13 +56,13 @@ export function Header() {
         <motion.header
           initial={{ y: 0, opacity: 1 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -128, opacity: 0 }}
+          exit={{ y: -120, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm"
         >
           <div className="max-w-[120rem] mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
-              <div className="relative flex items-center justify-between h-28 gap-8">
+              <div className="relative flex items-center justify-between h-24 gap-8">
 
                 {/* Logo (absolute, won’t affect layout) */}
                 <div className="absolute -left-14 top-1/2 -translate-y-1/2 w-60 h-80">
@@ -75,7 +75,7 @@ export function Header() {
                 </div>
 
                 {/* Search (pushed right with margin so it doesn’t overlap logo) */}
-                <div className="ml-48 flex-1 max-w-3xl relative" ref={containerRef}>
+                <div className="ml-48 flex-1  max-w-4xl relative" ref={containerRef}>
                   <Input
                     type="text"
                     placeholder="Search your product"
@@ -157,8 +157,8 @@ export function Header() {
                 </div>
 
                 {/* Emergency Contact */}
-                <div className="flex flex-col items-end gap-1 max-w-sm">
-                  <p className="text-sm text-muted-foreground font-semibold text-right leading-snug">
+                <div className="flex  flex-col items-end gap-1 max-w-md">
+                  <p className="text-sm  text-muted-foreground  text-right leading-snug text-wrap">
                     জরুরি প্রয়োজনীয় পণ্য বা অর্ডার সম্পর্কিত তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন অথবা কল করুন{" "}
                     <span className="font-bold">+8801519558558</span>
                   </p>

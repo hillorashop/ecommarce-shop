@@ -2,7 +2,7 @@ import { getCategories } from "@/actions/category";
 import { getProducts } from "@/actions/product";
 import { NextResponse } from "next/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -24,7 +24,7 @@ export async function GET() {
     console.error("Failed to load categories:", err);
   }
 
-  const staticPages = ["", "/about", "/faq","/categories"];
+  const staticPages = ["", "/about", "/faq", "/categories"];
 
   const urls = staticPages
     .map(
@@ -52,7 +52,7 @@ export async function GET() {
     .map(
       (c) => `
       <url>
-        <loc>${baseUrl}/products?categoryId=${c.id}</loc>
+        <loc>${baseUrl}/products?categoryId=${encodeURIComponent(c.id)}</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
       </url>`
@@ -68,7 +68,7 @@ export async function GET() {
 
   return new NextResponse(sitemap, {
     headers: {
-      "Content-Type": "text/xml",
+      "Content-Type": "application/xml", // ✅ Fixed
     },
   });
 }

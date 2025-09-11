@@ -172,7 +172,7 @@ export function Header() {
           href={s.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative flex items-center justify-center w-8 h-8"
+          className="relative flex items-center justify-center w-8 h-8 z-50"
         >
           <Image
             src={s.Icon}

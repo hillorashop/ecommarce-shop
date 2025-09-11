@@ -6,10 +6,9 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   const quickLinks = [
-    { label: "Faq", href: "#" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms & Conditions", href: "#" },
-    { label: "Return Policy", href: "#" },
+    { label: "Faq", href: "/faq" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Return Policy", href: "/return-policy" },
   ];
 
   const myAccount = [
@@ -80,7 +79,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-gray-700 hover:text-yellow-600 transition-colors"
+                    className="text-gray-700 hover:text-yellow-600 transition-colors hover:underline"
                   >
                     {link.label}
                   </Link>

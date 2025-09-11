@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { FAQITEMS, siteMeta, siteMetaFaq } from "@/data";
+import { FAQITEMS, siteMeta} from "@/data";
 import { MailOpen } from "lucide-react";
 import Script from "next/script";
 import { HeadingTitle } from "@/components/heading-title";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: `FAQ`,
   description:
-    "",
+    "Hillora FAQ: আমাদের প্রায়শই জিজ্ঞাসিত প্রশ্ন এবং উত্তর। অর্ডার, পেমেন্ট, ডেলিভারি, প্রোডাক্ট এবং অন্যান্য সেবা সম্পর্কিত তথ্য।",
+  keywords:siteMeta.keyWords,
   openGraph: {
-    title: `FAQ | ${siteMeta.siteName}`,
-    description:siteMetaFaq.desc,
+    title: `FAQ | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
+    description:
+      "Hillora FAQ পেজে খুঁজুন অর্ডার, পেমেন্ট, ডেলিভারি ও প্রোডাক্ট সম্পর্কিত গুরুত্বপূর্ণ তথ্য।",
     url: `${process.env.NEXT_PUBLIC_BASE_URL}/faq`,
-    siteName: `${siteMeta.siteName}`,
+    siteName: siteMeta.siteName,
     type: "website",
     images: [
       {
-        url: `${siteMetaFaq.image}`, 
+        url: siteMeta.openGraph.image, 
         width: 1200,
         height: 630,
         alt: `${siteMeta.siteName} FAQ`,
@@ -25,12 +28,15 @@ export const metadata: Metadata = {
     ],
     locale: "bn_BD",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `FAQ - ${siteMeta.siteName}`,
+    description:
+      "Hillora FAQ পেজে আপনার প্রায়শই জিজ্ঞাসিত প্রশ্নের উত্তর খুঁজে পাবেন। অর্ডার, পেমেন্ট, ডেলিভারি ও প্রোডাক্ট সম্পর্কিত তথ্য।",
+    images: [siteMeta.twitter.image],
+  },
   alternates: {
     canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/faq`,
-    languages: {
-      en: "https://yourdomain.com/en/faq",
-      bn: "https://yourdomain.com/bn/faq",
-    },
   },
 };
 
@@ -57,7 +63,7 @@ const FaqPage = () => {
       <Accordion
         type="multiple"
         defaultValue={FAQITEMS.map((_, index) => `item-${index}`)}
-        className="w-full max-w-2xl space-y-6"
+        className="w-full max-w-5xl space-y-6"
       >
         {FAQITEMS.map((item, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
@@ -76,6 +82,9 @@ const FaqPage = () => {
                     {item.mail}
                   </a>
                 </p>
+              )}
+              {item.link && (
+                <Link href={item.link} className="underline text-blue-600">{item.linkName}</Link>
               )}
             </AccordionContent>
           </AccordionItem>

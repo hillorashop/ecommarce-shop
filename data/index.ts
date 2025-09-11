@@ -13,58 +13,96 @@ export const navLinks = [
 
 
 
+export const mobileNavLinks = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/products" },
+  { name: "Categories", href: "/categories" },
+  { name: "Faq", href: "/faq" },
+  { name: "About", href: "/about" },
+];
+
+
+
+
 
 export const FAQITEMS = [
   {
-    question: "What is Hillora?",
-    answer: "Hillora is a powerful online shopping platform that offers a wide range of products, including nutritious organic food, clothing choices, and modern daily life essentials. Our goal is to provide a convenient and reliable shopping experience for our customers."
+    question: "Hillora কী?",
+    answer:
+      "Hillora হলো একটি অনলাইন শপিং প্ল্যাটফর্ম, যা খাগড়াছড়ির পাহাড়ি ঐতিহ্যবাহী পণ্য, জৈব খাদ্য এবং দৈনন্দিন প্রয়োজনীয় জিনিসপত্র সরবরাহ করে। আমাদের লক্ষ্য হলো ঐতিহ্য ও আধুনিক জীবনধারার সমন্বয় ঘটিয়ে আপনাকে একটি ভরসাযোগ্য ও সুবিধাজনক শপিং অভিজ্ঞতা দেওয়া।"
   },
   {
-    question: "Where is Hillora located?",
-    answer: "Hillora head office is located at: 1st Floor, Ali Complex, Matiranga, Khagrachari."
+    question: "Hillora কোথায় অবস্থিত?",
+    answer:
+      "KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar"
   },
   {
-    question: "How can I contact Hillora customer support?",
-    answer: "You can reach our customer support team by email or support ticket on website.",
-    mail: "mail@Hillora.com"
+    question: "Hillora কাস্টমার সাপোর্টে কীভাবে যোগাযোগ করব?",
+    answer:
+      "আপনি আমাদের কাস্টমার সাপোর্ট টিমের সাথে ইমেইল বা ওয়েবসাইটে সাপোর্ট টিকিট সাবমিট করে যোগাযোগ করতে পারেন।",
+    mail: "support@hillora.com",
+    phone: "+880 1519558558"
   },
   {
-    question: "How long does it take to process and ship an order?",
-    answer: "We typically process orders within 2-3 business days. Shipping time varies depending on your location and the selected shipping method."
+    question: "অর্ডার প্রসেস ও শিপ করতে কত সময় লাগে?",
+    answer:
+      "আমরা সাধারণত ১–২ কর্মদিবসের মধ্যে অর্ডার প্রসেস করি। ডেলিভারির সময় আপনার অবস্থান এবং কুরিয়ার সার্ভিসের উপর নির্ভর করে ভিন্ন হতে পারে।"
   },
   {
-    question: "How can I track my order?",
-    answer: "Once your order is shipped, you will receive a Shipment Confirmation email with a tracking number. You can use this tracking number to track the status of your order on our website or the shipping carrier's website."
+    question: "আমি কীভাবে আমার অর্ডার ট্র্যাক করব?",
+    answer:
+      "আপনার অর্ডার শিপ হওয়ার পর আপনি একটি কনফার্মেশন ইমেইল পাবেন, যেখানে ট্র্যাকিং নম্বর দেওয়া থাকবে। সেই নম্বর ব্যবহার করে আমাদের ওয়েবসাইট বা কুরিয়ার সার্ভিসের ওয়েবসাইটে অর্ডারের অবস্থা দেখতে পারবেন।",
+      link:"/tracking",
+      linkName:"Tracking"
+
+
   },
   {
-    question: "Do you offer international shipping?",
-    answer: "Currently, we only offer shipping within Bangladesh. We do not ship internationally."
+    question: "আপনারা কি আন্তর্জাতিক ডেলিভারি দেন?",
+    answer:
+      "বর্তমানে Hillora শুধুমাত্র বাংলাদেশে ডেলিভারি সেবা প্রদান করে। ভবিষ্যতে আন্তর্জাতিক শিপমেন্ট চালু করা হবে।"
+  },
+{
+  question: "আপনারা কোন কোন পেমেন্ট মেথড গ্রহণ করেন?",
+  answer:
+    "বর্তমানে আমরা শুধুমাত্র ক্যাশ অন ডেলিভারি (COD) পেমেন্ট মেথড গ্রহণ করি।"
+},
+
+{
+  question: "আমার পেমেন্ট তথ্য কি নিরাপদ?",
+  answer:
+    "বর্তমানে আমাদের পেমেন্ট শুধুমাত্র ক্যাশ অন ডেলিভারি (COD) পদ্ধতিতে হয়, তাই আপনার পেমেন্ট তথ্য অনলাইনে সংরক্ষিত হয় না।"
+},
+
+  {
+    question: "আমি কি কোনো পণ্য রিটার্ন বা এক্সচেঞ্জ করতে পারি?",
+    answer:
+      "বর্তমানে আমরা কোনো পণ্য রিটার্ন বা এক্সচেঞ্জ গ্রহণ করি না, তবে যদি পণ্য ক্ষতিগ্রস্ত বা ত্রুটিপূর্ণ হয় তাহলে ব্যতিক্রম প্রযোজ্য হবে। বিস্তারিত জানতে আমাদের রিটার্ন পলিসি দেখুন।",
+      link:"/return-policy",
+       linkName:"Return Policy"
   },
   {
-    question: "What payment methods do you accept?",
-    answer: "We accept various payment methods, including credit/debit cards, online banking, and cash on delivery. The available payment options will be displayed during the checkout process."
+    question: "আমি কীভাবে রিফান্ড চাইতে পারি?",
+    answer:
+      "যদি আপনি ক্ষতিগ্রস্ত বা ত্রুটিপূর্ণ পণ্য পান, তাহলে পণ্য পাওয়ার ২৪ ঘণ্টার মধ্যে আমাদের কাস্টমার সাপোর্টে যোগাযোগ করুন। যাচাইয়ের পর আমরা রিপ্লেসমেন্ট বা স্টোর ক্রেডিট প্রদান করব। বিস্তারিত জানতে আমাদের রিটার্ন পলিসি দেখুন।",
+      link:"/return-policy",
+      linkName:"Return Policy"
+
   },
+{
+  question: "অর্ডার দিতে কি অ্যাকাউন্ট তৈরি করতে হবে?",
+  answer:
+    "না, Hillora-তে আপনি অতিথি (Guest) হিসেবেও অর্ডার করতে পারবেন। তবে একটি অ্যাকাউন্ট তৈরি করলে আপনি সহজে অর্ডার ট্র্যাক করতে পারবেন, পূর্বের অর্ডার হিস্ট্রি দেখতে পারবেন এবং একটি ব্যক্তিগতকৃত শপিং অভিজ্ঞতা পাবেন।"
+},
   {
-    question: "Is my payment information secure?",
-    answer: "Yes, we take the security of your payment information seriously. We use secure encryption technology to protect your data and ensure a safe checkout process."
-  },
-  {
-    question: "Can I return or exchange a product?",
-    answer: "Currently, we do not accept returns or exchanges, except for damaged or defective products. Please refer to our Returns & Exchanges Policy for more details."
-  },
-  {
-    question: "How can I request a refund?",
-    answer: "If you have received a damaged or defective product, please contact our customer support within 24 hours of receipt. Provide the necessary details, and we will assist you with the refund process as per our Refund Policy."
-  },
-  {
-    question: "Do I need to create an account to place an order?",
-    answer: "Yes, creating an account is required to place an order on Hillora. It allows you to track your orders, manage your preferences, and enjoy a personalized shopping experience."
-  },
-  {
-    question: "How do you protect my personal information?",
-    answer: "We prioritize the protection of your personal information and adhere to strict privacy standards. Please refer to our Privacy Policy to understand how we collect, use, and protect your data."
+    question: "Hillora কীভাবে আমার ব্যক্তিগত তথ্য সুরক্ষিত রাখে?",
+    answer:
+      "আমরা কঠোর ডেটা প্রোটেকশন ও প্রাইভেসি স্ট্যান্ডার্ড মেনে চলি। আপনার ব্যক্তিগত তথ্য শুধুমাত্র অর্ডার প্রসেসিং ও কাস্টমার সাপোর্টের কাজে ব্যবহৃত হয়। বিস্তারিত জানতে আমাদের প্রাইভেসি পলিসি পড়ুন।",
+      link:"/privacy-policy",
+       linkName:"Privacy Policy"
   }
 ];
+
 
 export const siteMeta = {
   siteName:"Hillora",
@@ -80,31 +118,17 @@ export const siteMeta = {
    openGraph:{
     title:"",
     desc:"",
-    image:[
-
-    ]
+    image:"/"
    },
    twitter:{
     title: "Hillora – Bangladesh Ecommerce",
     description: "বাংলাদেশ ভিত্তিক ই-কমার্স ওয়েবসাইট",
     creator:"@your_twitter",
-    image:[
-
-    ]
+    image:"/"
    }
 
 }
 
-export const siteMetaFaq = {
-  desc:"Frequently Asked Questions about Hillora, Bangladesh's trusted online shopping platform. Learn about orders, products, payments, and more.",
-  image:"/faq.png"
-}
-
-
-export const siteMetaAbout = {
-  desc:"Discover Hillora, Bangladesh's unique online shopping platform offering organic food, fashionable clothing, and modern daily essentials with convenient delivery.",
-  image:"/about.png"
-}
 
 
 export const  ONE_DAY = 24 * 60 * 60 * 1000

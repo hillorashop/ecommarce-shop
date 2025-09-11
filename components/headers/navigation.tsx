@@ -35,14 +35,14 @@ export function Navigation() {
 
   return (
     <motion.div
-  animate={{ top: headerHidden ? 0 : 100 }} // 81px = header height
+  animate={{ top: headerHidden ? 0 : 84 }} 
       transition={{ duration: 0.4, ease: "easeInOut" }}
-  className="fixed top-[100px] left-0 right-0 z-40 backdrop-blur-lg border-b shadow-sm hidden lg:block"
+  className="fixed top-[84px] left-0 right-0 z-40 backdrop-blur-lg border-b shadow-sm hidden lg:block"
 >
       <div className="px-4 sm:px-6 lg:px-8 py-2 max-w-[120rem] mx-auto">
         <div className="flex items-center justify-between">
 
-    <Link href={'/categories'} className="flex gap-x-2 items-center text-gray-600 font-semibold hover:underline text-base">
+    <Link href={'/categories'} className="flex gap-x-2  items-center text-gray-600 font-semibold hover:underline text-base cursor-pointer">
          <BiCategory className="size-4" />
       Categories
     </Link>

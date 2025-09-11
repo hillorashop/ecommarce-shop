@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { navLinks, siteMeta } from "@/data";
+import {  mobileNavLinks, siteMeta } from "@/data";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -68,7 +68,7 @@ export function MobileHeader() {
                     Menu
                   </h3>
                   <div className="space-y-2 px-4">
-                    {navLinks.map((link, idx) => (
+                    {mobileNavLinks.map((link, idx) => (
                       <Link
                         key={idx}
                         href={link.href}

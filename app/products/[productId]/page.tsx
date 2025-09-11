@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.name} | ${siteMeta.siteName}`,
+    title: `${product.name}`,
     description: product.subDescription || product.description?.slice(0, 150),
     openGraph: {
       title: product.name,

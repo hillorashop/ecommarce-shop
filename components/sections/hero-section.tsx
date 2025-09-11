@@ -14,7 +14,19 @@ import { useBillboards } from "@/hooks/use-billboards";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteMeta } from "@/data";
 
+
+const toRelativePath = (url: string) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname + parsed.search + parsed.hash; // only path + query + hash
+  } catch {
+    return url; // already relative
+  }
+}
+
+
 export const HeroSection = () => {
+
   const { data: billboards, isLoading } = useBillboards();
 
   const plugin = useRef(
@@ -32,7 +44,7 @@ export const HeroSection = () => {
 
   return (
     <section className="w-full">
-      <div className="w-full lg:pt-2">
+      <div className="w-full">
         <Carousel className="w-full" plugins={[plugin.current]} setApi={setApi}>
           <CarouselContent>
             {isLoading
@@ -50,7 +62,7 @@ export const HeroSection = () => {
   className="w-full relative aspect-[16/8] md:aspect-[16/7] lg:aspect-[16/4] overflow-hidden">
   {item.billboardImage ? (
     <Link
-      href={item.productLink || "#"}
+    href={toRelativePath(item.productLink)}
       className="block w-full h-full relative cursor-pointer"
     >
       <Image

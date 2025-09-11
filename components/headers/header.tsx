@@ -58,136 +58,139 @@ export function Header() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -120, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm"
+          className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm overflow-hidden"
         >
           <div className="max-w-[120rem] mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
-              <div className="relative flex items-center justify-between h-24 gap-8">
+          <div className="flex items-center justify-between h-20 gap-8 relative">
 
-                {/* Logo (absolute, won’t affect layout) */}
-                <div className="absolute -left-14 top-1/2 -translate-y-1/2 w-60 h-80">
+  {/* Logo (left side) */}
+<div className="flex-shrink-0 w-60 h-56 relative">
+  <Image
+    src="/logo.svg"
+    width={250}
+    height={100}
+    alt={siteMeta.siteName}
+    className="object-contain absolute translate-y-1/5 -translate-x-15"
+  />
+</div>
+
+  {/* Search (center) */}
+  <div className="flex-1 flex justify-center relative" ref={containerRef}>
+    <div className="w-full max-w-3xl relative">
+      <Input
+        type="text"
+        placeholder="Search your product"
+        className="w-full pl-4 pr-12 py-3 text-base"
+        value={productName}
+        onChange={(e) => {
+          const value = e.target.value;
+          setProductName(value);
+          if (value.trim() === "") {
+            setSearchResults([]);
+            return;
+          }
+          const filtered = products?.data?.filter((p) =>
+            p.name.toLowerCase().includes(value.toLowerCase())
+          );
+          setSearchResults(filtered as dbProduct[]);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            router.replace(`/products?productName=${encodeURIComponent(productName)}`);
+          }
+        }}
+      />
+      <button
+        className="absolute right-3 top-1/2 -translate-y-1/2"
+        type="button"
+        onClick={() => {
+          router.replace(`/products?productName=${encodeURIComponent(productName)}`);
+        }}
+      >
+        <Search className="h-6 w-6 text-gray-400" />
+      </button>
+
+      {/* Search Results */}
+      {searchResults.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 max-h-[400px] overflow-auto z-50 space-y-2 py-2 bg-white shadow-md rounded-md px-2">
+          {searchResults.map((product) => {
+            const hasDiscount =
+              product.discountPrice &&
+              product.discountPrice < product.price;
+
+            return (
+              <Card
+                key={product.id}
+                className="cursor-pointer hover:shadow-md transition flex flex-row items-center gap-4 p-2"
+                onClick={() => {
+                  setProductName(product.name);
+                  setSearchResults([]);
+                  router.replace(`/products/${product.id}`);
+                }}
+              >
+                <div className="w-14 h-14 flex-shrink-0 relative">
                   <Image
-                    src="/logo.svg"
-                    alt={siteMeta.siteName}
-                    fill
-                    className="object-contain"
+                    src={product.productImage || `${siteMeta.siteName}`}
+                    alt={product.name}
+                    width={56}
+                    height={56}
+                    className="object-cover rounded"
                   />
                 </div>
-
-                {/* Search (pushed right with margin so it doesn’t overlap logo) */}
-                <div className="ml-48 flex-1  max-w-4xl relative" ref={containerRef}>
-                  <Input
-                    type="text"
-                    placeholder="Search your product"
-                    className="w-full pl-4 pr-12 py-3 text-base"
-                    value={productName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setProductName(value);
-                      if (value.trim() === "") {
-                        setSearchResults([]);
-                        return;
-                      }
-                      const filtered = products?.data?.filter((p) =>
-                        p.name.toLowerCase().includes(value.toLowerCase())
-                      );
-                      setSearchResults(filtered as dbProduct[]);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        router.replace(`/products?productName=${encodeURIComponent(productName)}`);
-                      }
-                    }}
-                  />
-                  <button
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                    type="button"
-                    onClick={() => {
-                      router.replace(`/products?productName=${encodeURIComponent(productName)}`);
-                    }}
-                  >
-                    <Search className="h-6 w-6 text-gray-400" />
-                  </button>
-
-                  {/* Search Results */}
-                  {searchResults.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 mt-2 max-h-[400px] overflow-auto z-50 space-y-2 py-2 bg-white shadow-md rounded-lg">
-                      {searchResults.map((product) => {
-                        const hasDiscount =
-                          product.discountPrice &&
-                          product.discountPrice < product.price;
-
-                        return (
-                          <Card
-                            key={product.id}
-                            className="cursor-pointer hover:shadow-md transition flex flex-row items-center gap-4 p-2"
-                            onClick={() => {
-                              setProductName(product.name);
-                              setSearchResults([]);
-                              router.replace(`/products/${product.id}`);
-                            }}
-                          >
-                            <div className="w-14 h-14 flex-shrink-0 relative">
-                              <Image
-                                src={product.productImage || `${siteMeta.siteName}`}
-                                alt={product.name}
-                                width={56}
-                                height={56}
-                                className="object-cover rounded"
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="text-sm font-semibold text-gray-900">{product.name}</h3>
-                              <div className="flex items-baseline gap-2 text-sm font-semibold">
-                                {hasDiscount ? (
-                                  <>
-                                    <span>BDT {product.discountPrice}</span>
-                                    <span className="text-muted-foreground line-through text-xs">BDT {product.price}</span>
-                                  </>
-                                ) : (
-                                  <span className="text-gray-800">BDT {product.price}</span>
-                                )}
-                              </div>
-                            </div>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* Emergency Contact */}
-                <div className="flex  flex-col items-end gap-1 max-w-md">
-                  <p className="text-sm  text-muted-foreground  text-right leading-snug text-wrap">
-                    জরুরি প্রয়োজনীয় পণ্য বা অর্ডার সম্পর্কিত তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন অথবা কল করুন{" "}
-                    <span className="font-bold">+8801519558558</span>
-                  </p>
-                  <div className="flex items-center gap-6">
-                    {emergency_contact.map((s, i) => (
-                      <a
-                        key={i}
-                        href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative flex items-center justify-center w-12 h-12"
-                      >
-                        <Image
-                          src={s.Icon}
-                          alt={siteMeta.siteName}
-                          width={32}
-                          height={32}
-                          className="rounded-full overflow-hidden z-10"
-                        />
-                        <div
-                          className="absolute inset-0 border-2 rounded-full animate-ping"
-                          style={{ borderColor: s.bg }}
-                        />
-                      </a>
-                    ))}
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900">{product.name}</h3>
+                  <div className="flex items-baseline gap-2 text-sm font-semibold">
+                    {hasDiscount ? (
+                      <>
+                        <span>BDT {product.discountPrice}</span>
+                        <span className="text-muted-foreground line-through text-xs">BDT {product.price}</span>
+                      </>
+                    ) : (
+                      <span className="text-gray-800">BDT {product.price}</span>
+                    )}
                   </div>
                 </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </div>
 
-              </div>
+  {/* Emergency Contact (right side) */}
+  <div className="flex flex-col items-end gap-1 max-w-md">
+    <p className="text-sm text-muted-foreground text-right leading-snug text-wrap">
+      জরুরি প্রয়োজনীয় পণ্য বা অর্ডার সম্পর্কিত তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন অথবা কল করুন{" "}
+      <span className="font-bold">+8801519558558</span>
+    </p>
+    <div className="flex items-center gap-4">
+      {emergency_contact.map((s, i) => (
+        <a
+          key={i}
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative flex items-center justify-center w-8 h-8"
+        >
+          <Image
+            src={s.Icon}
+            alt={siteMeta.siteName}
+            width={24}
+            height={24}
+            className="rounded-full overflow-hidden z-10"
+          />
+          <div
+            className="absolute inset-0 border-2 rounded-full animate-ping"
+            style={{ borderColor: s.bg }}
+          />
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
             </div>
           </div>
         </motion.header>

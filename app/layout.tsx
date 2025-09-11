@@ -26,8 +26,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteMeta.siteName} | Your Trust`,
-    template: `%s | ${siteMeta.siteName}`,
+    default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
+    template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
   },
   icons:[{url:"/logo.svg",sizes: "32x32", href:"/"}],
   description: siteMeta.desc,
@@ -57,10 +57,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: process.env.NEXT_PUBLIC_BASE_URL,
-    languages: {
-      en: "https://your-domain.com/en",
-      bn: "https://your-domain.com/bn",
-    },
+
   },
 };
 
@@ -98,7 +95,7 @@ export default function RootLayout({
         <UserProvider>
           <main className="max-w-[120rem] mx-auto">
             <Navbar />
-            <div className="mt-16 lg:mt-40">
+            <div className="mt-16 lg:mt-38">
               {children}
               <Cart />
             </div>

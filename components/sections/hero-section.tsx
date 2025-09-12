@@ -59,7 +59,7 @@ export const HeroSection = () => {
               : billboards?.data?.map((item, index) => (
                 <CarouselItem
   key={item.id ?? index}
-  className="w-full relative aspect-[16/8] md:aspect-[16/7] lg:aspect-[16/4] overflow-hidden">
+  className="w-full relative aspect-[16/8] md:aspect-[16/7] lg:aspect-[14/5] overflow-hidden">
   {item.billboardImage ? (
     <Link
     href={toRelativePath(item.productLink)}
@@ -69,7 +69,7 @@ export const HeroSection = () => {
         src={item.billboardImage}
         alt={siteMeta.siteName}
         fill
-        className="object-cover object-center"
+        className="object-contain object-center"
         priority
       />
     </Link>

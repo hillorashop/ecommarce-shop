@@ -21,6 +21,7 @@ import { formatDate } from "@/lib/utils";
 import { useCustomQuery } from "@/hooks/use-custom-query";
 import { getOrders } from "@/actions/order";
 import { useState } from "react";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 
 interface Props {
   tabValue: string;
@@ -87,7 +88,7 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
                   onClick={() => setPage(prev => Math.max(prev - 1, 1))}
                   disabled={page === 1}
                 >
-                  Previous Page
+                  <ArrowBigLeft className="size-4"/>
                 </Button>
 
                 <span>
@@ -95,10 +96,11 @@ export const UserOrderList = ({ tabValue, userId }: Props) => {
                 </span>
 
                 <Button
+                size={"icon"}
                   onClick={() => setPage(prev => Math.min(prev + 1, orders?.pagination.totalPages || 1))}
                   disabled={page === orders?.pagination.totalPages}
                 >
-                  Next Page
+                  <ArrowBigRight className="size-4"/>
                 </Button>
               </div>
 

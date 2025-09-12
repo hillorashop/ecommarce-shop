@@ -59,7 +59,7 @@ export const HeroSection = () => {
               : billboards?.data?.map((item, index) => (
                 <CarouselItem
   key={item.id ?? index}
-  className="w-full relative aspect-[20/9] md:aspect-[16/7]  lg:aspect-[14/5] overflow-hidden">
+  className="w-full relative aspect-[20/9] md:aspect-[16/7]  lg:aspect-[14/6] overflow-hidden">
   {item.billboardImage ? (
     <Link
     href={toRelativePath(item.productLink)}

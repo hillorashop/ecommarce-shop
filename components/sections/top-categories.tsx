@@ -41,7 +41,7 @@ export const TopCategories = () => {
       ) : categories?.data && categories.data.length > 0 ? (
         <div className="relative mt-8">
           <Carousel className="w-full" plugins={[plugin.current]}>
-            <CarouselContent className="grid grid-flow-col auto-cols-[calc(50%-0.5rem)] sm:auto-cols-[calc(33.333%-0.75rem)] lg:auto-cols-[calc(25%-1rem)] gap-4 px-4 sm:px-8 py-2">
+            <CarouselContent className="grid grid-flow-col auto-cols-[calc(50%-0.5rem)] sm:auto-cols-[calc(33.333%-0.75rem)] lg:auto-cols-[calc(25%-1rem)] gap-4 px-4 sm:px-8 py-2 lg:justify-center">
               {categories.data.map((category, index) => (
                 <CarouselItem key={index} className="w-full"> 
                   <CategoryCard category={category} />

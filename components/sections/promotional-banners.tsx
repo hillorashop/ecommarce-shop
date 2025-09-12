@@ -6,13 +6,13 @@ import { motion } from "framer-motion";
 
 export function PromotionalBanners() {
   return (
-    <div className="bg-white">
+    <div className="">
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
 
           {/* === Left Hero Banner === */}
           <motion.div
-            className="w-full relative aspect-[14/7] lg:aspect-[14/8] rounded-lg overflow-hidden shadow-lg"
+            className="w-full relative aspect-[14/7] lg:aspect-[12/7] rounded-lg overflow-hidden"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -29,11 +29,11 @@ export function PromotionalBanners() {
           </motion.div>
 
           {/* === Right Column: Two stacked banners === */}
-          <div className="col-span-1 md:col-span-2 grid grid-rows-2 gap-2">
+          <div className="col-span-1 md:col-span-2 grid grid-rows-2 gap-4">
 
             {/* Top Banner */}
             <motion.div
-              className="w-full relative aspect-[30/6] lg:aspect-[30/4]  rounded-lg overflow-hidden shadow-md"
+              className="w-full relative aspect-[30/6] lg:aspect-[30/4]  rounded-lg overflow-hidden"
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -51,7 +51,7 @@ export function PromotionalBanners() {
 
             {/* Bottom Banner */}
             <motion.div
-              className="w-full relative aspect-[30/6]  lg:aspect-[32/4]  rounded-lg overflow-hidden shadow-md"
+              className="w-full relative aspect-[30/6]  lg:aspect-[30/4]  rounded-lg overflow-hidden "
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}

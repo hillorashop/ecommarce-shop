@@ -41,16 +41,17 @@ export function NewProducts() {
        <CarouselContent
   className="
     grid grid-flow-col 
-    auto-cols-[calc(50%-0.5rem)]     /* 2 cols → same as grid-cols-2 */
-    md:auto-cols-[calc(33.333%-0.67rem)] /* 3 cols → same as md:grid-cols-3 */
-    lg:auto-cols-[calc(20%-0.8rem)]  /* 5 cols → same as lg:grid-cols-5 */
+    auto-cols-[calc(50%-0.5rem)]     
+    md:auto-cols-[calc(33.333%-0.67rem)] 
+    lg:auto-cols-[calc(20%-0.8rem)]  
     gap-4 
     px-4 sm:px-8 lg:px-10 
     py-2
+    lg:justify-center
   "
 >
   {products.data.map((product) => (
-    <CarouselItem key={product.id} className="w-full">
+    <CarouselItem key={product.id} className="w-full lg:w-auto">
       <ProductCard product={product} />
     </CarouselItem>
   ))}

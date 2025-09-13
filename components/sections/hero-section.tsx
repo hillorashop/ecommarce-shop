@@ -57,11 +57,14 @@ export const HeroSection = () => {
                   </CarouselItem>
                 ))
               : billboards?.data?.map((item, index) => (
-                <CarouselItem
+<CarouselItem
   key={item.id ?? index}
-  className={`w-full relative overflow-hidden
-  ${item.billboardImage && item.billboardImageMobileDevice ? item.billboardImageMobileDevice ? "aspect-[23/6] md:aspect-[23/6]" : "lg:aspect-[12/3]" : "aspect-[23/6] md:aspect-[23/6]  lg:aspect-[12/3] "}
-  `}>
+  className={`w-full relative overflow-hidden ${
+    item.billboardImageMobileDevice
+      ? "aspect-[14/6] lg:aspect-[12/3]"
+      : "aspect-[23/6]  lg:aspect-[12/3]"
+  }`}
+>
   {item.billboardImage ? (
     <Link
       href={item.productLink ? toRelativePath(item.productLink) : "#"}
@@ -69,7 +72,7 @@ export const HeroSection = () => {
     >
       {item.billboardImageMobileDevice ? (
         <>
-          {/* Mobile → show below lg */}
+          {/* Mobile & MD devices */}
           <Image
             src={item.billboardImageMobileDevice}
             alt={siteMeta.siteName}
@@ -77,7 +80,7 @@ export const HeroSection = () => {
             className="object-contain object-center block lg:hidden"
             priority
           />
-          {/* LG → show on lg+ */}
+          {/* Large devices */}
           <Image
             src={item.billboardImage}
             alt={siteMeta.siteName}
@@ -87,7 +90,7 @@ export const HeroSection = () => {
           />
         </>
       ) : (
-        // Only LG → show everywhere
+        // Only LG → show on all devices
         <Image
           src={item.billboardImage}
           alt={siteMeta.siteName}
@@ -102,6 +105,7 @@ export const HeroSection = () => {
     <Skeleton className="w-full h-full rounded-lg" />
   )}
 </CarouselItem>
+
 
                 ))}
           </CarouselContent>

@@ -59,21 +59,46 @@ export const HeroSection = () => {
               : billboards?.data?.map((item, index) => (
                 <CarouselItem
   key={item.id ?? index}
-  className="w-full relative aspect-[23/6] md:aspect-[23/6]  lg:aspect-[12/3] overflow-hidden">
+  className={`w-full relative overflow-hidden
+  ${item.billboardImage && item.billboardImageMobileDevice ? item.billboardImageMobileDevice ? "aspect-[23/6] md:aspect-[23/6]" : "lg:aspect-[12/3]" : "aspect-[23/6] md:aspect-[23/6]  lg:aspect-[12/3] "}
+  `}>
   {item.billboardImage ? (
     <Link
-    href={toRelativePath(item.productLink)}
+      href={item.productLink ? toRelativePath(item.productLink) : "#"}
       className="block w-full h-full relative cursor-pointer"
     >
-      <Image
-        src={item.billboardImage}
-        alt={siteMeta.siteName}
-        fill
-        className="object-contain object-center"
-        priority
-      />
+      {item.billboardImageMobileDevice ? (
+        <>
+          {/* Mobile → show below lg */}
+          <Image
+            src={item.billboardImageMobileDevice}
+            alt={siteMeta.siteName}
+            fill
+            className="object-contain object-center block lg:hidden"
+            priority
+          />
+          {/* LG → show on lg+ */}
+          <Image
+            src={item.billboardImage}
+            alt={siteMeta.siteName}
+            fill
+            className="object-contain object-center hidden lg:block"
+            priority
+          />
+        </>
+      ) : (
+        // Only LG → show everywhere
+        <Image
+          src={item.billboardImage}
+          alt={siteMeta.siteName}
+          fill
+          className="object-contain object-center"
+          priority
+        />
+      )}
     </Link>
   ) : (
+    // No image → show Skeleton
     <Skeleton className="w-full h-full rounded-lg" />
   )}
 </CarouselItem>

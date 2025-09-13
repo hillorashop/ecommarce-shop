@@ -1,6 +1,7 @@
 export type dbBillboard = {
   id: string;
   billboardImage: string;
+  billboardImageMobileDevice:string | null;
   productLink: string;
 };
 

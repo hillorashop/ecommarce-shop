@@ -12,8 +12,8 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { data: products } = await getProducts()
   const resolvedParams = await params
-  const productId = resolvedParams.productId
-  const product = products.find((p) => p.id === productId)
+  const productId = decodeURIComponent(resolvedParams.productId)
+  const product = products.find((p) => p.productId === productId)
 
   if (!product) {
     return {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.name,
       description:  product.description?.slice(0, 100) || product.subDescription ,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.id}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
       type: "website", 
       siteName: `${siteMeta.siteName}`,
       images: [
@@ -49,10 +49,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ProductIdPage = async({ params }: Props) => {
 
   const resolvedParams = await params
-  const productId = resolvedParams.productId 
+  const productId = decodeURIComponent(resolvedParams.productId)
   
   const { data: products } = await getProducts();
-  const product = products.find((p) => p.id === productId);
+  const product = products.find((p) => p.productId === productId);
 
   if (!product) {
     return <p className="text-center py-10 sr-only">Product not found.</p>;

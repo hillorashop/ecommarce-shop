@@ -18,6 +18,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const {
     id,
+    productId,
     name,
     productImage,
     price,
@@ -72,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Image */}
-        <Link href={`/products/${id}`}>
+        <Link href={`/products/${productId}`}>
           <div className="w-full h-40 mb-4 relative rounded-xl overflow-hidden bg-gray-50">
             <Image
               src={productImage || `${siteMeta.siteName}`}

@@ -28,7 +28,7 @@ export const ProductClient = ({productId}:Props) => {
   const router = useRouter();
 
   const product: dbProduct | undefined = products?.data?.find(
-    (p) => p.id === productId
+    (p) =>p.productId === productId
   );
 
 
@@ -97,7 +97,7 @@ export const ProductClient = ({productId}:Props) => {
     (c) => c.id === product.categoryId
   );
 
-  const relatedProducts = products?.data?.filter((p) => p.id !== productId).slice(0, 5)
+  const relatedProducts = products?.data?.filter((p) => p.productId !== productId).slice(0, 5)
 
 
   const isInCart = cartItems.some((item) => item.id === product.id);

@@ -14,6 +14,7 @@ export type dbCategory = {
 
 export type dbProduct = {
   id: string;
+  productId:string;
   name: string;
   description: string
   subDescription: string;

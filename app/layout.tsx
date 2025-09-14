@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
   },
-  icons:[{url:"/logo.svg",sizes: "32x32", href:"/"}],
+  icons:[{url:"/logo.svg",sizes: "180x180", href:"/logo.svg"}],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),

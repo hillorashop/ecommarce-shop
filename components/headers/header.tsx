@@ -91,7 +91,7 @@ export function Header() {
             return;
           }
           const filtered = products?.data?.filter((p) =>
-            p.name.toLowerCase().includes(value.toLowerCase())
+            p.name.toLowerCase().includes(value.trim().toLowerCase())
           );
           setSearchResults(filtered as dbProduct[]);
         }}
@@ -162,8 +162,7 @@ export function Header() {
   {/* Emergency Contact (right side) */}
   <div className="flex flex-col items-end gap-1 max-w-md">
     <p className="text-sm text-muted-foreground text-right leading-snug text-wrap">
-      জরুরি প্রয়োজনীয় তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ বা কল করুন{" "}
-      <span className="font-bold">+8801519558558</span>
+      জরুরি প্রয়োজনীয় তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন - 
     </p>
     <div className="flex items-center gap-4">
       {emergency_contact.map((s, i) => (

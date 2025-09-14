@@ -176,7 +176,7 @@ export function MobileHeader() {
                      }
    
                      const filtered = products?.data?.filter((p) =>
-                       p.name.toLowerCase().includes(value.toLowerCase())
+                       p.name.toLowerCase().includes(value.trim().toLowerCase())
                      );
                      setSearchResults(filtered as dbProduct[]);
                    }}

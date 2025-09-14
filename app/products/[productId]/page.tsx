@@ -8,10 +8,14 @@ type Props = {
   params: Promise<{ productId: string }>;
 };
 
+function stripHtml(html: string) {
+  return html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { data: products } = await getProducts();
   const resolvedParams = await params;
-  const productId = decodeURIComponent(resolvedParams.productId);
+  const productId = resolvedParams.productId;
   const product = products.find((p) => p.productId === productId);
 
   if (!product) {
@@ -21,14 +25,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+    const plainDescription = stripHtml(product.description || product.subDescription || '');
+
   return {
     title: product.name,
-    description: product.description?.slice(0, 150) || product.subDescription,
+    description: plainDescription.slice(0, 150) || product.subDescription,
     openGraph: {
       title: product.name,
-      description: product.description?.slice(0, 100) || product.subDescription,
+      description: plainDescription.slice(0, 100) || product.subDescription,
       // ✅ Use encodeURIComponent for social sharing to avoid broken links
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${encodeURIComponent(product.productId)}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
       type: "website",
       siteName: siteMeta.siteName,
       images: [
@@ -46,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const ProductIdPage = async ({ params }: Props) => {
   const resolvedParams = await params;
-  const productId = decodeURIComponent(resolvedParams.productId);
+  const productId = (resolvedParams.productId);
 
   const { data: products } = await getProducts();
   const product = products.find((p) => p.productId === productId);
@@ -72,7 +78,7 @@ const ProductIdPage = async ({ params }: Props) => {
             brand: { "@type": "Brand", name: siteMeta.siteName },
             offers: {
               "@type": "Offer",
-              url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${encodeURIComponent(product.productId)}`,
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
               priceCurrency: "BDT",
               price: product.price,
               availability: product.inStocks > 0 ? "InStock" : "OutOfStock",

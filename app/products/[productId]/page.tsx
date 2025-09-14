@@ -29,10 +29,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: product.name,
-    description: plainDescription.slice(0, 150) || product.subDescription,
+    description: plainDescription.slice(0, 400) || product.subDescription,
     openGraph: {
       title: product.name,
-      description: plainDescription.slice(0, 100) || product.subDescription,
+      description: plainDescription.slice(0, 400) || product.subDescription,
       // ✅ Use encodeURIComponent for social sharing to avoid broken links
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
       type: "website",

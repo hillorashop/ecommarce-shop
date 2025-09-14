@@ -29,7 +29,7 @@ export function PromotionalBanners() {
           </motion.div>
 
           {/* === Right Column: Two stacked banners === */}
-          <div className="col-span-1 md:col-span-2 grid grid-rows-2 gap-4">
+          <div className="col-span-1 md:col-span-2 grid grid-rows-2 gap-5">
 
             {/* Top Banner */}
             <motion.div

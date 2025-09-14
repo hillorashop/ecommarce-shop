@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${product.name}`,
-    description: product.subDescription || product.description?.slice(0, 150),
+    description: product.description?.slice(0, 150) || product.subDescription ,
     openGraph: {
       title: product.name,
-      description: product.subDescription || product.description,
+      description:  product.description?.slice(0, 100) || product.subDescription ,
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.id}`,
       type: "website", 
       siteName: `${siteMeta.siteName}`,
@@ -39,7 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: product.name,
         },
       ],
+      locale:"bn_BD",
     },
+    
   }
 }
 

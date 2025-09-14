@@ -5,6 +5,7 @@ import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { ONE_DAY, THREEDAY } from "@/data";
 import { useEffect, useState } from "react";
+import FirstTimeDataToast from "./first-time-data-toast";
 
 interface Props {
   children: React.ReactNode;
@@ -47,6 +48,7 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydrate(queryClient)}>
         {children}
+        <FirstTimeDataToast/>
       </HydrationBoundary>
     </QueryClientProvider>
   );

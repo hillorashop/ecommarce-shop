@@ -11,10 +11,7 @@ export function Footer() {
     { label: "Return Policy", href: "/return-policy" },
   ];
 
-  const myAccount = [
-    { label: "Sign In", href: "#" },
-    { label: "Track Order", href: "#" },
-  ];
+
 
   const payments = [
     "/logo/cod.png",
@@ -25,8 +22,7 @@ export function Footer() {
 
   const socialLinks = [
     { href: "#", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
-    { href: "#", Icon: "/icons/instagram.svg", bg:"#be123c",},
-    { href: "#", Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+    { href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।", Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
    
   ];
 

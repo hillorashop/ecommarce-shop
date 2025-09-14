@@ -8,29 +8,29 @@ type Props = {
   params: Promise<{ productId: string }>;
 };
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { data: products } = await getProducts()
-  const resolvedParams = await params
-  const productId = decodeURIComponent(resolvedParams.productId)
-  const product = products.find((p) => p.productId === productId)
+  const { data: products } = await getProducts();
+  const resolvedParams = await params;
+  const productId = decodeURIComponent(resolvedParams.productId);
+  const product = products.find((p) => p.productId === productId);
 
   if (!product) {
     return {
       title: `Product not found | ${siteMeta.siteName}`,
       description: "The product you're looking for does not exist.",
-    }
+    };
   }
 
   return {
-    title: `${product.name}`,
-    description: product.description?.slice(0, 150) || product.subDescription ,
+    title: product.name,
+    description: product.description?.slice(0, 150) || product.subDescription,
     openGraph: {
       title: product.name,
-      description:  product.description?.slice(0, 100) || product.subDescription ,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
-      type: "website", 
-      siteName: `${siteMeta.siteName}`,
+      description: product.description?.slice(0, 100) || product.subDescription,
+      // ✅ Use encodeURIComponent for social sharing to avoid broken links
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${encodeURIComponent(product.productId)}`,
+      type: "website",
+      siteName: siteMeta.siteName,
       images: [
         {
           url: product.productImage || `${siteMeta.siteName}.png`,
@@ -39,18 +39,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: product.name,
         },
       ],
-      locale:"bn_BD",
+      locale: "bn_BD",
     },
-    
-  }
+  };
 }
 
+const ProductIdPage = async ({ params }: Props) => {
+  const resolvedParams = await params;
+  const productId = decodeURIComponent(resolvedParams.productId);
 
-const ProductIdPage = async({ params }: Props) => {
-
-  const resolvedParams = await params
-  const productId = decodeURIComponent(resolvedParams.productId)
-  
   const { data: products } = await getProducts();
   const product = products.find((p) => p.productId === productId);
 
@@ -58,11 +55,10 @@ const ProductIdPage = async({ params }: Props) => {
     return <p className="text-center py-10 sr-only">Product not found.</p>;
   }
 
-
   return (
     <div className="p-6 px-4 max-w-7xl w-full mx-auto">
-
-     <Script
+      {/* ✅ Use productId for URL, not DB id */}
+      <Script
         type="application/ld+json"
         id="product-schema"
         dangerouslySetInnerHTML={{
@@ -73,21 +69,20 @@ const ProductIdPage = async({ params }: Props) => {
             image: [product.productImage || `/${siteMeta.siteName}.png`],
             description: product.description,
             sku: product.id,
-            brand: { "@type": "Brand", name: `${siteMeta.siteName}` },
+            brand: { "@type": "Brand", name: siteMeta.siteName },
             offers: {
               "@type": "Offer",
-              url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.id}`,
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${encodeURIComponent(product.productId)}`,
               priceCurrency: "BDT",
               price: product.price,
-              availability: product.inStocks,
-              discountPrice:product.discountPrice,
+              availability: product.inStocks > 0 ? "InStock" : "OutOfStock",
+              discountPrice: product.discountPrice,
             },
           }),
         }}
       />
 
-    <ProductClient productId={productId}/>
-
+      <ProductClient productId={productId} />
     </div>
   );
 };

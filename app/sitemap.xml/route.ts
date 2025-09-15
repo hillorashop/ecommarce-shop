@@ -24,7 +24,7 @@ export async function GET() {
     console.error("Failed to load categories:", err);
   }
 
-  const staticPages = ["", "/about", "/faq", "/categories"];
+  const staticPages = ["", "/about", "/faq", "/categories", "/return-policy", "/privacy-policy", "/sign-up"];
 
   const urls = staticPages
     .map(

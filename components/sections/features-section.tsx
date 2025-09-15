@@ -47,7 +47,7 @@ export function FeaturesSection() {
             return (
               <div
                 key={index}
-                className="p-8 rounded-2xl shadow-lg flex flex-col items-center bg-white border border-gray-100 hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                className="p-4 rounded-2xl shadow-lg flex flex-col items-center bg-white border border-gray-100 hover:scale-105 hover:shadow-2xl transition-all duration-300"
               >
                 <div className="flex items-center justify-center size-12 rounded-full bg-yellow-400 text-white mb-6 shadow-md">
                   <Icon className="size-6" />

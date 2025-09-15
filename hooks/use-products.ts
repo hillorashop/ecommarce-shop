@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProducts, ProductsResponse } from "@/actions/product";
-import { ONE_DAY, TWODAY } from "@/data";
+import { ONE_DAY } from "@/data";
 
 interface UseProductsOptions {
   page?: number;
@@ -13,8 +13,20 @@ interface UseProductsOptions {
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
+  // Build a stable query key instead of passing the whole object
+  const queryKey = [
+    "products",
+    options.page ?? 1,
+    options.sortBy ?? null,
+    options.sortOrder ?? null,
+    options.productName ?? null,
+    options.minPrice ?? null,
+    options.maxPrice ?? null,
+    options.categoryIds?.join(",") ?? null,
+  ];
+
   return useQuery<ProductsResponse, Error>({
-    queryKey: ["products", options], // cache key depends on filters
+    queryKey,
     queryFn: () =>
       getProducts(
         options.page,
@@ -25,10 +37,9 @@ export const useProducts = (options: UseProductsOptions = {}) => {
         options.maxPrice,
         options.categoryIds
       ),
-    staleTime:ONE_DAY ,    
+    staleTime: ONE_DAY,
     gcTime: ONE_DAY,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false,     
-
+    refetchOnReconnect: false,
   });
 };

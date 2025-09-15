@@ -9,12 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {  MessageSquareMore, Search, Star,} from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
-import { dbProduct } from "@/types/type";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCategories } from "@/hooks/use-categories";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { siteMeta } from "@/data";
+import { ONE_DAY, siteMeta } from "@/data";
+import { useProduct } from "@/hooks/use-product";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getProduct, ProductResponse } from "@/actions/product";
+
 
 interface Props {
   productId:string;
@@ -22,17 +24,25 @@ interface Props {
 
 export const ProductClient = ({productId}:Props) => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const { data: products, isLoading } = useProducts();
   const { cartItems, addItem } = useCart();
-  const { data: categories, isLoading: categoryLoading } = useCategories();
+  const { data: products, isLoading:productLoading } = useProducts({page:1});
   const router = useRouter();
+const { data: product, isLoading } = useCustomQuery<ProductResponse>(
+  ["product", productId], // unique key for each product
+  () => getProduct(productId),
+  {
+    staleTime: ONE_DAY,    // data is fresh for 1 day
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  }
+);
 
-  const product: dbProduct | undefined = products?.data?.find(
-    (p) =>p.productId === productId
-  );
 
 
-    if (isLoading || categoryLoading) {
+
+
+    if (isLoading || productLoading) {
     return (
        <div className="p-6 px-8 max-w-7xl w-full mx-auto space-y-8">
       {/* Product ID Skeleton */}
@@ -89,18 +99,16 @@ export const ProductClient = ({productId}:Props) => {
 
   if (!product) return <p className="text-center py-10">Product not found.</p>;
 
-  const productImages = product.productImage
-    ? [product.productImage]
+  const productImages = product
+    ? [product.data.productImage]
     : [`${siteMeta.siteName}`];
 
-  const productCategory = categories?.data.find(
-    (c) => c.id === product.categoryId
-  );
+
 
   const relatedProducts = products?.data?.filter((p) => p.productId !== productId).slice(0, 5)
 
 
-  const isInCart = cartItems.some((item) => item.id === product.id);
+  const isInCart = cartItems.some((item) => item.id === product.data.id);
 
 
   
@@ -120,7 +128,7 @@ export const ProductClient = ({productId}:Props) => {
           <div className="relative  rounded-2xl p-4 shadow-sm">
             <Image
               src={productImages[selectedImage]}
-              alt={product.name}
+              alt={product.data.name}
               width={500}
               height={500}
               className="w-full h-auto rounded-xl object-cover"
@@ -158,38 +166,38 @@ export const ProductClient = ({productId}:Props) => {
 
         {/* Product Details */}
         <div className="space-y-6">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <h1 className="text-3xl font-bold">{product.data.name}</h1>
           <div className="flex items-center gap-3">
             <span className="text-3xl font-extrabold">
-              BDT {product.discountPrice ?? product.price}
+              BDT {product.data.discountPrice ?? product.data.price}
             </span>
-            {product.discountPrice && (
+            {product.data.discountPrice && (
               <span className="line-through text-gray-400">
-                BDT {product.price}
+                BDT {product.data.price}
               </span>
             )}
           </div>
           <p className="text-gray-600 leading-relaxed">
-            {product.subDescription}
+            {product.data.subDescription}
           </p>
 
           <div>
             <h3 className="font-semibold mb-2 text-gray-800">Category</h3>
-            <Badge className="bg-green-600">{productCategory?.name}</Badge>
+            <Badge className="bg-green-600">{product.data.category?.name}</Badge>
           </div>
 
           {/* Buttons */}
           <div className="flex items-center gap-4 pt-4">
             <Button
-              onClick={() => addItem(product)}
-              disabled={product.inStocks <= 0 || isInCart} 
+              onClick={() => addItem(product.data)}
+              disabled={product.data.inStocks <= 0 || isInCart} 
             >
               {isInCart ? "Already in Cart" : "Add to Cart"}
             </Button>
             <Button
               variant="secondary"
-              disabled={product.inStocks <= 0 }
-              onClick={() => router.push(`/checkout?productId=${product.id}`)}
+              disabled={product.data.inStocks <= 0 }
+              onClick={() => router.push(`/checkout?productId=${product.data.id}`)}
             >
               Buy Now
             </Button>
@@ -212,7 +220,7 @@ export const ProductClient = ({productId}:Props) => {
             <CardContent className="p-6">
                <div
           className="prose max-w-none text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: product.description || "" }}
+          dangerouslySetInnerHTML={{ __html: product.data.description || "" }}
         />
             </CardContent>
           </Card>

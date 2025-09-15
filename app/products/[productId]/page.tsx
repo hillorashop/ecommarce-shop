@@ -1,4 +1,4 @@
-import { getProducts } from "@/actions/product";
+import { getProduct} from "@/actions/product";
 import { ProductClient } from "../_components/product-client";
 import { Metadata } from "next";
 import Script from "next/script";
@@ -13,11 +13,9 @@ function stripHtml(html: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { data: products } = await getProducts();
   const resolvedParams = await params;
   const productId = resolvedParams.productId;
-  const product = products.find((p) => p.productId === productId);
-
+  const { data: product } = await getProduct(productId);
   if (!product) {
     return {
       title: `Product not found | ${siteMeta.siteName}`,
@@ -54,8 +52,8 @@ const ProductIdPage = async ({ params }: Props) => {
   const resolvedParams = await params;
   const productId = (resolvedParams.productId);
 
-  const { data: products } = await getProducts();
-  const product = products.find((p) => p.productId === productId);
+  const { data: product } = await getProduct(productId);
+ 
 
   if (!product) {
     return <p className="text-center py-10 sr-only">Product not found.</p>;
@@ -64,7 +62,7 @@ const ProductIdPage = async ({ params }: Props) => {
   return (
     <div className="p-6 px-4 max-w-7xl w-full mx-auto">
       {/* ✅ Use productId for URL, not DB id */}
-      <Script
+      {/* <Script
         type="application/ld+json"
         id="product-schema"
         dangerouslySetInnerHTML={{
@@ -86,7 +84,7 @@ const ProductIdPage = async ({ params }: Props) => {
             },
           }),
         }}
-      />
+      /> */}
 
       <ProductClient productId={productId} />
     </div>

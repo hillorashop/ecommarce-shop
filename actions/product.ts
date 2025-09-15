@@ -1,4 +1,4 @@
-import { dbProduct } from "@/types/type";
+import { dbProduct, dbCategory } from "@/types/type";
 
 export type ProductsResponse = {
   data: dbProduct[];
@@ -38,4 +38,16 @@ export const getProducts = async (
   if (!res.ok) throw new Error("Failed to load Products");
 
   return await res.json();
+};
+
+export type ProductResponse = {
+  data: dbProduct & {
+    category: dbCategory;
+  };
+};
+
+export const getProduct = async (productId: string): Promise<ProductResponse> => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/products/${productId}`);
+  if (!res.ok) throw new Error("Failed to fetch product");
+  return res.json();
 };

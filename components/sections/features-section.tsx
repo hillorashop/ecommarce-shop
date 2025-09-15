@@ -8,20 +8,14 @@ export function FeaturesSection() {
   const features = [
     {
       title: "Authentic Local Products",
-      description:
-        "Experience the true essence of Khagrachari with our carefully selected traditional goods crafted by local artisans.",
       icon: ShieldCheck,
     },
     {
       title: "Friendly Support",
-      description:
-        "Have questions? Our dedicated Hillora support team is always here to guide you with care and respect.",
       icon: Headphones,
     },
     {
       title: "Fast & Affordable Delivery",
-      description:
-        "Get Khagrachari’s finest products delivered straight to your doorstep quickly and affordably.",
       icon: Truck,
     },
   ];
@@ -47,7 +41,7 @@ export function FeaturesSection() {
         </p>
 
         {/* Features */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-4xl mx-auto">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -61,9 +55,6 @@ export function FeaturesSection() {
                 <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
               </div>
             );
           })}

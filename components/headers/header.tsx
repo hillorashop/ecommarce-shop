@@ -161,9 +161,6 @@ export function Header() {
 
   {/* Emergency Contact (right side) */}
   <div className="flex flex-col items-end gap-1 max-w-md">
-    <p className="text-sm text-muted-foreground text-right leading-snug text-wrap">
-      জরুরি প্রয়োজনীয় তথ্যের জন্য সরাসরি আমাদেরকে মেসেজ করুন - 
-    </p>
     <div className="flex items-center gap-4">
       {emergency_contact.map((s, i) => (
         <a

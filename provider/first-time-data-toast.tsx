@@ -12,19 +12,23 @@ export default function FirstTimeDataToast() {
 
     const QUERY_CACHE_KEY = "REACT_QUERY_OFFLINE_CACHE";
     const AUTH_TOKEN = "auth_token";
+    const TOAST_SHOWN_KEY = "toast_shown"; // new flag
 
-    // Show toast if React Query cache exists
-    if (localStorage.getItem(QUERY_CACHE_KEY)) {
-      setShowCacheToast(true);
-      const timer = setTimeout(() => setShowCacheToast(false),20 * 1000);
-      return () => clearTimeout(timer);
-    }
+    // ✅ Only show toast if cache/auth exists AND toast has never been shown before
+    if (!localStorage.getItem(TOAST_SHOWN_KEY)) {
+      if (localStorage.getItem(QUERY_CACHE_KEY)) {
+        setShowCacheToast(true);
+        localStorage.setItem(TOAST_SHOWN_KEY, "true"); // mark as shown
+        const timer = setTimeout(() => setShowCacheToast(false), 20 * 1000);
+        return () => clearTimeout(timer);
+      }
 
-    // Show toast if Auth token exists
-    if (localStorage.getItem(AUTH_TOKEN)) {
-      setShowAuthToast(true);
-      const timer = setTimeout(() => setShowAuthToast(false),20 * 1000);
-      return () => clearTimeout(timer);
+      if (localStorage.getItem(AUTH_TOKEN)) {
+        setShowAuthToast(true);
+        localStorage.setItem(TOAST_SHOWN_KEY, "true"); // mark as shown
+        const timer = setTimeout(() => setShowAuthToast(false), 20 * 1000);
+        return () => clearTimeout(timer);
+      }
     }
   }, []);
 

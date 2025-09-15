@@ -41,7 +41,7 @@ export function FeaturesSection() {
         </p>
 
         {/* Features */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-4xl mx-auto">
+        <div className="mt-4 grid grid-cols-1  md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (

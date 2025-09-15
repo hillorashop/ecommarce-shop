@@ -24,7 +24,7 @@ export const TopCategories = () => {
   );
 
   return (
-    <div className="py-16 w-full max-w-5xl mx-auto">
+    <div className="py-4 lg:py-8 w-full max-w-5xl mx-auto">
       <HeadingTitle title="Top Categories" />
 
       {isLoading ? (

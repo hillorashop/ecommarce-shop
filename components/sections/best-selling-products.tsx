@@ -11,7 +11,7 @@ export function BestSelling() {
   const { data: products, isLoading, error } = useProducts({page:1});
 
   return (
-    <div className="py-16 w-full">
+    <div className="py-4 lg:py-8 w-full">
       <div className="space-y-8 w-full">
 
         <HeadingTitle title="  Best Selling"/>

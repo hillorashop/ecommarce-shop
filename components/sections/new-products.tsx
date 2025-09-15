@@ -26,7 +26,7 @@ export function NewProducts() {
   );
 
   return (
-    <div className="py-4 lg:py-16 bg-gray-50  lg:mt-10 relative">
+    <div className="py-4 lg:py-8 bg-gray-50   relative">
       <HeadingTitle title="New Products" />
 
       {!isClient || isLoading ? (

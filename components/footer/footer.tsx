@@ -23,6 +23,11 @@ export function Footer() {
   const socialLinks = [
     { href: "#", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
     { href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।", Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+    {
+    href: "https://m.me/yourpageusername?ref=order_now",
+    Icon: "/icons/messenger.svg.webp",
+    bg: "#be123c",
+  },
    
   ];
 
@@ -107,24 +112,31 @@ export function Footer() {
             ))}
           </div>
 
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 lg:space-x-8">
             {socialLinks.map((s, i) => (
-              <a
-                key={i}
-                href={s.href}
-                target="_blank"
-                className="relative"
-              >
-                <Image
-                src={s.Icon}
-                alt={siteMeta.siteName}
-                width={30}
-                height={30}
-                className="rounded-full  overflow-hidden"
-                />
-                <div className="absolute inset-0 border-2 rounded-full pb-4 animate-ping" style={{borderColor:s.bg}}/>
-             
-              </a>
+                  <a
+                     key={i}
+                     href={s.href}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="relative flex items-center justify-center w-8 h-8 z-50"
+                   >
+                     <Image
+                       src={s.Icon}
+                       alt={siteMeta.siteName}
+                       width={24}
+                       height={24}
+                       className="rounded-full overflow-hidden z-10"
+                     />
+                     <div
+                       className="absolute inset-1 border-2 rounded-full animate-ping duration-200"
+                       style={{ borderColor: s.bg }}
+                     />
+                         <div
+                       className="absolute -inset-0.5 border-2 rounded-full animate-ping duration-100"
+                       style={{ borderColor: s.bg }}
+                     />
+                   </a>
             ))}
           </div>
         </div>

@@ -12,6 +12,7 @@ import { siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
 
 const emergency_contact = [
+    { href: "#", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
   {
     href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।",
     Icon: "/icons/whatsapp.svg",
@@ -62,7 +63,7 @@ export function Header() {
         >
           <div className="max-w-[120rem] mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
-          <div className="flex items-center justify-between h-20 gap-8 relative">
+          <div className="flex items-center justify-between h-16 gap-8 relative">
 
   {/* Logo (left side) */}
 <div className="flex-shrink-0 w-60 h-56 relative">
@@ -161,7 +162,7 @@ export function Header() {
 
   {/* Emergency Contact (right side) */}
   <div className="flex flex-col items-end gap-1 max-w-md">
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-8">
       {emergency_contact.map((s, i) => (
         <a
           key={i}
@@ -178,7 +179,11 @@ export function Header() {
             className="rounded-full overflow-hidden z-10"
           />
           <div
-            className="absolute inset-0 border-2 rounded-full animate-ping"
+            className="absolute inset-1 border-2 rounded-full animate-ping duration-200"
+            style={{ borderColor: s.bg }}
+          />
+              <div
+            className="absolute -inset-0.5 border-2 rounded-full animate-ping duration-100"
             style={{ borderColor: s.bg }}
           />
         </a>

@@ -7,6 +7,7 @@ import { dbCategory } from "@/types/type";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 
 interface Props {
   initialPage: number;
@@ -48,7 +49,7 @@ export const CategoryContent = ({ initialPage }: Props) => {
                 currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-primary transition"
               }`}
             >
-              Previous
+              <ArrowBigLeft className="size-4"/>
             </Link>
 
             <span className="text-sm font-semibold text-muted-foreground">
@@ -61,7 +62,7 @@ export const CategoryContent = ({ initialPage }: Props) => {
                 currentPage >= categories.totalPages ? "pointer-events-none opacity-50" : "hover:bg-primary transition"
               }`}
             >
-              Next
+              <ArrowBigRight className="size-4"/>
             </Link>
           </div>
         </>

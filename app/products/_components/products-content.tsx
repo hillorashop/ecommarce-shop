@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 import { useProducts } from "@/hooks/use-products";
 import { dbProduct } from "@/types/type";
 
@@ -73,11 +73,11 @@ export const ProductsContent = ({
           {/* Pagination */}
           <div className="flex justify-center items-center gap-4 pt-10">
             <Button
-              variant={"outline"}
+            size={"icon"}
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}
             >
-              Previous
+               <ArrowBigLeft className="size-4"/>
             </Button>
 
             <span className="text-sm text-muted-foreground font-medium">
@@ -85,11 +85,11 @@ export const ProductsContent = ({
             </span>
 
             <Button
-              variant={"outline"}
+            size={"icon"}
               disabled={currentPage >= products.totalPages}
               onClick={() => setCurrentPage((prev) => prev + 1)}
             >
-              Next
+        <ArrowBigRight className="size-4"/>
             </Button>
           </div>
         </>

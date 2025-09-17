@@ -62,7 +62,7 @@ const ProductIdPage = async ({ params }: Props) => {
   return (
     <div className="p-6 px-4 max-w-7xl w-full mx-auto">
       {/* ✅ Use productId for URL, not DB id */}
-      {/* <Script
+      <Script
         type="application/ld+json"
         id="product-schema"
         dangerouslySetInnerHTML={{
@@ -84,7 +84,7 @@ const ProductIdPage = async ({ params }: Props) => {
             },
           }),
         }}
-      /> */}
+      />
 
       <ProductClient productId={productId} />
     </div>

@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
-import { dbOrder, dbOrderItem, dbProduct } from "@/types/type";
+import { dbOrder, dbOrderItem} from "@/types/type";
 import { formatDate } from "@/lib/utils";
 import { useProducts } from "@/hooks/use-products";
 import { useRouter } from "next/navigation";
 import { siteMeta } from "@/data";
+import { dbProductwihtoutAll } from "@/actions/product";
 
 interface Props {
   order: dbOrder;
@@ -189,7 +190,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
             </thead>
             <tbody>
               {order.orderItems?.map((item: dbOrderItem) => {
-                const product = products?.data.find((p: dbProduct) => p.id === item.productId);
+                const product = products?.data.find((p: dbProductwihtoutAll) => p.id === item.productId);
                 if (!product) return null;
                 const subtotal = (product.discountPrice || product.price) * item.quantity;
                 const discountAmount = product.discountPrice ? (product.price - product.discountPrice) * item.quantity : 0;

@@ -1,7 +1,22 @@
-import { dbProduct, dbCategory } from "@/types/type";
+import { dbProduct, dbCategory, dbReview } from "@/types/type";
+
+export type dbProductwihtoutAll = {
+
+    id: string;
+    productId:string;
+    name: string;
+    productImage: string;
+    price: number;
+    discountPrice?: number;
+    packageQuantity: string;
+    packageQuantityType: string;
+    inStocks: number;
+    reviews: dbReview[];    
+  
+}
 
 export type ProductsResponse = {
-  data: dbProduct[];
+  data: dbProductwihtoutAll[];
   page: number;
   perPage: number;
   total: number;

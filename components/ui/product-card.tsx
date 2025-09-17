@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { dbProduct } from "@/types/type";
 import { useCart } from "@/hooks/use-store";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { siteMeta } from "@/data";
+import { dbProductwihtoutAll } from "@/actions/product";
 
 interface ProductCardProps {
-  product: dbProduct;
+  product: dbProductwihtoutAll;
 }
 
 export function ProductCard({ product }: ProductCardProps) {

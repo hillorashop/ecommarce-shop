@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { dbProduct } from "@/types/type";
+import { dbProductwihtoutAll } from "@/actions/product";
 
-export interface CartItem extends dbProduct {
+export interface CartItem extends dbProductwihtoutAll {
   cartQuantity: number; // ✅ separate numeric quantity for the cart
 }
 
 interface ProductStore {
   cartItems: CartItem[];
-  addItem: (item: dbProduct) => void;
+  addItem: (item: dbProductwihtoutAll) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
 }

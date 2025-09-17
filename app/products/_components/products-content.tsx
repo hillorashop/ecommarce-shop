@@ -5,9 +5,10 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 import { useProducts } from "@/hooks/use-products";
-import { dbProduct } from "@/types/type";
+
 
 import {useState } from "react";
+import { dbProductwihtoutAll } from "@/actions/product";
 
 interface Props {
   sortBy?: "price" | "category" | "createdAt";
@@ -65,7 +66,7 @@ export const ProductsContent = ({
         <>
           {/* Products Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
-            {products.data.map((product: dbProduct, index: number) => (
+            {products.data.map((product: dbProductwihtoutAll, index: number) => (
               <ProductCard product={product} key={index} />
             ))}
           </div>

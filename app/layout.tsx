@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   icons: [
     { rel: "icon", url: "/favicon.ico" },
-    { rel: "apple-touch-icon", url: "/logo.png", sizes: "180x180" },
+    { rel: "apple-touch-icon", url: "/logo.svg", sizes: "180x180" },
   ],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
@@ -72,7 +72,7 @@ export default function RootLayout({
       <head>
         {/* ✅ Favicons */}
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo.svg" />
 
         {/* ✅ Bangladesh SEO specific */}
         <meta
@@ -93,7 +93,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: siteMeta.siteName,
               url: process.env.NEXT_PUBLIC_BASE_URL,
-              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`,
+              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.svg`,
             }),
           }}
         />

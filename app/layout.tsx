@@ -13,7 +13,6 @@ import { ReactQueryClientProvider } from "@/provider/queryClient-provider";
 import TopLoadingBar from "@/components/top-loading-bar";
 import Script from "next/script";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,7 +28,10 @@ export const metadata: Metadata = {
     default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
   },
-  icons:[{url:"/logo.svg",sizes: "180x180", href:"/logo.svg"}],
+  icons: [
+    { rel: "icon", url: "/favicon.ico" },
+    { rel: "apple-touch-icon", url: "/logo.png", sizes: "180x180" },
+  ],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
@@ -42,14 +44,14 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-                url: `${siteMeta.openGraph.image}`, 
-                width: 1200,
-                height: 630,
-      }
+        url: `${siteMeta.openGraph.image}`,
+        width: 1200,
+        height: 630,
+      },
     ],
   },
   twitter: {
-    card:"summary_large_image",
+    card: "summary_large_image",
     title: siteMeta.twitter.title,
     description: siteMeta.twitter.description,
     creator: siteMeta.twitter.creator,
@@ -57,10 +59,8 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: process.env.NEXT_PUBLIC_BASE_URL,
-
   },
 };
-
 
 export default function RootLayout({
   children,
@@ -70,13 +70,36 @@ export default function RootLayout({
   return (
     <html lang="bn" suppressHydrationWarning>
       <head>
+        {/* ✅ Favicons */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+
         {/* ✅ Bangladesh SEO specific */}
-        <meta name="google-site-verification" content="WjC9PZ6_fnkB0mYfs3I9mr3CVQgeauW-japi-LW31cM" />
+        <meta
+          name="google-site-verification"
+          content="WjC9PZ6_fnkB0mYfs3I9mr3CVQgeauW-japi-LW31cM"
+        />
         <meta name="geo.region" content="BD" />
         <meta name="geo.placename" content="Khagrachari" />
         <meta name="geo.position" content="23.1193;91.9847" />
         <meta name="ICBM" content="23.1193, 91.9847" />
-          <Script id="gtm" strategy="afterInteractive">
+
+        {/* ✅ Organization Schema (so Google shows Hillora, not Vercel) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: siteMeta.siteName,
+              url: process.env.NEXT_PUBLIC_BASE_URL,
+              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`,
+            }),
+          }}
+        />
+
+        {/* ✅ Google Tag Manager */}
+        <Script id="gtm" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -90,22 +113,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         <TopLoadingBar />
-         <ReactQueryClientProvider>
-        <UserProvider>
-          <main className="max-w-[120rem] mx-auto">
-            <Navbar />
-            <div className="mt-14 lg:mt-34">
-              {children}
-              <Cart />
-            </div>
-            <FeaturesSection />
-            <Footer />
-          </main>
-          <Toaster />
-          <MobileFooterNavbar />
-        </UserProvider>
-       </ReactQueryClientProvider>
+        <TopLoadingBar />
+        <ReactQueryClientProvider>
+          <UserProvider>
+            <main className="max-w-[120rem] mx-auto">
+              <Navbar />
+              <div className="mt-14 lg:mt-34">
+                {children}
+                <Cart />
+              </div>
+              <FeaturesSection />
+              <Footer />
+            </main>
+            <Toaster />
+            <MobileFooterNavbar />
+          </UserProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

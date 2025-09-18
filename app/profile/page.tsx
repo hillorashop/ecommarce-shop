@@ -59,9 +59,26 @@ const ProfilePage = () => {
     }
   }, [user, loaded, profileForm, router]);
 
-  const handleProfile = (data: userInput) => {
-    updateProfile(data, { onSuccess: () => setIsEdit(false) });
-  };
+const handleProfile = (data: userInput) => {
+  if (!user) return;
+
+  // ✅ Check if any data actually changed
+  const isChanged =
+    data.name !== user.name ||
+    data.mobileNumber !== user.mobileNumber ||
+    data.address !== user.address;
+
+  if (!isChanged) {
+    setIsEdit(false);
+    return;
+  }
+
+  // Only update if something changed
+  updateProfile(data, {
+    onSuccess: () => setIsEdit(false),
+  });
+};
+
   const handleLogout = () => {
     logout();
     toast.success("You have been logged out");

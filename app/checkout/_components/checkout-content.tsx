@@ -17,8 +17,7 @@ import { CustomForm } from "@/components/ui/custom-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
 import { useCustomMutation } from "@/hooks/use-custom-query";
-import { GetOrdersResponse, postOrder } from "@/actions/order";
-import { queryClient } from "@/provider/queryClient-provider";
+import { postOrder } from "@/actions/order";
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -65,7 +64,7 @@ export const  CheckoutContent = ({ productId }: Props) => {
 const { mutate: submitOrder, isPending, error } = useCustomMutation(
   ["post-order"],
   postOrder,
-  ["ordersByUser", user?.id], // ✅ root key (all pages for this user)
+  ["ordersByUser", user?.id], 
   (newOrder) => {
     setOrderResponse(newOrder.data);
   }

@@ -20,7 +20,7 @@ import { CustomForm } from "@/components/ui/custom-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "@/lib/zod-schema";
-import { updateUser, userInput } from "@/actions/user";
+import {  userInput } from "@/actions/user";
 import { UserOrderList } from "./_components/user-order-list";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

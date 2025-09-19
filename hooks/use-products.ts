@@ -13,30 +13,31 @@ interface UseProductsOptions {
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
-  // Build a stable query key instead of passing the whole object
+  // Set defaults inside the hook
+  const page = options.page ?? 1;
+  const sortBy = options.sortBy ?? "createdAt";
+  const sortOrder = options.sortOrder ?? "asc";
+  const productName = options.productName ?? "";
+  const minPrice = options.minPrice ?? undefined; // undefined = no filter
+  const maxPrice = options.maxPrice ?? undefined;
+  const categoryIds = options.categoryIds ?? [];
+
+  // Build a stable query key
   const queryKey = [
     "products",
-    options.page ?? 1,
-    options.sortBy ?? null,
-    options.sortOrder ?? null,
-    options.productName ?? null,
-    options.minPrice ?? null,
-    options.maxPrice ?? null,
-    options.categoryIds?.join(",") ?? null,
+    page,
+    sortBy,
+    sortOrder,
+    productName,
+    minPrice,
+    maxPrice,
+    categoryIds.join(","),
   ];
 
   return useQuery<ProductsResponse, Error>({
     queryKey,
     queryFn: () =>
-      getProducts(
-        options.page,
-        options.sortBy,
-        options.sortOrder,
-        options.productName,
-        options.minPrice,
-        options.maxPrice,
-        options.categoryIds
-      ),
+      getProducts(page, sortBy, sortOrder, productName, minPrice, maxPrice, categoryIds),
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
     refetchOnWindowFocus: false,

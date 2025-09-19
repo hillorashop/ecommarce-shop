@@ -8,15 +8,7 @@ import Link from "next/link";
 import { HeadingTitle } from "../heading-title";
 
 export function BestSelling() {
-  const { data: products, isLoading, error } = useProducts({
-  page:1,
-  sortBy:"createdAt",
-  sortOrder:"asc",
-  productName:"",
-  minPrice:0,
-  maxPrice:999999,
-  categoryIds:[]
-})
+  const { data: products, isLoading, error } = useProducts({page:1})
 
 
   return (

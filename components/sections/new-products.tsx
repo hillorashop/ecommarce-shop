@@ -16,7 +16,16 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 
 export function NewProducts() {
-  const { data: products, isLoading } = useProducts({page:1});
+  const { data: products, isLoading } = useProducts({
+  page:1,
+  sortBy:"createdAt",
+  sortOrder:"asc",
+  productName:"",
+  minPrice:0,
+  maxPrice:999999,
+  categoryIds:[]
+})
+
    const [isClient, setIsClient] = useState(false);
      useEffect(() => setIsClient(true), []);
 

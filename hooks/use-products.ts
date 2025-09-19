@@ -16,7 +16,7 @@ export const useProducts = (options: UseProductsOptions = {}) => {
   // Set defaults inside the hook
   const page = options.page ?? 1;
   const sortBy = options.sortBy ?? "createdAt";
-  const sortOrder = options.sortOrder ?? "asc";
+  const sortOrder = options.sortOrder ?? "desc";
   const productName = options.productName ?? "";
   const minPrice = options.minPrice ?? undefined; // undefined = no filter
   const maxPrice = options.maxPrice ?? undefined;

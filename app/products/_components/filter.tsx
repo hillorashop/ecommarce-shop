@@ -40,7 +40,7 @@ export const Filter = ({
   sortOrder,
   onSortChange,
   minPrice = 0,
-  maxPrice = 2000,
+  maxPrice = 5000,
   onPriceChange,
   categoryIds = [],
   onCategoryChange,
@@ -83,6 +83,10 @@ export const Filter = ({
     onCategoryChange?.(newCategories);
   };
 
+  const resetFilters = () => {
+    onReset()
+    setPrice([0, 5000])
+  }
 
     return (
         <>
@@ -94,7 +98,7 @@ export const Filter = ({
           variant="ghost"
           size="sm"
           className="text-xs text-red-500 font-semibold bg-gray-100 hover:bg-green-600 hover:text-white"
-          onClick={onReset}
+          onClick={resetFilters}
         >
           Reset
         </Button>
@@ -128,8 +132,8 @@ export const Filter = ({
                 value={price}
                 onValueChange={(val: number[]) => setPrice([val[0], val[1]])}
                 min={0}
-                max={2000}
-                step={10}
+                max={5000}
+                step={50}
               />
 
 

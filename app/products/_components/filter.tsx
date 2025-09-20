@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -49,6 +49,13 @@ export const Filter = ({
 
 
       const { data: categories, isLoading } = useCategories();
+ // 👇 Local slider state
+  const [price, setPrice] = useState<[number, number]>([minPrice, maxPrice]);
+
+  // Sync local price when parent props change (e.g. on reset)
+  useEffect(() => {
+    setPrice([minPrice, maxPrice]);
+  }, [minPrice, maxPrice]);
 
 
   // Sort dropdown value
@@ -117,21 +124,23 @@ export const Filter = ({
           <AccordionTrigger className="flex items-center gap-2">Price Range</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3 mt-2">
-       <Slider
-  value={[minPrice ?? 0, maxPrice ?? 2000]}
-  onValueChange={(val: number[]) => onPriceChange?.(val[0], val[1])}
-  min={0}
-  max={2000}
-  step={10}
-/>
+      <Slider
+                value={price}
+                onValueChange={(val: number[]) => setPrice([val[0], val[1]])}
+                min={0}
+                max={2000}
+                step={10}
+              />
+
 
               <div className="flex justify-between text-sm text-gray-600">
-                <span>Tk {minPrice}</span>
-        <span>Tk {maxPrice}</span>
+                <span>Tk {price[0]}</span>
+                <span>Tk {price[1]}</span>
               </div>
-              <Button className="w-full mt-1 rounded-xl" size="sm" 
-                    onClick={() => onPriceChange?.(minPrice, maxPrice)}
-              
+               <Button
+                className="w-full mt-1 rounded-xl"
+                size="sm"
+                onClick={() => onPriceChange?.(price[0], price[1])}
               >
                 Apply Range
               </Button>

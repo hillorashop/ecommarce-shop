@@ -146,22 +146,37 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
           ) : (
             <div className="space-y-3">
               {checkoutItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-4">
-                  <Image
-                    src={item.productImage}
-                    alt={item.name}
-                    width={56}
-                    height={56}
-                    className="rounded-md object-cover border"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{item.name}</p>
-                    <p className="text-xs text-gray-500">Qty: {item.cartQuantity}</p>
-                  </div>
-                  <p className="font-semibold">
-                    BDT {(item.discountPrice ?? item.price) * item.cartQuantity}
-                  </p>
-                </div>
+              <div key={item.id} className="flex items-center gap-4 border-b pb-3">
+  <Image
+    src={item.productImage}
+    alt={item.name}
+    width={64}
+    height={64}
+    className="rounded-md object-cover border"
+  />
+  <div className="flex-1">
+    <p className="text-sm font-medium">{item.name}</p>
+    <p className="text-xs text-gray-500">Qty: {item.cartQuantity}</p>
+    <div className="flex items-center gap-2 mt-1">
+      {item.discountPrice && item.discountPrice < item.price ? (
+        <>
+          <span className="text-sm font-semibold text-green-600">
+            BDT {item.discountPrice}
+          </span>
+          <span className="text-xs line-through text-gray-400">
+            BDT {item.price}
+          </span>
+        </>
+      ) : (
+        <span className="text-sm font-semibold">BDT {item.price}</span>
+      )}
+    </div>
+  </div>
+  <p className="font-semibold text-right text-yellow-600">
+    BDT {(item.discountPrice ?? item.price) * item.cartQuantity}
+  </p>
+</div>
+
               ))}
             </div>
           )}

@@ -50,8 +50,6 @@ export const Filter = ({
 
       const { data: categories, isLoading } = useCategories();
 
-  // Local price slider state
-  const [price, setPrice] = useState<[number, number]>([minPrice, maxPrice]);
 
   // Sort dropdown value
   const sortValue =
@@ -70,9 +68,6 @@ export const Filter = ({
     if (value === "category") onSortChange("category", "asc");
   };
 
-  const applyPrice = () => {
-    onPriceChange?.(price[0], price[1]);
-  };
 
   const toggleCategory = (id: string, checked: boolean) => {
     const newCategories = checked
@@ -122,18 +117,22 @@ export const Filter = ({
           <AccordionTrigger className="flex items-center gap-2">Price Range</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3 mt-2">
-              <Slider
-                value={price}
-                onValueChange={(val: number[]) => setPrice(val as [number, number])}
-                min={0}
-                max={2000}
-                step={10}
-              />
+       <Slider
+  value={[minPrice ?? 0, maxPrice ?? 2000]}
+  onValueChange={(val: number[]) => onPriceChange?.(val[0], val[1])}
+  min={0}
+  max={2000}
+  step={10}
+/>
+
               <div className="flex justify-between text-sm text-gray-600">
-                <span>Tk {price[0]}</span>
-                <span>Tk {price[1]}</span>
+                <span>Tk {minPrice}</span>
+        <span>Tk {maxPrice}</span>
               </div>
-              <Button className="w-full mt-1 rounded-xl" size="sm" onClick={applyPrice}>
+              <Button className="w-full mt-1 rounded-xl" size="sm" 
+                    onClick={() => onPriceChange?.(minPrice, maxPrice)}
+              
+              >
                 Apply Range
               </Button>
             </div>

@@ -172,7 +172,7 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
       )}
     </div>
   </div>
-  <p className="font-semibold text-right text-green-600">
+  <p className="font-semibold text-right text-gray-800">
     BDT {(item.discountPrice ?? item.price) * item.cartQuantity}
   </p>
 </div>

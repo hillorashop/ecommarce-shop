@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: `About Hillora | ${siteMeta.siteName} -পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     description:
       "Hillora হল একটি অনলাইন শপিং প্ল্যাটফর্ম যেখানে খাগড়াছড়ির পাহাড়ি ঐতিহ্যের পণ্য, জৈব খাদ্য ও ফ্যাশন সামগ্রী পাওয়া যায়।",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}/about`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/about`,
     siteName: siteMeta.siteName,
     type: "website",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     images: [siteMeta.twitter.image],
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/about`,
+    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/about`,
   },
 };
 

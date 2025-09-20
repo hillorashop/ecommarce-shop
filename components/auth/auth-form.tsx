@@ -63,7 +63,7 @@ export function AuthForm() {
       setIsLoading(true);
       setLoginError("");
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/login`, values);
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/login`, values);
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
@@ -88,7 +88,7 @@ const registerSubmit = async (values: z.infer<typeof registerSchema>) => {
     setIsLoading(true);
     const { email, name, password } = values;
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/register`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/register`, {
       name,
       email,
       password,
@@ -152,9 +152,9 @@ const providerSubmit = (provider: "google" | "facebook") => {
     setLoadProvider(true);
 
     if (provider === "google") {
-      window.location.href = `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/auth/google`;
+      window.location.href = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/auth/google`;
     } else {
-      window.location.href = `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/auth/facebook`;
+      window.location.href = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/auth/facebook`;
     }
   } catch (error: any) {
     toast.error(error.message || "Something went wrong");

@@ -10,7 +10,7 @@ export type CategoriesResponse = {
 };
 
 export const getCategories = async (page?: number): Promise<CategoriesResponse> => {
-  const url = new URL(`${process.env.NEXT_PUBLIC_ADMIN_URL!}/api/category`);
+  const url = new URL(`${process.env.NEXT_PUBLIC_ADMIN_URL! || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/category`);
 
   if (page) {
     url.searchParams.set("page", page.toString());

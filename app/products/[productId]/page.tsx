@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: product.name,
       description: plainDescription.slice(0, 400) || product.subDescription,
       // ✅ Use encodeURIComponent for social sharing to avoid broken links
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.productId}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products/${product.productId}`,
       type: "website",
       siteName: siteMeta.siteName,
       images: [

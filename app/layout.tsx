@@ -34,11 +34,11 @@ export const metadata: Metadata = {
   ],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL! || process.env.NEXT_PUBLIC_BASE_WWW_URL!),
   openGraph: {
     title: siteMeta.openGraph.title,
     description: siteMeta.openGraph.desc,
-    url: process.env.NEXT_PUBLIC_BASE_URL,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
     siteName: siteMeta.siteName,
     locale: "bn_BD",
     type: "website",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     images: siteMeta.twitter.image,
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL,
+    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
   },
 };
 

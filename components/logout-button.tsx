@@ -11,7 +11,7 @@ export const LogOutButton = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/logout`, {
+      await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/logout`, {
         method: "POST",
         credentials: "include", // send cookies
       });

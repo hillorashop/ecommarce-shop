@@ -86,7 +86,7 @@ const handleSendResetLink = async (values: EmailInput) => {
   const handleResetPassword = async (values: PasswordInput) => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/reset-password`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password: values.password }),

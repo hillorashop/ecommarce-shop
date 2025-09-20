@@ -34,7 +34,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const handlePrint = () => {
     if (!invoiceRef.current) return;
 
-    const logoSrc = `${process.env.NEXT_PUBLIC_BASE_URL}/logo.svg`;
+    const logoSrc = `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/logo.svg`;
     const img = new Image();
     img.src = logoSrc;
 
@@ -95,7 +95,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   {/* Logo container */}
   <div style={{ display: "inline-block", position: "relative", marginTop: "-40px" }}>
     <img
-      src={`${process.env.NEXT_PUBLIC_BASE_URL}/logo.svg`}
+      src={`${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/logo.svg`}
       alt={siteMeta.siteName}
       width={200}
       height={200}
@@ -107,7 +107,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
     KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar
   </p>
   <p style={{ margin: "4px 0", fontSize: "12px" }}>
-    Contact: +880 1519558558 | Website: {process.env.NEXT_PUBLIC_BASE_URL}
+    Contact: +880 1519558558 | Website: {process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}
   </p>
 </div>
 

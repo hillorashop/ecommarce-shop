@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: `Privacy Policy | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     description:
       "Hillora প্রাইভেসি পলিসি: কীভাবে আমরা আপনার ব্যক্তিগত তথ্য ব্যবহার করি এবং সুরক্ষিত রাখি।",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}/privacy-policy`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/privacy-policy`,
     siteName: siteMeta.siteName,
     type: "website",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     images: [siteMeta.twitter.image],
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/privacy-policy`,
+    canonical:`${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/privacy-policy`,
   },
 };
 

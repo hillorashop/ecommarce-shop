@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Browse Categories | ${siteMeta.siteName}`,
     description: "বিভিন্ন ক্যাটাগরি এক্সপ্লোর করুন এবং যা আপনার ইন্টারেস্টিং খুঁজে বের করুন।",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}/categories`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/categories`,
     siteName: siteMeta.siteName,
     images: [
       {
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description: "Hillora-তে বিভিন্ন ক্যাটাগরি এক্সপ্লোর করুন এবং আপনার পছন্দের প্রোডাক্ট খুঁজে নিন।.",
     images: [siteMeta.twitter.image],
   },
+  alternates:{
+    canonical:`${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/categories`
+  }
 }
 
 export default async function CategoryPage({

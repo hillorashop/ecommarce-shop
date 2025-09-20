@@ -67,7 +67,7 @@ export const PasswordMangement = ({ tabValue, disable, userId }: Props) => {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/reset-password`,
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/reset-password`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL  || process.env.NEXT_PUBLIC_BASE_WWW_URL
 
   let products: any[] = [];
   let categories: any[] = [];

@@ -34,7 +34,7 @@ export type GetOrdersResponse = {
 
 
 export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/order/create-order`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -28,7 +28,7 @@ export const getUser = async (token?:string): Promise<UserResponse> => {
     if (!token) return { success: false, error: "No token found" };
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/get-profile`,
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/get-profile`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -54,7 +54,7 @@ export const updateUser = async (data: userInput): Promise<UserResponse> => {
     if (!token) return { success: false, error: "No token found" };
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/update-profile`,
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/update-profile`,
       {
         method: "PUT",
         headers: {

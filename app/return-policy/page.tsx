@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: `Return Policy | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     description:
       "Hillora রিটার্ন পলিসি পেজে পণ্য ফেরত, এক্সচেঞ্জ এবং রিফান্ড সম্পর্কিত গুরুত্বপূর্ণ তথ্য খুঁজে পাবেন।",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}/return-policy`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/return-policy`,
     siteName: siteMeta.siteName,
     type: "website",
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     images: [siteMeta.twitter.image],
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/return-policy`,
+    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/return-policy`,
   },
 };
 

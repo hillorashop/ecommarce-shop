@@ -33,7 +33,7 @@ export const getProducts = async (
   maxPrice?: number,
   categoryIds?: string[] // new optional filter
 ): Promise<ProductsResponse> => {
-  let url = `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/products`;
+  let url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products`;
 
   const params = new URLSearchParams();
 

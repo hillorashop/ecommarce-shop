@@ -27,7 +27,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/products?productName=${productName}&categoryId=${categoryId}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products?productName=${productName}&categoryId=${categoryId}`,
       siteName: siteMeta.siteName,
       images: [
         {

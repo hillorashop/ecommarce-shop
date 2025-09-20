@@ -57,7 +57,7 @@ export function DekstopFilterSideBar({
     <div className="max-w-[120rem] mx-auto relative flex">
       {/* Sidebar */}
       <motion.aside
-        animate={{ top: headerHidden ? 0 : 162 }}
+        animate={{ top: headerHidden ? 0 : 140 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="hidden lg:block sticky top-[162px] w-56 xl:w-64 h-[calc(100vh-162px)] overflow-y-auto shadow-md bg-gray-100 p-4 space-y-4"
       >

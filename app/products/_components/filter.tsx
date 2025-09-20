@@ -32,6 +32,7 @@ interface Props {
   onPriceChange?: (min: number, max: number) => void;
   categoryIds?: string[];
   onCategoryChange?: (ids: string[]) => void;
+  onReset: () => void;
 }
 
 export const Filter = ({
@@ -43,6 +44,7 @@ export const Filter = ({
   onPriceChange,
   categoryIds = [],
   onCategoryChange,
+  onReset
 }:Props) => {
 
 
@@ -79,13 +81,6 @@ export const Filter = ({
     onCategoryChange?.(newCategories);
   };
 
-  const resetFilters = () => {
-    setPrice([0, 2000]);
-    onPriceChange?.(0, 2000);
-    onCategoryChange?.([]);
-    onSortChange("createdAt", "desc");
-  };
-
 
     return (
         <>
@@ -97,7 +92,7 @@ export const Filter = ({
           variant="ghost"
           size="sm"
           className="text-xs text-red-500 font-semibold bg-gray-100 hover:bg-green-600 hover:text-white"
-          onClick={resetFilters}
+          onClick={onReset}
         >
           Reset
         </Button>

@@ -26,6 +26,15 @@ export const ProductState = ({productName, categoryId}:Props) => {
      categoryId ? [categoryId] : []
   );
 
+    const resetFilters = () => {
+    setSortBy("createdAt");
+    setSortOrder("desc");
+    setMinPrice(undefined);
+    setMaxPrice(undefined);
+    setCategoryIds(categoryId ? [categoryId] : []); 
+  };
+
+
   return (
     <div className="lg:flex lg:gap-6 w-full">
       <MobileFilterSideBar
@@ -41,6 +50,7 @@ export const ProductState = ({productName, categoryId}:Props) => {
         }}
         categoryIds={categoryIds}
         onCategoryChange={(ids) => setCategoryIds(ids)}
+        onReset={resetFilters}
       />
       <DekstopFilterSideBar
         sortBy={sortBy}
@@ -55,6 +65,7 @@ export const ProductState = ({productName, categoryId}:Props) => {
         }}
         categoryIds={categoryIds}
         onCategoryChange={(ids) => setCategoryIds(ids)}
+        onReset={resetFilters}
       />
 
       <div className="flex-1 min-h-screen py-10 lg:overflow-y-scroll">

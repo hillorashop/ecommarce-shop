@@ -17,6 +17,7 @@ interface Props {
   onPriceChange?: (min: number, max: number) => void;
   categoryIds?: string[];
   onCategoryChange?: (ids: string[]) => void;
+  onReset: () => void;
 }
 
 
@@ -30,6 +31,7 @@ export const MobileFilterSideBar = ({
   onPriceChange,
   categoryIds,
   onCategoryChange,
+  onReset
 
 }:Props) => {
     const [open, setOpen] = useState(false);
@@ -60,7 +62,7 @@ export const MobileFilterSideBar = ({
             categoryIds={categoryIds}
             minPrice={minPrice}
             maxPrice={maxPrice}
-                
+                onReset={onReset}
                 />
           </aside>
             </SheetContent>

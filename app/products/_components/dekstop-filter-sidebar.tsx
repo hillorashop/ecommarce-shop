@@ -16,6 +16,7 @@ interface Props {
   onPriceChange?: (min: number, max: number) => void;
   categoryIds?: string[];
   onCategoryChange?: (ids: string[]) => void;
+  onReset: () => void;
 }
 
 export function DekstopFilterSideBar({
@@ -27,6 +28,7 @@ export function DekstopFilterSideBar({
   onPriceChange,
   categoryIds,
   onCategoryChange,
+  onReset
 }: Props) {
   const [headerHidden, setHeaderHidden] = useState(false);
   const [leftOffset, setLeftOffset] = useState(0);
@@ -68,6 +70,7 @@ export function DekstopFilterSideBar({
           categoryIds={categoryIds}
           minPrice={minPrice}
           maxPrice={maxPrice}
+          onReset={onReset}
         />
       </motion.aside>
       </div>

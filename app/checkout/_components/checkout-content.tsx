@@ -6,7 +6,6 @@ import { useProducts } from "@/hooks/use-products";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { usePostOrder } from "@/hooks/use-post-order";
 import { Zap } from "lucide-react";
 import { InvoiceOrder } from "./invoice-order";
 import { useForm } from "react-hook-form";
@@ -44,13 +43,13 @@ interface Props {
   productId?: string;
 }
 
-
-export const  CheckoutContent = ({ productId }: Props) => {
+export const CheckoutContent = ({ productId }: Props) => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<any>(null);
-  const {user} = useUser()
+  const { user } = useUser();
+
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
       const found = products.data.find((p) => p.id === productId);
@@ -59,54 +58,68 @@ export const  CheckoutContent = ({ productId }: Props) => {
     return cartItems;
   }, [productId, products, cartItems]);
 
-  
+  const { mutate: submitOrder, isPending, error } = useCustomMutation(
+    ["post-order"],
+    postOrder,
+    ["ordersByUser", user?.id],
+    (newOrder) => {
+      setOrderResponse(newOrder.data);
+    }
+  );
 
-const { mutate: submitOrder, isPending, error } = useCustomMutation(
-  ["post-order"],
-  postOrder,
-  ["ordersByUser", user?.id], 
-  (newOrder) => {
-    setOrderResponse(newOrder.data);
-  }
-);
-
-
-
-
+  // ✅ Safe discount calculation
   const subTotal = checkoutItems.reduce(
     (acc, item) => acc + item.price * item.cartQuantity,
     0
   );
 
-  const totalDiscount = checkoutItems.reduce(
-    (acc, item) =>
-      acc + (item.price - (item.discountPrice ?? item.price)) * item.cartQuantity,
-    0
-  );
+  const totalDiscount = checkoutItems.reduce((acc, item) => {
+    const hasDiscount =
+      item.discountPrice &&
+      item.discountPrice > 0 &&
+      item.discountPrice < item.price;
+
+    return (
+      acc +
+      (hasDiscount ? (item.price - item.discountPrice!) * item.cartQuantity : 0)
+    );
+  }, 0);
 
   const total = subTotal - totalDiscount;
 
   // React Hook Form
   const form = useForm<ShippingForm>({
     resolver: zodResolver(shippingSchema),
-    defaultValues: { name: "", mobileNumber:user?.mobileNumber || "", address:user?.address || "" },
+    defaultValues: {
+      name: "",
+      mobileNumber: user?.mobileNumber || "",
+      address: user?.address || "",
+    },
   });
 
   const handlePlaceOrder = async (data: ShippingForm) => {
     if (!selectedPayment) return;
 
     const orderData = {
-      userId:user?.id,
+      userId: user?.id,
       name: data.name,
       mobileNumber: data.mobileNumber,
       address: data.address,
       paymentMethod: selectedPayment,
       totalDiscount,
       total,
-      orderItems: checkoutItems.map((item) => ({
-        productId: item.id,
-        quantity: item.cartQuantity,
-      })),
+      orderItems: checkoutItems.map((item) => {
+        const hasDiscount =
+          item.discountPrice &&
+          item.discountPrice > 0 &&
+          item.discountPrice < item.price;
+
+        return {
+          productId: item.id,
+          quantity: item.cartQuantity,
+          price: hasDiscount ? item.discountPrice : item.price,
+        };
+      }),
     };
 
     try {
@@ -115,8 +128,6 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
       console.error("Order failed:", err);
     }
   };
-
-
 
   if (orderResponse) return <InvoiceOrder order={orderResponse} />;
 
@@ -129,7 +140,7 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           {isLoading ? (
-             <div className="space-y-3">
+            <div className="space-y-3">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <Skeleton className="w-14 h-14 rounded-md" />
@@ -145,39 +156,58 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
             <p className="text-gray-500">Your cart is empty.</p>
           ) : (
             <div className="space-y-3">
-              {checkoutItems.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 border-b pb-3">
-  <Image
-    src={item.productImage}
-    alt={item.name}
-    width={64}
-    height={64}
-    className="rounded-md object-cover border"
-  />
-  <div className="flex-1">
-    <p className="text-sm font-medium">{item.name}</p>
-    <p className="text-xs text-gray-500">Qty: {item.cartQuantity}</p>
-    <div className="flex items-center gap-2 mt-1">
-      {item.discountPrice && item.discountPrice < item.price ? (
-        <>
-          <span className="text-sm font-semibold text-green-600">
-            BDT {item.discountPrice}
-          </span>
-          <span className="text-xs line-through text-gray-400">
-            BDT {item.price}
-          </span>
-        </>
-      ) : (
-        <span className="text-sm font-semibold">BDT {item.price}</span>
-      )}
-    </div>
-  </div>
-  <p className="font-semibold text-right text-gray-800">
-    BDT {(item.discountPrice ?? item.price) * item.cartQuantity}
-  </p>
-</div>
+              {checkoutItems.map((item) => {
+                const hasDiscount =
+                  item.discountPrice &&
+                  item.discountPrice > 0 &&
+                  item.discountPrice < item.price;
 
-              ))}
+                return (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-4 border-b pb-3"
+                  >
+                    <Image
+                      src={item.productImage}
+                      alt={item.name}
+                      width={64}
+                      height={64}
+                      className="rounded-md object-cover border"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{item.name}</p>
+                      <p className="text-xs text-gray-500">
+                        Qty: {item.cartQuantity}
+                      </p>
+
+                      <div className="flex items-center gap-2 mt-1">
+                        {hasDiscount ? (
+                          <>
+                            <span className="text-sm font-semibold text-green-600">
+                              BDT {item.discountPrice}
+                            </span>
+                            <span className="text-xs line-through text-gray-400">
+                              BDT {item.price}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-sm font-semibold">
+                            BDT {item.price}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <p className="font-semibold text-right text-gray-800">
+                      BDT{" "}
+                      {(
+                        (hasDiscount ? item.discountPrice! : item.price) *
+                        item.cartQuantity
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -185,15 +215,15 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
           <div className="space-y-1 border-t pt-3">
             <div className="flex justify-between text-sm">
               <span>Sub Total:</span>
-              <span>BDT {subTotal}</span>
+              <span>BDT {subTotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm text-green-600">
               <span>Discount:</span>
-              <span>- BDT {totalDiscount}</span>
+              <span>- BDT {totalDiscount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total:</span>
-              <span>BDT {total}</span>
+              <span>BDT {total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -282,7 +312,9 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
               <Button
                 type="submit"
                 className="w-full mt-4"
-                disabled={!selectedPayment || checkoutItems.length === 0 || isPending}
+                disabled={
+                  !selectedPayment || checkoutItems.length === 0 || isPending
+                }
               >
                 {isPending ? (
                   <div className="flex items-center gap-2">
@@ -300,4 +332,4 @@ const { mutate: submitOrder, isPending, error } = useCustomMutation(
       {error && <p className="text-red-500">{error}</p>}
     </div>
   );
-}
+};

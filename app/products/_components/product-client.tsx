@@ -167,12 +167,13 @@ const { data: product, isLoading } = useCustomQuery<ProductResponse>(
         {/* Product Details */}
         <div className="space-y-6">
           <h1 className="text-3xl font-bold">{product.data.name}</h1>
+          <p className="flex gap-x-1 flex-wrap font-semibold">{product.data.packageQuantity} <span>{product.data.packageQuantityType}</span></p>
           <div className="flex items-center gap-3">
             <span className="text-3xl font-extrabold">
               BDT {product.data.discountPrice ?? product.data.price}
             </span>
             {product.data.discountPrice && (
-              <span className="line-through text-gray-400">
+              <span className="line-through text-muted-foreground">
                 BDT {product.data.price}
               </span>
             )}

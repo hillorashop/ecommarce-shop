@@ -31,7 +31,6 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const router = useRouter();
   const { addItem, cartItems } = useCart();
-
   const isInCart = cartItems.some((item) => item.id === id);
 
   // Rating calculation
@@ -41,10 +40,11 @@ export function ProductCard({ product }: ProductCardProps) {
       ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviewCount
       : 0;
 
-  // Price handling
+  // ✅ Safe discount handling
   const hasDiscount =
     discountPrice !== undefined &&
     discountPrice !== null &&
+    discountPrice > 0 &&
     discountPrice < price;
 
   const displayPrice = hasDiscount ? discountPrice : price;
@@ -112,17 +112,17 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex flex-col gap-1 mb-2">
           <div className="flex items-baseline gap-2">
             <span className="text-base lg:text-lg font-bold text-gray-900">
-              BDT {displayPrice}
+              BDT {displayPrice.toLocaleString()}
             </span>
             {hasDiscount && (
               <span className="text-sm text-gray-400 line-through">
-                BDT {price}
+                BDT {price.toLocaleString()}
               </span>
             )}
           </div>
           {hasDiscount && (
             <span className="text-xs text-green-600 font-medium">
-              You save BDT {savingsAmount} ({discountPercentage}%)
+              You save BDT {savingsAmount.toLocaleString()} ({discountPercentage}%)
             </span>
           )}
         </div>
@@ -133,9 +133,8 @@ export function ProductCard({ product }: ProductCardProps) {
             className="text-xs px-4 py-1 h-7 rounded-md flex-1"
             disabled={inStocks <= 0 || isInCart}
             onClick={() => {
-              addItem(product)
-              toast.success("Product added in cart")
-            
+              addItem(product);
+              toast.success("Product added to cart");
             }}
           >
             {isInCart ? "ADDED" : "ADD TO CART"}

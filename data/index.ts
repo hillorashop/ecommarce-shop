@@ -9,6 +9,7 @@ export const navLinks = [
   { name: "Shop", href: "/products" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
+  { name: "Become a Seller?", href: "/become-seller" },
 ];
 
 
@@ -19,6 +20,7 @@ export const mobileNavLinks = [
   { name: "Categories", href: "/categories" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
+  { name: "Become a Seller?", href: "/become-seller" },
 ];
 
 
@@ -134,3 +136,13 @@ export const siteMeta = {
 export const  ONE_DAY = 24 * 60 * 60 * 1000
 export const  TWODAY = 48 * 60 * 60 * 1000
 export const  THREEDAY = 72 * 60 * 60 * 1000
+
+
+
+
+
+
+
+
+
+ 

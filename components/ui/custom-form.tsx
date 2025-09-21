@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   FormControl,
   FormItem,
@@ -9,6 +9,15 @@ import { GoStarFill } from "react-icons/go";
 import { Eye, EyeOff } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox"; // ✅ import checkbox
+import { Label } from "./label";
 
 interface SelectOption {
   label: string;
@@ -19,14 +28,15 @@ interface Props {
   field: any;
   label: string;
   placeHolder?: string;
-  fieldType: "input" | "textarea";
-  inputType?: "number" | "text" | "password" | "email"; // Added email here
+  fieldType: "input" | "textarea" | "select" | "checkbox"; // ✅ added "checkbox"
+  inputType?: "number" | "text" | "password" | "email";
   important?: boolean;
   error?: any;
   allowShowHidePassword?: boolean;
   previewImage?: string;
-  options?: SelectOption[];
-  disable?:boolean;
+  options?: SelectOption[]; // used for select
+  disable?: boolean;
+  checkBoxLabel?:ReactNode;
 }
 
 export const CustomForm = ({
@@ -39,7 +49,9 @@ export const CustomForm = ({
   allowShowHidePassword = false,
   previewImage,
   options = [],
-  disable
+  disable,
+  checkBoxLabel
+
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -56,6 +68,43 @@ export const CustomForm = ({
         />
       );
       break;
+
+    case "select":
+      FieldComponent = (
+        <Select
+          onValueChange={field.onChange}
+          value={field.value}
+          disabled={disable}
+
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={placeHolder || "Select option"} />
+          </SelectTrigger>
+          <SelectContent className="w-full">
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
+      break;
+case "checkbox":
+  FieldComponent = (
+    <div className="flex items-center space-x-2">
+      <Checkbox
+        id={field.name}
+        checked={field.value}
+        onCheckedChange={(checked) => field.onChange(checked)}
+      />
+      <Label htmlFor={field.name} className="text-sm leading-relaxed">
+        {checkBoxLabel} 
+      </Label>
+    </div>
+  );
+  break;
+
 
     case "input":
     default:
@@ -82,7 +131,7 @@ export const CustomForm = ({
                 ? ""
                 : field.value
             }
-        disabled={disable}
+            disabled={disable}
           />
           {isPassword && (
             <button
@@ -91,9 +140,8 @@ export const CustomForm = ({
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
             >
               {showPassword ? (
-                    <Eye className="w-5 h-5" />
+                <Eye className="w-5 h-5" />
               ) : (
-            
                 <EyeOff className="w-5 h-5" />
               )}
             </button>

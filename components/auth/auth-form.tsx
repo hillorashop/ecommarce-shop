@@ -4,7 +4,7 @@ import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ShoppingBag, TriangleAlert, Zap } from "lucide-react"
+import { LogIn, TriangleAlert, Zap } from "lucide-react"
 import { useForm } from "react-hook-form"
 import z from "zod"
 import { logInSchema, registerSchema } from "@/lib/zod-schema"
@@ -25,6 +25,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { siteMeta } from "@/data";
+import { SiGnuprivacyguard } from "react-icons/si";
 
 export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -47,6 +48,7 @@ export function AuthForm() {
     email:"",
     password:"",
     confirmPassword:"",
+    agreeToTerms: false,
     },
   });
 
@@ -261,7 +263,8 @@ const providerSubmit = (provider: "google" | "facebook") => {
                         Signing in...
                       </div>
                     ) : (
-                      "Sign In"
+                      <p className="items-center flex gap-x-4">Sign In <LogIn className="text-gray-100 stroke-4"/></p>
+                      
                     )}
                   </Button>
                 </form>
@@ -341,7 +344,31 @@ const providerSubmit = (provider: "google" | "facebook") => {
                 />
                 
                   {registerError && <p className="text-destructive text-sm font-semibold flex items-center gap-x-2"> <TriangleAlert className="size-4"/> {registerError}</p>}
-            
+    <div className="flex items-center gap-x-2">
+      <FormField
+        control={registerForm.control}
+        name="agreeToTerms"
+        render={({ field }) => (
+          <CustomForm
+            field={field}
+            fieldType="checkbox"
+            label=""
+            checkBoxLabel={
+<>
+  I am agree with{" "}
+          <Link href="/privacy-policy" className="text-primary hover:underline">
+            Privacy Policy
+          </Link>
+</>
+            }
+          />
+        )}
+      />
+
+
+
+    </div>
+
 
                   <Button
                     type="submit"
@@ -354,7 +381,8 @@ const providerSubmit = (provider: "google" | "facebook") => {
                         Creating account...
                       </div>
                     ) : (
-                      "Create Account"
+                      <p className="flex items-center gap-x-4">Create Account <SiGnuprivacyguard className="storke-white"/></p>
+                     
                     )}
                   </Button>
                 </form>

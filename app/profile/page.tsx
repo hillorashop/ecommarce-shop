@@ -113,7 +113,7 @@ const handleProfile = (data: userInput) => {
             className="flex items-center gap-2"
             onClick={handleLogout}
           >
-            <LogOut className="size-4" /> Logout
+            Logout  <LogOut className="size-4" />
           </Button>
         </CardHeader>
 
@@ -261,8 +261,9 @@ const handleProfile = (data: userInput) => {
                         onClick={() => setIsEdit(true)}
                         className="flex items-center gap-x-2 bg-green-600 text-white hover:bg-green-700 active:bg-green-600"
                       >
+                         Edit
                         <Edit className="size-4" />
-                        Edit
+                       
                       </Button>
                     </div>
                   )}

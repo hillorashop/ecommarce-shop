@@ -67,7 +67,7 @@ export function MobileHeader() {
                   <h3 className="font-semibold text-white mb-3 w-full bg-primary p-2">
                     Menu
                   </h3>
-                  <div className="space-y-2 px-4">
+                  <div className="space-y-2 px-4 uppercase">
                     {mobileNavLinks.map((link, idx) => (
                       <Link
                         key={idx}
@@ -108,7 +108,7 @@ export function MobileHeader() {
               <Link
                       href="/sign-up"
                       onClick={() => setIsOpen(false)}
-                      className="block w-full text-left text-gray-700 hover:text-primary py-2 rounded-md transition-colors"
+                      className="block w-full text-left text-gray-700 hover:text-primary py-2 rounded-md transition-colors uppercase"
                     >
                       Sign Up
                     </Link>

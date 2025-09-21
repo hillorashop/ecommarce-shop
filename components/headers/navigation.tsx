@@ -42,7 +42,7 @@ export function Navigation() {
       <div className="px-4 sm:px-6 lg:px-8 py-2 max-w-[120rem] mx-auto">
         <div className="flex items-center justify-between">
 
-    <Link href={'/categories'} className="flex gap-x-2  items-center text-gray-600 font-semibold hover:underline text-base cursor-pointer">
+    <Link href={'/categories'} className="flex gap-x-2  items-center text-gray-600 font-semibold hover:underline text-base cursor-pointer uppercase">
          <BiCategory className="size-4" />
       Categories
     </Link>
@@ -50,7 +50,7 @@ export function Navigation() {
  
 
 
-          <nav className="flex space-x-8">
+          <nav className="flex space-x-8 uppercase">
             {navLinks.map((link, index) => (
               <Link
                 key={index}
@@ -63,7 +63,7 @@ export function Navigation() {
           </nav>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-6 font-semibold">
+          <div className="flex items-center space-x-6 font-semibold ">
             <button
     onClick={() => setOpen(true)} // ✅ open cart sheet
     className="relative text-center flex flex-col gap-y-1 items-center cursor-pointer hover:scale-110 transition-all"
@@ -102,12 +102,14 @@ export function Navigation() {
        : (
       <Link
               href={"/sign-up"}
-              className="text-center flex flex-col gap-y-1 items-center hover:scale-105 transition-all"
+              className="text-center flex flex-col gap-y-1 items-center hover:scale-105 transition-all uppercase"
             >
               <User2 />
               <span className="text-xs block">Sign Up</span>
             </Link>
     )}
+
+    
       
           </div>
         </div>

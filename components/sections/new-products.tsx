@@ -27,7 +27,7 @@ export function NewProducts() {
   );
 
   return (
-    <div className="py-4 lg:py-8 bg-gray-50   relative">
+    <div className="py-4 lg:py-8 bg-gradient-to-br from-primary/5 via-background to-accent/10  relative">
       <HeadingTitle title="New Products" />
 
       {!isClient || isLoading ? (

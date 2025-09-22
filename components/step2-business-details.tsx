@@ -31,6 +31,20 @@ export const Step2BusinessDetails = ({ control }: StepProps) => {
 return (
   <div className="space-y-8">
     {/* Business Description */}
+        <FormField
+      control={control}
+      name="businessName"
+      render={({ field }) => (
+        <CustomForm
+          field={field}
+          fieldType="input"
+          label="ব্যবসার নাম"
+          placeHolder="আপনার ব্যবসার নাম লিখুন"
+          important
+        />
+      )}
+    />
+    
     <FormField
       control={control}
       name="description"

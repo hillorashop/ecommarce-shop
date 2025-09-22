@@ -1,7 +1,25 @@
-
 import { HeadingTitle } from "@/components/heading-title";
 import { SellerOnboarding } from "@/components/seller-onboarding";
 import { Users, TrendingUp, Shield} from "lucide-react"
+
+
+const features = [
+  {
+    icon: Users,
+    title: "হাজার হাজার Customers",
+    description: "বাংলাদেশের সক্রিয় Buyers-এর কাছে পৌঁছান",
+  },
+  {
+    icon: TrendingUp,
+    title: "Powerful Analytics",
+    description: "বিস্তারিত Insights-এর মাধ্যমে আপনার Performance Track করুন",
+  },
+  {
+    icon: Shield,
+    title: "Secure Payments",
+    description: "দ্রুত এবং নিরাপদ Transactions, Buyer Protection সহ",
+  },
+];
 
 const  SellerPage = () => {
 
@@ -17,41 +35,26 @@ const  SellerPage = () => {
     আমাদের সঙ্গে যুক্ত হোন, আপনার Products-এর গল্প জানান, এবং দেশের মানুষকে আপনার Brand-এর সঙ্গে পরিচিত করুন—সহজ, Safe এবং কার্যকরীভাবে।
   </p>
 </div>
+        <SellerOnboarding/>
 
-
-      
-
-            {/* Benefits */}
-
-<div className="grid md:grid-cols-3 gap-6 mb-12">
-  <div className="flex flex-col items-center p-6 rounded-lg bg-card/50 border">
-    <Users className="h-12 w-12 text-primary mb-4" />
-    <h3 className="font-semibold mb-2">হাজার হাজার Customers</h3>
-    <p className="text-sm text-muted-foreground text-center">
-      বাংলাদেশের সক্রিয় Buyers-এর কাছে পৌঁছান
-    </p>
-  </div>
-
-  <div className="flex flex-col items-center p-6 rounded-lg bg-card/50 border">
-    <TrendingUp className="h-12 w-12 text-primary mb-4" />
-    <h3 className="font-semibold mb-2">Powerful Analytics</h3>
-    <p className="text-sm text-muted-foreground text-center">
-      বিস্তারিত Insights-এর মাধ্যমে আপনার Performance Track করুন
-    </p>
-  </div>
-
-  <div className="flex flex-col items-center p-6 rounded-lg bg-card/50 border">
-    <Shield className="h-12 w-12 text-primary mb-4" />
-    <h3 className="font-semibold mb-2">Secure Payments</h3>
-    <p className="text-sm text-muted-foreground text-center">
-      দ্রুত এবং নিরাপদ Transactions, Buyer Protection সহ
-    </p>
-  </div>
-</div>
-
-
-     
-            <SellerOnboarding/>
+    <div className="grid md:grid-cols-3 gap-6 mt-12">
+      {features.map((feature, index) => {
+        const Icon = feature.icon;
+        return (
+          <div
+            key={index}
+            className="flex flex-col items-center p-6 bg-card text-card-foreground rounded-xl border shadow-sm hover:scale-105 hover:shadow-xl transition-all duration-300"
+          >
+            <Icon className="h-12 w-12 text-primary mb-4" />
+            <h3 className="font-semibold mb-2">{feature.title}</h3>
+            <p className="text-sm text-muted-foreground text-center">
+              {feature.description}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+         
       </div>
     </div>
   )

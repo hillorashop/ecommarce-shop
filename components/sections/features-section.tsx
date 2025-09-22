@@ -47,12 +47,12 @@ export function FeaturesSection() {
             return (
               <div
                 key={index}
-                className="p-4 rounded-2xl shadow-lg flex flex-col items-center bg-white border border-gray-100 hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                className="flex flex-col items-center p-6 bg-card text-card-foreground rounded-xl border shadow-sm hover:scale-105 hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center justify-center size-12 rounded-full bg-yellow-400 text-white mb-6 shadow-md">
                   <Icon className="size-6" />
                 </div>
-                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="font-semibold text-sm  text-gray-900 mb-2">
                   {feature.title}
                 </h3>
               </div>

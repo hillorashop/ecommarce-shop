@@ -150,7 +150,7 @@ export const metadata: Metadata = {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold mb-2">শিশুদের প্রাইভেসি</h2>
+            <h2 className="text-lg font-semibold mb-2">শিশুদের Privacy</h2>
             <p>
               আমাদের Service ১৩ বছরের কম বয়সীদের জন্য নয়। আমরা সচেতনভাবে এই বয়সের শিশুর তথ্য সংগ্রহ করি না। কোনো শিশু যদি তথ্য প্রদান করে, অনুগ্রহ করে আমাদের জানাতে হবে এবং আমরা তা সার্ভার থেকে মুছে ফেলব।
             </p>

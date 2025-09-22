@@ -118,7 +118,7 @@ const handleOtpSubmit = () => {
   )}
 </CardHeader>
 
-<CardContent className="p-2 md:p-6">
+<CardContent className="p-2 px-4 md:p-6">
   {
     formStep === "createSeller" ? (
         <Form {...bussnessForm}>

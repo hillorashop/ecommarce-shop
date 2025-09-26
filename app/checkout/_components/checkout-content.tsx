@@ -203,7 +203,7 @@ export const CheckoutContent = ({ productId }: Props) => {
                       {(
                         (hasDiscount ? item.discountPrice! : item.price) *
                         item.cartQuantity
-                      ).toFixed(2)}
+                      )}
                     </p>
                   </div>
                 );
@@ -215,15 +215,15 @@ export const CheckoutContent = ({ productId }: Props) => {
           <div className="space-y-1 border-t pt-3">
             <div className="flex justify-between text-sm">
               <span>Sub Total:</span>
-              <span>BDT {subTotal.toFixed(2)}</span>
+              <span>BDT {subTotal}</span>
             </div>
             <div className="flex justify-between text-sm text-green-600">
               <span>Discount:</span>
-              <span>- BDT {totalDiscount.toFixed(2)}</span>
+              <span>- BDT {totalDiscount}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total:</span>
-              <span>BDT {total.toFixed(2)}</span>
+              <span>BDT {total}</span>
             </div>
           </div>
 

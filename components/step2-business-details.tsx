@@ -29,7 +29,7 @@ export const Step2BusinessDetails = ({ control }: StepProps) => {
   };
 
 return (
-  <div className="space-y-8">
+  <div className="space-y-8 mb-4">
     {/* Business Description */}
         <FormField
       control={control}
@@ -176,7 +176,7 @@ return (
     </div>
 
     {/* Terms & Marketing Checkbox */}
-    <div className="flex items-center gap-x-2">
+
       <FormField
         control={control}
         name="agreeToTerms"
@@ -203,7 +203,7 @@ return (
 
 
 
-    </div>
+
   </div>
 );
 

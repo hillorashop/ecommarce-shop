@@ -1,8 +1,3 @@
-import { title } from "process";
-
-
-
-
 
 export const navLinks = [
   { name: "Home", href: "/" },
@@ -120,13 +115,13 @@ export const siteMeta = {
    openGraph:{
     title:"",
     desc:"",
-    image:"/"
+    image:"/banners/hillora-meta.jpg"
    },
    twitter:{
     title: "Hillora – Bangladesh Ecommerce",
     description: "বাংলাদেশ ভিত্তিক ই-কমার্স ওয়েবসাইট",
     creator:"@your_twitter",
-    image:"/"
+    image:"/banners/hillora-meta.jpg"
    }
 
 }

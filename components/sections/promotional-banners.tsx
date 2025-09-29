@@ -3,66 +3,71 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { siteMeta } from "@/data";
 
 export function PromotionalBanners() {
   return (
-    <div className=" py-4 md:py-8">
+    <div className="py-4 md:py-8">
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div className="flex flex-col md:flex-row gap-4">
 
           {/* === Left Hero Banner === */}
           <motion.div
-            className="w-full relative aspect-[14/7] md:aspect-[12/7] rounded-lg overflow-hidden"
+            className="relative w-full md:w-1/3 overflow-hidden flex"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false }}
           >
-            <Link href="/category/masala" className="block w-full h-full relative">
+            <Link href="/products" className="block w-full h-full relative">
               <Image
-                src="/banners/masala.jpg"
-                alt="Masala Banner"
-                fill
-                className="object-cover object-center"
+                src="/banners/hillora-turmeric-powder.jpg"
+                alt={siteMeta.siteName}
+                width={600}
+                height={900} // increased height
+                className="w-full h-full object-contain object-center"
+                priority
               />
             </Link>
           </motion.div>
 
           {/* === Right Column: Two stacked banners === */}
-          <div className="col-span-1 md:col-span-2 grid grid-rows-2 gap-1.5 lg:gap-5">
+          <div className="flex flex-col gap-4 md:w-2/3">
 
             {/* Top Banner */}
             <motion.div
-              className="w-full relative aspect-[30/6] md:aspect-[30/4]  rounded-lg overflow-hidden"
+              className="relative overflow-hidden"
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: false }}
             >
-              <Link href="/category/all-masala" className="block w-full h-full relative">
+              <Link href="/products" className="block w-full h-full relative">
                 <Image
-                  src="/banners/all-masala.jpg"
-                  alt="All Masala Banner"
-                  fill
-                  className="object-cover object-center"
+                  src="/banners/hillora-red-chilli.jpg"
+                  alt={siteMeta.siteName}
+                  width={1200}
+                  height={300}
+                  className="w-full h-auto object-contain"
                 />
               </Link>
             </motion.div>
 
             {/* Bottom Banner */}
             <motion.div
-              className="w-full relative aspect-[30/6]  md:aspect-[30/4]  rounded-lg overflow-hidden "
+              className="relative overflow-hidden"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: false }}
             >
-              <Link href="/category/organic" className="block w-full h-full relative">
+              <Link href="/products" className="block w-full h-full relative">
                 <Image
-                  src="/banners/tomato.jpg"
-                  alt="Organic Products Banner"
-                  fill
-                  className="object-cover object-center"
+                  src="/banners/hillora-banner.jpg"
+                  alt={siteMeta.siteName}
+                  width={1200}
+                  height={300}
+                  className="w-full h-auto object-contain"
                 />
               </Link>
             </motion.div>

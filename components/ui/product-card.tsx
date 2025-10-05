@@ -74,7 +74,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Image */}
         <Link href={`/products/${productId}`}>
-          <div className="w-full h-40 mb-4 relative rounded-xl overflow-hidden bg-gray-50">
+          <div className="w-full h-40 mb-4 relative rounded-xl overflow-hidden">
             <Image
               src={productImage || `${siteMeta.siteName}`}
               alt={name}

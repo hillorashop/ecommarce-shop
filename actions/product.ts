@@ -4,6 +4,7 @@ export type dbProductwihtoutAll = {
 
     id: string;
     productId:string;
+    productUrl:string;
     name: string;
     productImage: string;
     price: number;
@@ -61,8 +62,8 @@ export type ProductResponse = {
   };
 };
 
-export const getProduct = async (productId: string): Promise<ProductResponse> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/products/${productId}`);
+export const getProduct = async (productUrl: string): Promise<ProductResponse> => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/products/${productUrl}`);
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
 };

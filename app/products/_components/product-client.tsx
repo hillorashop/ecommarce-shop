@@ -17,18 +17,18 @@ import { useCustomQuery } from "@/hooks/use-custom-query";
 import { getProduct, ProductResponse } from "@/actions/product";
 
 interface Props {
-  productId: string;
+  productUrl: string;
 }
 
-export const ProductClient = ({ productId }: Props) => {
+export const ProductClient = ({ productUrl }: Props) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { cartItems, addItem } = useCart();
   const { data: products, isLoading: productLoading } = useProducts({ page: 1 });
   const router = useRouter();
 
   const { data: product, isLoading } = useCustomQuery<ProductResponse>(
-    ["product", productId],
-    () => getProduct(productId),
+    ["product", productUrl],
+    () => getProduct(productUrl),
     {
       staleTime: ONE_DAY,
       refetchOnMount: false,
@@ -85,7 +85,7 @@ export const ProductClient = ({ productId }: Props) => {
   if (!product) return <p className="text-center py-10">Product not found.</p>;
 
   const productImages = product ? [product.data.productImage] : [`${siteMeta.siteName}`];
-  const relatedProducts = products?.data?.filter((p) => p.productId !== productId).slice(0, 5);
+  const relatedProducts = products?.data?.filter((p) => p.productId !== product.data.productId).slice(0, 5);
   const isInCart = cartItems.some((item) => item.id === product.data.id);
 
   // ✅ Discount handling
@@ -105,7 +105,7 @@ export const ProductClient = ({ productId }: Props) => {
     <>
       <div className="mb-6">
         <Badge variant="secondary" className="text-xs px-3 py-1">
-          Product ID: {productId}
+          Product ID: {product.data.productId}
         </Badge>
       </div>
 

@@ -5,7 +5,7 @@ import Script from "next/script";
 import { siteMeta } from "@/data";
 
 type Props = {
-  params: Promise<{ productId: string }>;
+  params: Promise<{ productUrl: string }>;
 };
 
 function stripHtml(html: string) {
@@ -14,7 +14,7 @@ function stripHtml(html: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const productId = resolvedParams.productId;
+  const productId = resolvedParams.productUrl;
   const { data: product } = await getProduct(productId);
   if (!product) {
     return {
@@ -50,9 +50,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const ProductIdPage = async ({ params }: Props) => {
   const resolvedParams = await params;
-  const productId = (resolvedParams.productId);
+  const productUrl = (resolvedParams.productUrl);
 
-  const { data: product } = await getProduct(productId);
+  const { data: product } = await getProduct(productUrl);
  
 
   if (!product) {
@@ -86,7 +86,7 @@ const ProductIdPage = async ({ params }: Props) => {
         }}
       />
 
-      <ProductClient productId={productId} />
+      <ProductClient productUrl={productUrl} />
     </div>
   );
 };

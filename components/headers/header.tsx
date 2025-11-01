@@ -68,6 +68,7 @@ export function Header() {
   {/* Logo (left side) */}
 <div className="flex-shrink-0 w-60 h-56 relative">
   <Image
+  onClick={()=> router.push("/")}
     src="/logo.svg"
     width={250}
     height={100}

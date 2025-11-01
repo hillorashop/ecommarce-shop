@@ -33,7 +33,7 @@ export function Footer() {
 
   return (
     <footer className="bg-gray-200 border-t border-gray-100">
-      <div className="py-4 px-6">
+      <div className="py-4 lg:py-1 px-6">
         {/* Main content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-20">
           {/* Logo + description */}

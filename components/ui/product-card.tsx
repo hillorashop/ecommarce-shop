@@ -110,7 +110,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Price */}
         <div className="flex flex-col gap-1 mb-2">
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-col lg:flex-row lg:items-baseline gap-2">
             <span className="text-base lg:text-lg font-bold text-gray-900">
               BDT {displayPrice.toLocaleString()}
             </span>

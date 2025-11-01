@@ -285,7 +285,7 @@ export const CheckoutContent = ({ productId }: Props) => {
                     <Card
                       key={method.id}
                       onClick={() => setSelectedPayment(method.id)}
-                      className={`cursor-pointer p-4 flex flex-col items-center text-center border-2 rounded-xl ${
+                      className={`cursor-pointer p-2 flex flex-col space-y-1.5 items-center text-center border-2 rounded-xl ${
                         isSelected
                           ? "border-yellow-400 ring-2 ring-yellow-200"
                           : "border-gray-200"

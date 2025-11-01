@@ -15,7 +15,7 @@ export const mobileNavLinks = [
   { name: "Categories", href: "/categories" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
-  { name: "Become a Seller?", href: "/become-seller" },
+  { name: "Become a Seller", href: "/become-seller" },
 ];
 
 

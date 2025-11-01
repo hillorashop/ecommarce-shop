@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider, HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { ONE_DAY, THREEDAY } from "@/data";
 import { useEffect, useState } from "react";
 import FirstTimeDataToast from "./first-time-data-toast";
 
@@ -15,8 +14,8 @@ interface Props {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: ONE_DAY,
-      gcTime: ONE_DAY,
+      staleTime: 60 * 60 * 1000,
+      gcTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -36,7 +35,7 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
     persistQueryClient({
       queryClient,
       persister,
-      maxAge: ONE_DAY,
+      maxAge: 60 * 60 * 1000,
     });
 
     setHydrated(true);

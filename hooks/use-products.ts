@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProducts, ProductsResponse } from "@/actions/product";
-import { ONE_DAY } from "@/data";
+
 
 interface UseProductsOptions {
   page?: number;
@@ -38,8 +38,8 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     queryKey,
     queryFn: () =>
       getProducts(page, sortBy, sortOrder, productName, minPrice, maxPrice, categoryIds),
-    staleTime: ONE_DAY,
-    gcTime: ONE_DAY,
+    staleTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

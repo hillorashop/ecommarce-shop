@@ -33,7 +33,7 @@ export function Footer() {
 
   return (
     <footer className="bg-gray-200 border-t border-gray-100">
-      <div className="py-12 px-6">
+      <div className="py-4 px-6">
         {/* Main content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-20">
           {/* Logo + description */}
@@ -59,7 +59,7 @@ export function Footer() {
             </h4>
             <ul className="space-y-1 text-sm text-gray-700">
               <li>
-                <span className="font-medium">Address: </span>KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar
+                <span className="font-medium">Address: </span>Shop No:06 Sohag Complex, 2nd Floor Chengi Square, khagachari Sadar Chittagong.
               </li>
               <li>
                 <span className="font-medium">Email:</span> mail@hillora.com

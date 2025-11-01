@@ -31,7 +31,7 @@ export const FAQITEMS = [
   {
     question: "Hillora কোথায় অবস্থিত?",
     answer:
-      "KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar"
+      "Shop No:06 Sohag Complex, 2nd Floor Chengi Square, khagachari Sadar Chittagong."
   },
   {
     question: "Hillora কাস্টমার সাপোর্টে কীভাবে যোগাযোগ করব?",

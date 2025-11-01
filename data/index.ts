@@ -4,7 +4,7 @@ export const navLinks = [
   { name: "Shop", href: "/products" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
-  { name: "Become a Seller?", href: "/become-seller" },
+  { name: "Become a Seller", href: "/become-seller" },
 ];
 
 

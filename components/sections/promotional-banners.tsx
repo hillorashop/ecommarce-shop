@@ -21,7 +21,7 @@ export function PromotionalBanners() {
           >
             <Link href="/products" className="block w-full h-full relative">
               <Image
-                src="/banners/hillora-turmeric-powder.jpg"
+                src="/banners/hillora-banner.jpg"
                 alt={siteMeta.siteName}
                 width={600}
                 height={900} // increased height
@@ -63,7 +63,7 @@ export function PromotionalBanners() {
             >
               <Link href="/products" className="block w-full h-full relative">
                 <Image
-                  src="/banners/hillora-banner.jpg"
+                  src="/banners/hillora-turmeric-powder.jpg"
                   alt={siteMeta.siteName}
                   width={1200}
                   height={300}

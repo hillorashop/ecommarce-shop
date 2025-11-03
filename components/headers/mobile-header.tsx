@@ -217,7 +217,7 @@ export function MobileHeader() {
       onClick={() => {
         setProductName(product.name);
         setSearchResults([]);
-        router.replace(`/products/${product.id}`);
+        router.replace(`/products/${product.productUrl}`);
       }}
     >
       {/* Product Image */}

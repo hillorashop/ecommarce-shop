@@ -128,7 +128,7 @@ export function Header() {
                 onClick={() => {
                   setProductName(product.name);
                   setSearchResults([]);
-                  router.replace(`/products/${product.id}`);
+                  router.replace(`/products/${product.productUrl}`);
                 }}
               >
                 <div className="w-14 h-14 flex-shrink-0 relative">

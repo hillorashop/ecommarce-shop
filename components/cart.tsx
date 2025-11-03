@@ -13,16 +13,60 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { pushToDataLayer } from "@/lib/gtm";
+import { siteMeta } from "@/data";
 
 export const Cart = () => {
   const router = useRouter();
   const { cartItems, removeItem, updateQuantity } = useCart();
   const { open, setOpen } = useOpenStore();
 
-  const remove = (id: string) => {
-    removeItem(id);
-    toast.success("Product removed from cart");
-  };
+
+  useEffect(() => {
+  if (open && cartItems.length > 0) {
+    const items = cartItems.map((item) => {
+      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+      return {
+        item_id: item.productId,
+        item_name: item.name,
+        price,
+        quantity: item.cartQuantity,
+        discount: item.price - price,
+        item_brand: siteMeta.siteName,
+        item_category: item.packageQuantityType,
+      };
+    });
+
+    pushToDataLayer("view_cart", {
+      currency: "BDT",
+      value: items.reduce((total, i) => total + i.price * i.quantity, 0),
+      items,
+    });
+  }
+}, [open, cartItems]);
+
+const remove = (id: string) => {
+    const item = cartItems.find((i) => i.id === id);
+    if (item) {
+      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+      pushToDataLayer("remove_from_cart", {
+        currency: "BDT",
+        value: price * item.cartQuantity,
+        items: [
+          {
+            item_id: item.productId,
+            item_name: item.name,
+            price,
+            discount: item.price - price,
+            quantity: item.cartQuantity,
+            item_brand: siteMeta.siteName,
+            item_category: item.packageQuantityType,
+          },
+        ],
+      });
+    }
+  }
 
   const totalPrice = cartItems.reduce((total, item) => {
     const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
@@ -30,6 +74,30 @@ export const Cart = () => {
   }, 0);
 
   const onCheckout = () => {
+    if (cartItems.length > 0) {
+      const items = cartItems.map((item) => {
+        const price =
+          item.discountPrice && item.discountPrice > 0
+            ? item.discountPrice
+            : item.price;
+        return {
+          item_id: item.productId,
+          item_name: item.name,
+          price,
+          quantity: item.cartQuantity,
+          discount: item.price - price,
+          item_brand: siteMeta.siteName,
+          item_category: item.packageQuantityType,
+        };
+      });
+
+      pushToDataLayer("begin_checkout", {
+        currency: "BDT",
+        value: totalPrice,
+        items,
+      });
+    }
+
     router.push("/checkout");
     setOpen(false);
   };

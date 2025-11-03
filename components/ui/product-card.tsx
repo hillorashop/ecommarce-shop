@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { siteMeta } from "@/data";
 import { dbProductwihtoutAll } from "@/actions/product";
+import { pushToDataLayer } from "@/lib/gtm";
 
 interface ProductCardProps {
   product: dbProductwihtoutAll;
@@ -136,6 +137,24 @@ export function ProductCard({ product }: ProductCardProps) {
             onClick={() => {
               addItem(product);
               toast.success("Product added to cart");
+                pushToDataLayer("add_to_cart", {
+    ecommerce: {
+      currency: "BDT",
+      value: displayPrice,
+      items: [
+        {
+          item_id: productId,
+          item_name: name,
+          price: displayPrice,
+          discount: savingsAmount,
+          item_category: packageQuantityType,
+          item_brand: siteMeta.siteName,
+          item_variant: "default",
+          in_stock: inStocks > 0,
+        },
+      ],
+    },
+  });
             }}
           >
             {isInCart ? "ADDED" : "ADD TO CART"}

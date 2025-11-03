@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { CartItem, useCart } from "@/hooks/use-store";
 import { useProducts } from "@/hooks/use-products";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -17,6 +17,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
 import { useCustomMutation } from "@/hooks/use-custom-query";
 import { postOrder } from "@/actions/order";
+import { pushToDataLayer } from "@/lib/gtm";
+import { siteMeta } from "@/data";
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -50,6 +52,9 @@ export const CheckoutContent = ({ productId }: Props) => {
   const [orderResponse, setOrderResponse] = useState<any>(null);
   const { user } = useUser();
 
+  
+
+
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
       const found = products.data.find((p) => p.id === productId);
@@ -66,6 +71,9 @@ export const CheckoutContent = ({ productId }: Props) => {
       setOrderResponse(newOrder.data);
     }
   );
+
+
+  
 
   // ✅ Safe discount calculation
   const subTotal = checkoutItems.reduce(
@@ -87,6 +95,29 @@ export const CheckoutContent = ({ productId }: Props) => {
 
   const total = subTotal - totalDiscount;
 
+    useEffect(() => {
+    if (selectedPayment) {
+      const items = checkoutItems.map((item) => {
+        const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+        return {
+          item_id: item.productId,
+          item_name: item.name,
+          price,
+          discount: item.price - price,
+          quantity: item.cartQuantity,
+          item_brand: siteMeta.siteName,
+          item_category: item.packageQuantityType,
+        };
+      });
+      pushToDataLayer("add_payment_info", {
+        currency: "BDT",
+        value: total,
+        payment_type: selectedPayment,
+        items,
+      });
+    }
+  }, [selectedPayment, checkoutItems, total]);
+
   // React Hook Form
   const form = useForm<ShippingForm>({
     resolver: zodResolver(shippingSchema),
@@ -99,6 +130,25 @@ export const CheckoutContent = ({ productId }: Props) => {
 
   const handlePlaceOrder = async (data: ShippingForm) => {
     if (!selectedPayment) return;
+
+      const items = checkoutItems.map((item) => {
+      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+      return {
+        item_id: item.productId,
+        item_name: item.name,
+        price,
+        discount: item.price - price,
+        quantity: item.cartQuantity,
+        item_brand: siteMeta.siteName,
+        item_category: item.packageQuantityType,
+      };
+    });
+
+    pushToDataLayer("add_shipping_info", {
+      currency: "BDT",
+      value: total,
+      items,
+    });
 
     const orderData = {
       userId: user?.id,

@@ -19,6 +19,7 @@ import { useCustomMutation } from "@/hooks/use-custom-query";
 import { postOrder } from "@/actions/order";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
+import { dbOrder } from "@/types/type";
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -49,7 +50,7 @@ export const CheckoutContent = ({ productId }: Props) => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
-  const [orderResponse, setOrderResponse] = useState<any>(null);
+  const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
 
   
@@ -70,7 +71,7 @@ export const CheckoutContent = ({ productId }: Props) => {
     (newOrder) => {
       setOrderResponse(newOrder.data);
 
-          const purchaseItems = checkoutItems.map((item, index) => {
+      const purchaseItems = checkoutItems.map((item, index) => {
       const price =
         item.discountPrice && item.discountPrice > 0
           ? item.discountPrice
@@ -90,12 +91,13 @@ export const CheckoutContent = ({ productId }: Props) => {
     });
 
     pushToDataLayer("purchase", {
-      transaction_id: newOrder.data.id, // use actual order id
-      value: total,
-      tax: 0, // add tax if any
-      shipping: 0, // add shipping if any
+      transaction_id: "", 
+      value: total, 
       currency: "BDT",
-      coupon: "", // add coupon if any
+      coupon: "",
+      customerName:orderResponse?.name,
+      customerMobileNumber:orderResponse?.mobileNumber,
+      customerAddress:orderResponse?.address,
       customer_type: user?.role,
       items: purchaseItems,
     });

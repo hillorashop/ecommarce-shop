@@ -69,7 +69,40 @@ export const CheckoutContent = ({ productId }: Props) => {
     ["ordersByUser", user?.id],
     (newOrder) => {
       setOrderResponse(newOrder.data);
+
+          const purchaseItems = checkoutItems.map((item, index) => {
+      const price =
+        item.discountPrice && item.discountPrice > 0
+          ? item.discountPrice
+          : item.price;
+      return {
+        item_id: item.productId,
+        item_name: item.name,
+        affiliation: siteMeta.siteName,
+        coupon: "", // add coupon if any
+        discount: item.price - price,
+        index,
+        item_brand: siteMeta.siteName,
+        item_category: item.packageQuantityType,
+        price,
+        quantity: item.cartQuantity,
+      };
+    });
+
+    pushToDataLayer("purchase", {
+      transaction_id: newOrder.data.id, // use actual order id
+      value: total,
+      tax: 0, // add tax if any
+      shipping: 0, // add shipping if any
+      currency: "BDT",
+      coupon: "", // add coupon if any
+      customer_type: user?.role,
+      items: purchaseItems,
+    });
+  
     }
+
+    
   );
 
 

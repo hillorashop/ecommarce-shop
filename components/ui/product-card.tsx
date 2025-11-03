@@ -160,14 +160,48 @@ export function ProductCard({ product }: ProductCardProps) {
             {isInCart ? "ADDED" : "ADD TO CART"}
           </Button>
 
-          <Button
-            variant="secondary"
-            className="text-xs px-4 py-1 h-7 rounded-md w-full"
-            disabled={inStocks <= 0}
-            onClick={() => router.push(`/checkout?productId=${id}`)}
-          >
-            BUY NOW
-          </Button>
+<Button
+  variant="secondary"
+  className="text-xs px-4 py-1 h-7 rounded-md w-full"
+  disabled={inStocks <= 0}
+  onClick={() => {
+    const hasDiscount =
+      discountPrice !== undefined &&
+      discountPrice !== null &&
+      discountPrice > 0 &&
+      discountPrice < price;
+
+    const priceToUse = hasDiscount ? discountPrice : price;
+    const discountAmount = hasDiscount ? price - discountPrice! : 0;
+
+    // Fire begin_checkout event
+    pushToDataLayer("begin_checkout", {
+      currency: "BDT",
+      value: priceToUse,
+      coupon: "", // add coupon if any
+      items: [
+        {
+          item_id: productId,
+          item_name: name,
+          affiliation: siteMeta.siteName,
+          coupon: "", // add coupon if any
+          discount: discountAmount,
+          index: 0,
+          item_brand: siteMeta.siteName,
+          item_category: packageQuantityType,
+          quantity: 1,
+          price: priceToUse,
+        },
+      ],
+    });
+
+    // Navigate to checkout
+    router.push(`/checkout?productId=${id}`);
+  }}
+>
+  BUY NOW
+</Button>
+
         </div>
       </CardContent>
     </Card>

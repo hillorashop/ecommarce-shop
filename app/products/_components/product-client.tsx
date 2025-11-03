@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ONE_DAY, siteMeta } from "@/data";
 import { useCustomQuery } from "@/hooks/use-custom-query";
-import { getProduct, ProductResponse } from "@/actions/product";
+import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
 
 interface Props {
@@ -66,6 +66,72 @@ export const ProductClient = ({ productUrl }: Props) => {
     ],
   });
 }, [product]);
+
+  const handleAddToCart = (product:dbProductwihtoutAll ) => {
+  const hasDiscount =
+    product.discountPrice &&
+    product.discountPrice > 0 &&
+    product.discountPrice < product.price;
+
+  const price = hasDiscount ? product.discountPrice : product.price;
+  const discountAmount = hasDiscount ? product.price - product.discountPrice! : 0;
+
+  // Fire add_to_cart event
+  pushToDataLayer("add_to_cart", {
+    currency: "BDT",
+    value: price,
+    items: [
+      {
+        item_id: product.productId,
+        item_name: product.name,
+        affiliation: siteMeta.siteName,
+        coupon: "", // add coupon if any
+        discount: discountAmount,
+        index: 0,
+        item_brand: siteMeta.siteName,
+        price,
+      },
+    ],
+  });
+
+  // Add to cart
+  addItem(product);
+};
+
+
+
+const handleBuyNow = (product:dbProductwihtoutAll) => {
+  const hasDiscount =
+    product.discountPrice &&
+    product.discountPrice > 0 &&
+    product.discountPrice < product.price;
+
+  const price = hasDiscount ? product.discountPrice : product.price;
+  const discountAmount = hasDiscount ? product.price - product.discountPrice! : 0;
+
+  // Fire begin_checkout event
+  pushToDataLayer("begin_checkout", {
+    currency: "BDT",
+    value: price,
+    coupon: "", // add coupon if any
+    items: [
+      {
+        item_id: product.productId,
+        item_name: product.name,
+        affiliation: siteMeta.siteName,
+        coupon: "", // add coupon if any
+        discount: discountAmount,
+        index: 0,
+        item_brand: siteMeta.siteName,
+        quantity: 1,
+        price,
+      },
+    ],
+  });
+
+  // Redirect to checkout page with productId
+  router.push(`/checkout?productId=${product.id}`);
+};
 
   if (isLoading || productLoading) {
     return (
@@ -130,6 +196,8 @@ export const ProductClient = ({ productUrl }: Props) => {
   const discountPercentage = hasDiscount
     ? Math.round((savingsAmount / product.data.price) * 100)
     : null;
+
+
 
   return (
     <>
@@ -213,19 +281,20 @@ export const ProductClient = ({ productUrl }: Props) => {
 
           {/* Buttons */}
           <div className="flex items-center gap-4 pt-4">
-            <Button
-              onClick={() => addItem(product.data)}
-              disabled={product.data.inStocks <= 0 || isInCart}
-            >
-              {isInCart ? "Already in Cart" : "Add to Cart"}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={product.data.inStocks <= 0}
-              onClick={() => router.push(`/checkout?productId=${product.data.id}`)}
-            >
-              Buy Now
-            </Button>
+<Button
+  onClick={() => handleAddToCart(product.data)}
+  disabled={product.data.inStocks <= 0 || isInCart}
+>
+  {isInCart ? "Already in Cart" : "Add to Cart"}
+</Button>
+
+<Button
+  variant="secondary"
+  disabled={product.data.inStocks <= 0}
+  onClick={() => handleBuyNow(product.data)}
+>
+  Buy Now
+</Button>
           </div>
         </div>
       </div>

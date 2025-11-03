@@ -66,6 +66,8 @@ const remove = (id: string) => {
         ],
       });
     }
+    removeItem(id); 
+    toast.success(`${item?.name} removed from cart`);
   }
 
   const totalPrice = cartItems.reduce((total, item) => {

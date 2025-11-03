@@ -14,6 +14,8 @@ import {
 import { HeadingTitle } from "../heading-title";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
+import { pushToDataLayer } from "@/lib/gtm";
+import { siteMeta } from "@/data";
 
 export function NewProducts() {
   const { data: products, isLoading } = useProducts({page:1})
@@ -25,6 +27,28 @@ export function NewProducts() {
   const plugin = useRef(
     Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
+
+    useEffect(() => {
+    if (!isClient || !products?.data || products.data.length === 0) return;
+
+    const items = products.data.map((product, index) => ({
+      item_id: product.productId,
+      item_name: product.name,
+      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
+      discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,
+      index,
+      item_brand: siteMeta.siteName,
+      item_list_id: "new_products",
+      item_list_name: "New products",
+      quantity: 1,
+    }));
+
+    pushToDataLayer("view_item_list", {
+      item_list_id: "new_products",
+      item_list_name: "New products",
+      items,
+    });
+  }, [isClient, products]);
 
   return (
     <div className="py-4 lg:py-8 bg-gradient-to-br from-primary/5 via-background to-accent/10  relative">

@@ -11,10 +11,11 @@ import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ONE_DAY, siteMeta } from "@/data";
 import { useCustomQuery } from "@/hooks/use-custom-query";
 import { getProduct, ProductResponse } from "@/actions/product";
+import { pushToDataLayer } from "@/lib/gtm";
 
 interface Props {
   productUrl: string;
@@ -36,6 +37,35 @@ export const ProductClient = ({ productUrl }: Props) => {
       refetchOnReconnect: false,
     }
   );
+
+  useEffect(() => {
+  if (!product) return;
+
+  const hasDiscount =
+    product.data.discountPrice !== undefined &&
+    product.data.discountPrice !== null &&
+    product.data.discountPrice > 0 &&
+    product.data.discountPrice < product.data.price;
+
+  const displayPrice = hasDiscount ? product.data.discountPrice : product.data.price;
+  const discountAmount = hasDiscount ? product.data.price - product.data.discountPrice! : 0;
+
+  pushToDataLayer("view_item", {
+    currency: "BDT",
+    value: displayPrice,
+    items: [
+      {
+        item_id: product.data.productId,
+        item_name: product.data.name,
+        price: displayPrice,
+        discount: discountAmount,
+        item_brand: siteMeta.siteName,
+        item_category: product.data.category?.name || "Uncategorized",
+        quantity: 1,
+      },
+    ],
+  });
+}, [product]);
 
   if (isLoading || productLoading) {
     return (

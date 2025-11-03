@@ -6,11 +6,41 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { HeadingTitle } from "../heading-title";
+import { useEffect, useState } from "react";
+import { pushToDataLayer } from "@/lib/gtm";
+import { siteMeta } from "@/data";
 
 export function BestSelling() {
   const { data: products, isLoading } = useProducts({ page: 1 });
+  const [isClient, setIsClient] = useState(false);
+    const skeletonCount = 8;
+    // ✅ Mark component as client
+  useEffect(() => setIsClient(true), []);
 
-  const skeletonCount = 8;
+  // ✅ Fire view_item_list for Best Selling products
+  useEffect(() => {
+    if (!isClient || !products?.data || products.data.length === 0) return;
+
+    const items = products.data.map((product, index) => ({
+      item_id: product.productId,
+      item_name: product.name,
+      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
+      discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,
+      index,
+      item_brand: siteMeta.siteName,
+      item_list_id: "best_selling",
+      item_list_name: "Best Selling",
+      quantity: 1,
+    }));
+
+    pushToDataLayer("view_item_list", {
+      item_list_id: "best_selling",
+      item_list_name: "Best Selling",
+      items,
+    });
+  }, [isClient, products]);
+
+
 
   return (
     <div className="py-4 lg:py-8 w-full">

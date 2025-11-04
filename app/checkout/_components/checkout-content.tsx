@@ -80,7 +80,6 @@ export const CheckoutContent = ({ productId }: Props) => {
         item_id: item.productId,
         item_name: item.name,
         affiliation: siteMeta.siteName,
-        coupon: "", // add coupon if any
         discount: item.price - price,
         index,
         item_brand: siteMeta.siteName,

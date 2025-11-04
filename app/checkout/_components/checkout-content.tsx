@@ -83,7 +83,7 @@ export const CheckoutContent = ({ productId }: Props) => {
         discount: item.price - price,
         index,
         item_brand: siteMeta.siteName,
-        item_category: item.productId,
+        item_category: " ",
         price,
         quantity: item.cartQuantity,
       };

@@ -93,13 +93,10 @@ export const CheckoutContent = ({ productId }: Props) => {
       transaction_id: orderResponse?.orderId, 
       value: total, 
       currency: "BDT",
-      user_data:{
-        email_address:user?.email || "",
-        phone_number:orderResponse?.mobileNumber,
-        address:{
-          first_name:orderResponse?.name,
-
-        }
+      customer:{
+       name:orderResponse?.name,
+       address:orderResponse?.address,
+       phone:orderResponse?.mobileNumber,
       },
       customer_type: user?.role,
       items: purchaseItems,

@@ -90,7 +90,7 @@ export const CheckoutContent = ({ productId }: Props) => {
     });
 
     pushToDataLayer("purchase", {
-      transaction_id: orderResponse?.id, 
+      transaction_id: orderResponse?.orderId, 
       value: total, 
       currency: "BDT",
       user_data:{

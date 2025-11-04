@@ -91,15 +91,21 @@ export const CheckoutContent = ({ productId }: Props) => {
     });
 
     pushToDataLayer("purchase", {
-      transaction_id: "", 
+      transaction_id: orderResponse?.id, 
       value: total, 
       currency: "BDT",
-      coupon: "",
-      customerName:orderResponse?.name,
-      customerMobileNumber:orderResponse?.mobileNumber,
-      customerAddress:orderResponse?.address,
+      user_data:{
+        email_address:user?.email || "",
+        phone_number:orderResponse?.mobileNumber,
+        address:{
+          first_name:orderResponse?.name,
+          full_address:orderResponse?.address,
+
+        }
+      },
       customer_type: user?.role,
       items: purchaseItems,
+      
     });
   
     }

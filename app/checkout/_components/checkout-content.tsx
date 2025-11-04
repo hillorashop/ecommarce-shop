@@ -83,7 +83,7 @@ export const CheckoutContent = ({ productId }: Props) => {
         discount: item.price - price,
         index,
         item_brand: siteMeta.siteName,
-        item_category: item.packageQuantityType,
+        item_category: item.productId,
         price,
         quantity: item.cartQuantity,
       };
@@ -98,7 +98,6 @@ export const CheckoutContent = ({ productId }: Props) => {
         phone_number:orderResponse?.mobileNumber,
         address:{
           first_name:orderResponse?.name,
-          full_address:orderResponse?.address,
 
         }
       },

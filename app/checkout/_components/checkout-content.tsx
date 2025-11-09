@@ -93,7 +93,7 @@ export const CheckoutContent = ({ productId }: Props) => {
       transaction_id:"Sajib Saha testing" , 
       value: total, 
       currency: "BDT",
-      customer_name: orderResponse?.name,
+      customer_name: "Sajib Saha",
       customer_address: "Testing", 
       customer_phone:"Testing" ,
       customer_type: user?.role,

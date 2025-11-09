@@ -90,12 +90,12 @@ export const CheckoutContent = ({ productId }: Props) => {
     });
 
     pushToDataLayer("purchase", {
-      transaction_id: orderResponse?.orderId, 
+      transaction_id:"Sajib Saha testing" , 
       value: total, 
       currency: "BDT",
       customer_name: orderResponse?.name,
-      customer_address: orderResponse?.address, 
-      customer_phone: orderResponse?.mobileNumber,
+      customer_address: "Testing", 
+      customer_phone:"Testing" ,
       customer_type: user?.role,
       items: purchaseItems,
       

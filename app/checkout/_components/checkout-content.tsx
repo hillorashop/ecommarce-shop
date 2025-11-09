@@ -15,11 +15,12 @@ import { Form, FormField } from "@/components/ui/form";
 import { CustomForm } from "@/components/ui/custom-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
-import { useCustomMutation } from "@/hooks/use-custom-query";
+import { useCustomMutation, useCustomQuery } from "@/hooks/use-custom-query";
 import { postOrder } from "@/actions/order";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
 import { dbOrder } from "@/types/type";
+import { CategoriesResponse, getCategories } from "@/actions/category";
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -53,8 +54,6 @@ export const CheckoutContent = ({ productId }: Props) => {
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
 
-  
-
 
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
@@ -76,6 +75,7 @@ export const CheckoutContent = ({ productId }: Props) => {
         item.discountPrice && item.discountPrice > 0
           ? item.discountPrice
           : item.price;
+
       return {
         item_id: item.productId,
         item_name: item.name,
@@ -83,7 +83,7 @@ export const CheckoutContent = ({ productId }: Props) => {
         discount: item.price - price,
         index,
         item_brand: siteMeta.siteName,
-        item_category: " ",
+        item_category: "",
         price,
         quantity: item.cartQuantity,
       };

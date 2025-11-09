@@ -17,6 +17,7 @@ import { useCustomQuery } from "@/hooks/use-custom-query";
 import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
 
+
 interface Props {
   productUrl: string;
 }
@@ -37,6 +38,7 @@ export const ProductClient = ({ productUrl }: Props) => {
       refetchOnReconnect: false,
     }
   );
+
 
   useEffect(() => {
   if (!product) return;
@@ -85,9 +87,7 @@ export const ProductClient = ({ productUrl }: Props) => {
         item_id: product.productId,
         item_name: product.name,
         affiliation: siteMeta.siteName,
-        coupon: "", // add coupon if any
         discount: discountAmount,
-        index: 0,
         item_brand: siteMeta.siteName,
         price,
       },
@@ -113,17 +113,13 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
   pushToDataLayer("begin_checkout", {
     currency: "BDT",
     value: price,
-    coupon: "", // add coupon if any
     items: [
       {
         item_id: product.productId,
         item_name: product.name,
         affiliation: siteMeta.siteName,
-        coupon: "", // add coupon if any
         discount: discountAmount,
-        index: 0,
         item_brand: siteMeta.siteName,
-        quantity: 1,
         price,
       },
     ],

@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {  mobileNavLinks, siteMeta } from "@/data";
+import {  emergency_contact, mobileNavLinks, siteMeta } from "@/data";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -38,6 +38,33 @@ export function MobileHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
       <div className="px-6">
+          <div className="flex items-center gap-4 w-full justify-center border-b py-1">
+              {emergency_contact.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative flex items-center justify-center w-6 h-6 z-50"
+                >
+                  <Image
+                    src={s.Icon}
+                    alt={siteMeta.siteName}
+                    width={18}
+                    height={18}
+                    className="rounded-full overflow-hidden z-10"
+                  />
+                  <div
+                    className="absolute inset-1 border rounded-full animate-ping duration-200"
+                    style={{ borderColor: s.bg }}
+                  />
+                      <div
+                    className="absolute -inset-0.5 border rounded-full animate-ping duration-100"
+                    style={{ borderColor: s.bg }}
+                  />
+                </a>
+              ))}
+            </div>
         <div className="flex items-center justify-between h-14 relative">
           {/* === Hamburger Menu === */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -267,6 +294,7 @@ export function MobileHeader() {
           </motion.div>
         )}
       </AnimatePresence>
+
     </header>
   );
 }

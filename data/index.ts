@@ -137,6 +137,19 @@ export const  THREEDAY = 72 * 60 * 60 * 1000
 
 
 
+export const emergency_contact = [
+    { href: "https://www.facebook.com/hillorashop", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
+  {
+    href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।",
+    Icon: "/icons/whatsapp.svg",
+    bg: "#16a34a",
+  },
+  {
+    href: "https://m.me/hillorashop?ref=order_now",
+    Icon: "/icons/messenger.svg.webp",
+    bg: "#be123c",
+  },
+];
 
 
 

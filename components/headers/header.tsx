@@ -8,22 +8,9 @@ import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
 import { dbProduct } from "@/types/type";
 import { Card } from "@/components/ui/card";
-import { siteMeta } from "@/data";
+import { emergency_contact, siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
 
-const emergency_contact = [
-    { href: "https://www.facebook.com/hillorashop", Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
-  {
-    href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।",
-    Icon: "/icons/whatsapp.svg",
-    bg: "#16a34a",
-  },
-  {
-    href: "https://m.me/hillorashop?ref=order_now",
-    Icon: "/icons/messenger.svg.webp",
-    bg: "#be123c",
-  },
-];
 
 export function Header() {
   const [productName, setProductName] = useState("");

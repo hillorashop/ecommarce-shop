@@ -45,7 +45,7 @@ export function MobileHeader() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative flex items-center justify-center w-6 h-6 z-50"
+                  className="relative flex items-center justify-center w-6 h-6"
                 >
                   <Image
                     src={s.Icon}
@@ -184,7 +184,7 @@ export function MobileHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="absolute inset-0 bg-white/95  flex items-center px-4"
+            className="absolute inset-0 bg-white/95  flex items-center px-4 z-50"
           >
   <div className="relative w-full max-w-sm">
   <Input

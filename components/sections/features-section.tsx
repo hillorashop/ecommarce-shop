@@ -30,8 +30,8 @@ export function FeaturesSection() {
     src="/logo.svg"
     alt={siteMeta.siteName}
     width={200}
-    height={100}
-    className="object-contain w-36 drop-shadow-sm -top-0.5 absolute  lg:translate-x-28  lg:top-6 lg:-translate-y-1/2 overflow-hidden"
+    height={140}
+    className="object-contain w-52 drop-shadow-sm -top-6 absolute  lg:translate-x-28  lg:top-5 lg:-translate-y-1/2 overflow-hidden"
   />
 </h2>
 

@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
   },
   icons: [
-    { rel: "icon", url: "/meta-icon.jpg", type:"image/svg+xml", sizes: "180x180"},
-    { rel: "apple-touch-icon", url: "/meta-icon.jpg", sizes: "180x180" },
+    { rel: "icon", url: "/fevicon.svg", type:"image/svg+xml", sizes: "180x180"},
+    { rel: "apple-touch-icon", url: "/fevicon.svg", sizes: "180x180" },
   ],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,

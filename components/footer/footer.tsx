@@ -43,7 +43,7 @@ export function Footer() {
               alt={siteMeta.siteName}
               width={180}
               height={70}
-              className="object-contain  absolute -translate-20 left-8"
+              className="object-contain  absolute -translate-20 left-6"
             />
             <p className="text-sm text-gray-700 leading-relaxed">
               Hillora works directly with local farmers and artisans in

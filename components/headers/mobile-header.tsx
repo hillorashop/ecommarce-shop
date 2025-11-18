@@ -38,7 +38,7 @@ export function MobileHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
       <div className="px-6">
-          <div className="flex items-center gap-4 w-full justify-center border-b py-1">
+          <div className="flex items-center gap-4 w-full justify-center py-1">
               {emergency_contact.map((s, i) => (
                 <a
                   key={i}
@@ -153,8 +153,8 @@ export function MobileHeader() {
             <Image
               src="/logo.svg"
               alt={`${siteMeta.siteName}`}
-              width={200}
-              height={80}
+              width={300}
+              height={200}
               onClick={()=> router.push("/")}
               className="object-contain overflow-hidden"
             />

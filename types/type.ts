@@ -55,7 +55,7 @@ export type dbOrder = {
   mobileNumber: string;
   address: string;
   accountType: string;
-  status: "PENDING" | "PROCESSING" | "SHIPPED" | "NEARBY" | "COMPLETED" | "CANCELLED" | "RETURNED";
+  status: "PENDING" | "PROCESSING" | "SHIPPED" | "NEARBY" | "COMPLETED" | "CANCELLED" | "RETURNED" | "CONFIRM";
   total: number;
   totalDiscount?: number | null;
   transactionId?: string | null;

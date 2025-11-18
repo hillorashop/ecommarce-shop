@@ -128,39 +128,8 @@ export const CheckoutContent = ({ productId }: Props) => {
     },
   });
 
-    useEffect(() => {
-    if (orderResponse) {
-      const purchaseItems = checkoutItems.map((item, index) => {
-        const price =
-          item.discountPrice && item.discountPrice > 0
-            ? item.discountPrice
-            : item.price;
 
-        return {
-          item_id: item.productId,
-          item_name: item.name,
-          affiliation: siteMeta.siteName,
-          discount: item.price - price,
-          index,
-          item_brand: siteMeta.siteName,
-          item_category: "",
-          price,
-          quantity: item.cartQuantity,
-        };
-      });
 
-      pushToDataLayer("purchase", {
-        transaction_id: orderResponse.orderId,
-        value: total,
-        currency: "BDT",
-        customer_name: orderResponse.name,
-        customer_address: orderResponse.address,
-        customer_phone: orderResponse.mobileNumber,
-        customer_type: user?.role,
-        items: purchaseItems,
-      });
-    }
-  }, [orderResponse, checkoutItems, total, user]);
 
   const handlePlaceOrder = async (data: ShippingForm) => {
     if (!selectedPayment) return;

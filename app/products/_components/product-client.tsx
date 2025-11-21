@@ -59,8 +59,8 @@ export const ProductClient = ({ productUrl }: Props) => {
       {
         item_id: product.data.productId,
         item_name: product.data.name,
-        price: displayPrice,
-        discount: discountAmount,
+        price: displayPrice?.toString(),
+        discount: discountAmount.toString(),
         item_brand: siteMeta.siteName,
         item_category: product.data.category?.name || "Uncategorized",
         quantity: 1,

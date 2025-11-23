@@ -20,9 +20,10 @@ import { pushToDataLayer } from "@/lib/gtm";
 
 interface Props {
   productUrl: string;
+  fbclid?:string | null;
 }
 
-export const ProductClient = ({ productUrl }: Props) => {
+export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { cartItems, addItem } = useCart();
   const { data: products, isLoading: productLoading } = useProducts({ page: 1 });

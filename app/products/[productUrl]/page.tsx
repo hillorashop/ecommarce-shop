@@ -6,16 +6,17 @@ import { siteMeta } from "@/data";
 
 type Props = {
   params: Promise<{ productUrl: string }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params}: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const productId = resolvedParams.productUrl;
-  const { data: product } = await getProduct(productId);
+  const productUrl = resolvedParams.productUrl;
+  const { data: product } = await getProduct(productUrl);
   if (!product) {
     return {
       title: `Product not found | ${siteMeta.siteName}`,
@@ -31,8 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.name,
       description: plainDescription.slice(0, 400) || product.subDescription,
-      // ✅ Use encodeURIComponent for social sharing to avoid broken links
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products/${product.productId}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products/${productUrl}`,
       type: "website",
       siteName: siteMeta.siteName,
       images: [
@@ -48,8 +48,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const ProductIdPage = async ({ params }: Props) => {
+const ProductIdPage = async ({ params, searchParams }: Props) => {
   const resolvedParams = await params;
+  const fbclid = typeof searchParams.fbclid === "string" ? searchParams.fbclid : null;
   const productUrl = (resolvedParams.productUrl);
 
   const { data: product } = await getProduct(productUrl);
@@ -86,7 +87,7 @@ const ProductIdPage = async ({ params }: Props) => {
         }}
       />
 
-      <ProductClient productUrl={productUrl} />
+      <ProductClient productUrl={productUrl} fbclid={fbclid}/>
     </div>
   );
 };

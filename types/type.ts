@@ -60,6 +60,8 @@ export type dbOrder = {
   totalDiscount?: number | null;
   transactionId?: string | null;
   userId?: string | null;
+  fbc?:string | null;
+  fbp?:string | null;
   createdAt: Date;
   updatedAt: Date;
 

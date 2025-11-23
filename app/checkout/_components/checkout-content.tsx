@@ -53,6 +53,8 @@ export const CheckoutContent = ({ productId }: Props) => {
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
+  const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || null;
+  const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || null;
 
 
   const checkoutItems: CartItem[] = useMemo(() => {
@@ -155,6 +157,8 @@ export const CheckoutContent = ({ productId }: Props) => {
 
     const orderData = {
       userId: user?.id,
+      fbc,
+      fbp,
       name: data.name,
       mobileNumber: data.mobileNumber,
       address: data.address,

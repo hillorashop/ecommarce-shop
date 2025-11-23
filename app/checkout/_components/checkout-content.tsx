@@ -53,8 +53,13 @@ export const CheckoutContent = ({ productId }: Props) => {
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
-  const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || null;
-  const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || null;
+const [fbp, setFbp] = useState<string | null>(null);
+const [fbc, setFbc] = useState<string | null>(null);
+
+useEffect(() => {
+  setFbp(document.cookie.match(/_fbp=([^;]+)/)?.[1] || null);
+  setFbc(document.cookie.match(/_fbc=([^;]+)/)?.[1] || null);
+}, []);
 
 
   const checkoutItems: CartItem[] = useMemo(() => {

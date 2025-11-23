@@ -6,7 +6,7 @@ import { siteMeta } from "@/data";
 
 type Props = {
   params: Promise<{ productUrl: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
+
 };
 
 function stripHtml(html: string) {
@@ -48,9 +48,8 @@ export async function generateMetadata({ params}: Props): Promise<Metadata> {
   };
 }
 
-const ProductIdPage = async ({ params, searchParams }: Props) => {
+const ProductIdPage = async ({ params}: Props) => {
   const resolvedParams = await params;
-  const fbclid = typeof searchParams.fbclid === "string" ? searchParams.fbclid : null;
   const productUrl = (resolvedParams.productUrl);
 
   const { data: product } = await getProduct(productUrl);
@@ -87,7 +86,7 @@ const ProductIdPage = async ({ params, searchParams }: Props) => {
         }}
       />
 
-      <ProductClient productUrl={productUrl} fbclid={fbclid}/>
+      <ProductClient productUrl={productUrl}/>
     </div>
   );
 };

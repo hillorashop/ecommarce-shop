@@ -131,7 +131,7 @@ const remove = (id: string) => {
 
                   {/* Product Info */}
                   <div className="flex flex-col flex-1 mx-4">
-                    <p className="text-sm font-medium truncate">{item.name}</p>
+                    <p className="text-sm font-medium ">{item.name}</p>
 
                     <p className="text-sm text-gray-600">
                       {item.discountPrice && item.discountPrice > 0 ? (

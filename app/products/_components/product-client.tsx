@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquareMore, Search, Star } from "lucide-react";
+import { MessageSquareMore, MinusIcon, PlusIcon, Search, Star } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,8 +25,11 @@ interface Props {
 
 export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const { cartItems, addItem } = useCart();
+  const { cartItems, addItem} = useCart();
   const { data: products, isLoading: productLoading } = useProducts({ page: 1 });
+  const [quantity, setQuantity] = useState(1);
+
+  
   const router = useRouter();
 
   const { data: product, isLoading } = useCustomQuery<ProductResponse>(
@@ -96,7 +99,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
   });
 
   // Add to cart
-  addItem(product);
+  addItem(product, quantity);
 };
 
 
@@ -127,7 +130,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
   });
 
   // Redirect to checkout page with productId
-  router.push(`/checkout?productId=${product.id}`);
+  router.push(`/checkout?productId=${product.id}&qty=${quantity}`);
 };
 
   if (isLoading || productLoading) {
@@ -276,11 +279,33 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
             <Badge className="bg-green-600">{product.data.category?.name}</Badge>
           </div>
 
+             <div className="flex items-center gap-3 mt-2 max-w-1/3">
+  <Button
+    onClick={() => setQuantity((q) => Math.max(q - 1, 1))}
+    size="icon"
+    className="h-7 w-7 flex-1"
+  >
+    <MinusIcon />
+  </Button>
+
+  <p className="text-sm font-medium">{quantity}</p>
+
+  <Button
+    onClick={() => setQuantity((q) => q + 1)}
+    size="icon"
+    className="h-7 w-7 flex-1"
+  >
+    <PlusIcon />
+  </Button>
+</div>
+
+
           {/* Buttons */}
           <div className="flex items-center gap-4 pt-4">
 <Button
   onClick={() => handleAddToCart(product.data)}
   disabled={product.data.inStocks <= 0 || isInCart}
+  className="flex-1"
 >
   {isInCart ? "Already in Cart" : "Add to Cart"}
 </Button>
@@ -289,6 +314,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
   variant="secondary"
   disabled={product.data.inStocks <= 0}
   onClick={() => handleBuyNow(product.data)}
+  className="flex-1"
 >
   Buy Now
 </Button>

@@ -45,9 +45,10 @@ const paymentMethods = [
 
 interface Props {
   productId?: string;
+  qty?: number;
 }
 
-export const CheckoutContent = ({ productId }: Props) => {
+export const CheckoutContent = ({ productId,qty }: Props) => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
@@ -65,7 +66,7 @@ useEffect(() => {
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
       const found = products.data.find((p) => p.id === productId);
-      return found ? [{ ...found, cartQuantity: 1 }] : [];
+      return found ? [{ ...found, cartQuantity: qty ?? 1 }] : [];
     }
     return cartItems;
   }, [productId, products, cartItems]);

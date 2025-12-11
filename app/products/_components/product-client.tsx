@@ -237,7 +237,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
       {/* Product Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
        <div className="w-full">
-         <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden">
+         <div className="relative w-full h-[400px] md:h-[600px] overflow-hidden">
         {mergedMedia.map((mediaUrl, index) => {
           const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaUrl);
           return (
@@ -284,6 +284,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
         </div>
 
       {/* Thumbnails */}
+
       <div className="flex gap-3 mt-4 overflow-x-auto flex-wrap">
         {mergedMedia.map((mediaUrl, index) => {
           const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaUrl);
@@ -292,33 +293,28 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`
-              cursor-pointer flex-shrink-0 border transition relative h-24 md:h-34 aspect-[2/3] ${
+              cursor-pointer flex-shrink-0 border transition relative h-14 md:h-24  aspect-square ${
                     currentIndex === index
                       ? "border-primary shadow-md"
                       : "border-gray-200 hover:border-primary/50"
-                  }
-              
-              `}
+                  }`}
             >
               {isVideo ? (
-                <div className="relative w-[80px] md:w-[120px] aspect-[4/5]">
+                <div className="relative h-24 md:h-24 aspect-square">
                   <video
                     src={mediaUrl}
                     muted
-                    className={"w-full h-full object-cover border"}
-                
+                    className={"w-full h-full object-cover"}
                   />
-                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl md:text-2xl pointer-events-none" />
+                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl md:text-2xl pointer-events-none"/>
                 </div>
               ) : (
-              
                   <Image
                     src={mediaUrl}
                     alt={product.data.name}
                     fill
                     className="object-cover"
                   />
-              
               )}
             </div>
           );

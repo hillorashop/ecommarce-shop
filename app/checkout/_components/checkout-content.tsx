@@ -354,19 +354,21 @@ useEffect(() => {
                           : "border-gray-200"
                       } ${method.gradient}`}
                     >
+                    <div className="flex-shrink-0 w-60 h-12 relative flex items-center justify-center">
                       <Image
                         src={method.image}
                         alt={method.name}
-                        width={80}
-                        height={80}
-                        className="object-contain"
+                        width={120}
+                        height={60}
+                     
+                        className="object-contain absolute translate-y-1/5 -translate-x-1/3"
                       />
+                    </div>
+               
                       <h4 className={`font-semibold ${method.textColor}`}>
                         {method.name}
                       </h4>
-                      <p className={`text-sm ${method.textColor}`}>
-                        {method.description}
-                      </p>
+                 
                     </Card>
                   );
                 })}

@@ -6,16 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquareMore, MinusIcon, PlusIcon, Search, Star } from "lucide-react";
+import { MessageSquareMore, MinusIcon, PlusIcon, Search, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ONE_DAY, siteMeta } from "@/data";
 import { useCustomQuery } from "@/hooks/use-custom-query";
 import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
+import { FaRegPlayCircle } from "react-icons/fa";
 
 
 interface Props {
@@ -24,13 +25,18 @@ interface Props {
 }
 
 export const ProductClient = ({ productUrl, fbclid }: Props) => {
-  const [selectedImage, setSelectedImage] = useState(0);
   const { cartItems, addItem} = useCart();
   const { data: products, isLoading: productLoading } = useProducts({ page: 1 });
   const [quantity, setQuantity] = useState(1);
-
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [muted, setMuted] = useState<boolean>(true);
   
+;
+
   const router = useRouter();
+
+ 
 
   const { data: product, isLoading } = useCustomQuery<ProductResponse>(
     ["product", productUrl],
@@ -42,6 +48,14 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
       refetchOnReconnect: false,
     }
   );
+
+     const mergedMedia = useMemo(() => {
+    if (!product) return [];
+    const gallery = product.data.gallery || [];
+    return product.data.productImage
+      ? [product.data.productImage, ...gallery.filter((g) => g !== product.data.productImage)]
+      : gallery;
+  }, [product]);
 
 
   useEffect(() => {
@@ -72,6 +86,8 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     ],
   });
 }, [product]);
+
+
 
   const handleAddToCart = (product:dbProductwihtoutAll ) => {
   const hasDiscount =
@@ -104,6 +120,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
 
 
 
+
 const handleBuyNow = (product:dbProductwihtoutAll) => {
   const hasDiscount =
     product.discountPrice &&
@@ -132,6 +149,14 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
   // Redirect to checkout page with productId
   router.push(`/checkout?productId=${product.id}&qty=${quantity}`);
 };
+
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setMuted(videoRef.current.muted);
+    }
+  };
 
   if (isLoading || productLoading) {
     return (
@@ -180,7 +205,9 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 
   if (!product) return <p className="text-center py-10">Product not found.</p>;
 
-  const productImages = product ? [product.data.productImage] : [`${siteMeta.siteName}`];
+
+
+
   const relatedProducts = products?.data?.filter((p) => p.productId !== product.data.productId).slice(0, 5);
   const isInCart = cartItems.some((item) => item.id === product.data.id);
 
@@ -209,47 +236,95 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 
       {/* Product Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
-        {/* Product Images */}
-        <div className="space-y-4">
-          <div className="relative rounded-2xl p-4 shadow-sm">
-            <Image
-              src={productImages[selectedImage]}
-              alt={product.data.name}
-              width={500}
-              height={500}
-              className="w-full h-auto rounded-xl object-cover"
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-4 right-4 bg-white/80 hover:bg-white shadow-sm rounded-full"
+       <div className="w-full">
+         <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden">
+        {mergedMedia.map((mediaUrl, index) => {
+          const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaUrl);
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-500 ${
+                currentIndex === index ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
             >
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="flex gap-3">
-            {productImages.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(index)}
-                className={`border-2 rounded-xl p-1 transition ${
-                  selectedImage === index
-                    ? "border-primary shadow-md"
-                    : "border-gray-200 hover:border-primary/50"
-                }`}
-              >
+              {isVideo ? (
+                <div className="w-full h-full relative">
+                  <video
+                    ref={currentIndex === index ? videoRef : null}
+                    src={mediaUrl}
+                    autoPlay={currentIndex === index}
+                    muted={muted}
+                    loop
+                    playsInline
+                    disablePictureInPicture
+                    controlsList="nodownload nofullscreen noremoteplayback"
+                    className="w-full h-full object-contain"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleMute}
+                    className="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full"
+                  >
+                    {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                  </Button>
+                </div>
+              ) : (
                 <Image
-                  src={image}
-                  alt={`${siteMeta.siteName}`}
-                  width={70}
-                  height={70}
-                  className="rounded-lg object-cover"
+                  src={mediaUrl}
+                  alt={product.data.name}
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-contain"
                 />
-              </button>
-            ))}
-          </div>
+              )}
+            </div>
+          );
+        })}
         </div>
 
+      {/* Thumbnails */}
+      <div className="flex gap-3 mt-4 overflow-x-auto flex-wrap">
+        {mergedMedia.map((mediaUrl, index) => {
+          const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaUrl);
+          return (
+            <div
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`
+              cursor-pointer flex-shrink-0 border transition relative h-24 md:h-34 aspect-[2/3] ${
+                    currentIndex === index
+                      ? "border-primary shadow-md"
+                      : "border-gray-200 hover:border-primary/50"
+                  }
+              
+              `}
+            >
+              {isVideo ? (
+                <div className="relative w-[80px] md:w-[120px] aspect-[4/5]">
+                  <video
+                    src={mediaUrl}
+                    muted
+                    className={"w-full h-full object-cover border"}
+                
+                  />
+                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl md:text-2xl pointer-events-none" />
+                </div>
+              ) : (
+              
+                  <Image
+                    src={mediaUrl}
+                    alt={product.data.name}
+                    fill
+                    className="object-cover"
+                  />
+              
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
         {/* Product Details */}
         <div className="space-y-6">
           <h1 className="text-3xl font-bold">{product.data.name}</h1>

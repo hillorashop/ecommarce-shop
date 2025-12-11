@@ -20,6 +20,7 @@ export type dbProduct = {
   description: string
   subDescription: string;
   productImage: string;
+  gallery: string[];
   price: number;
   discountPrice?: number;
   packageQuantity: string;

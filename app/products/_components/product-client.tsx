@@ -17,7 +17,7 @@ import { useCustomQuery } from "@/hooks/use-custom-query";
 import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
 import { FaRegPlayCircle } from "react-icons/fa";
-
+import { motion, Transition } from "framer-motion";
 
 interface Props {
   productUrl: string;
@@ -283,7 +283,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
         })}
         </div>
 
-      {/* Thumbnails */}
+    
 
       <div className="flex gap-3 mt-4 overflow-x-auto flex-wrap">
         {mergedMedia.map((mediaUrl, index) => {
@@ -328,7 +328,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
             {product.data.packageQuantity} <span>{product.data.packageQuantityType}</span>
           </p>
 
-          {/* Price */}
+   
           <div className="flex items-center gap-3">
             <span className="text-3xl font-extrabold">BDT {displayPrice?.toLocaleString()}</span>
             {hasDiscount && (
@@ -337,24 +337,25 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
               </span>
             )}
           </div>
-          {hasDiscount && (
+
+            <div className="flex flex-row md:flex-col items-center justify-between md:items-start w-full">
+         {hasDiscount && (
             <span className="text-green-600 font-medium">
               You save BDT {savingsAmount.toLocaleString()} ({discountPercentage}%)
             </span>
           )}
+            <Badge className="bg-green-600 p-1">{product.data.category?.name}</Badge>
+            </div>
 
-          <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>
+ 
+          
 
-          <div>
-            <h3 className="font-semibold mb-2 text-gray-800">Category</h3>
-            <Badge className="bg-green-600">{product.data.category?.name}</Badge>
-          </div>
-
-             <div className="flex items-center gap-3 mt-2 max-w-1/3">
+<div className="flex items-center gap-x-2">
+               <div className="flex items-center gap-3  max-w-1/3 flex-1">
   <Button
     onClick={() => setQuantity((q) => Math.max(q - 1, 1))}
-    size="icon"
-    className="h-7 w-7 flex-1"
+
+    className=" w-7 flex-1"
   >
     <MinusIcon />
   </Button>
@@ -363,33 +364,66 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 
   <Button
     onClick={() => setQuantity((q) => q + 1)}
-    size="icon"
-    className="h-7 w-7 flex-1"
+
+    className=" w-7 flex-1"
   >
     <PlusIcon />
   </Button>
 </div>
-
-
-          {/* Buttons */}
-          <div className="flex items-center gap-4 pt-4">
-<Button
+  <Button
   onClick={() => handleAddToCart(product.data)}
   disabled={product.data.inStocks <= 0 || isInCart}
   className="flex-1"
 >
   {isInCart ? "Already in Cart" : "Add to Cart"}
 </Button>
+</div>
 
-<Button
-  variant="secondary"
+
+
+<motion.button
   disabled={product.data.inStocks <= 0}
   onClick={() => handleBuyNow(product.data)}
-  className="flex-1"
+  className="w-full font-semibold h-9 p-1 bg-black rounded-md text-primary text-sm "
+         animate={{ scale: [1, 1.1, 1, 1.05, 1] }} 
+        transition={{
+          duration: 2.5,           
+          ease: "easeInOut",     
+          repeat: Infinity,    
+          repeatType: "loop",
+        }}
 >
-  Buy Now
-</Button>
-          </div>
+অর্ডার করুন, ক্যাশ অন ডেলিভারি
+</motion.button>
+
+<div className="flex flex-col lg:flex-row  lg:items-center  w-full gap-4">
+  <motion.button 
+
+  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-green-500 to-green-800 h-9 p-1 flex-1 justify-center rounded-md  text-white">
+    <Image
+     src={"/icons/whatsapp.svg"}
+     alt="Whatsapp"
+     height={25}
+     width={25}
+     className="object-contain"
+    />
+Chat with WhatsApp 
+  </motion.button>
+  <motion.button 
+
+  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-blue-600 to-pink-600 h-9 p-1 flex-1 justify-center rounded-md  text-white">
+        <Image
+     src={"/icons/messenger.svg.webp"}
+     alt="Messenger"
+     height={25}
+     width={25}
+     className="object-contain"
+    />
+Chat with Messenger
+  </motion.button>
+</div>
+        
+       <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>
         </div>
       </div>
 

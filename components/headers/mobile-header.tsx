@@ -22,6 +22,8 @@ import { useProducts } from "@/hooks/use-products";
 import { Card } from "../ui/card";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback,  AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { useCart, useOpenStore } from "@/hooks/use-store";
 
 export function MobileHeader() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +34,8 @@ export function MobileHeader() {
  
    const { data: products, isLoading } = useProducts();
    const {user} = useUser()
-
+     const { setOpen } = useOpenStore();
+  const { cartItems } = useCart();
 
 
   return (
@@ -160,7 +163,6 @@ export function MobileHeader() {
             />
           </div>
 
-          {/* === Cart + Search Button === */}
           <div className="flex items-center gap-x-2">
         
 
@@ -172,6 +174,15 @@ export function MobileHeader() {
             >
               <Search className="size-6" />
             </Button>
+
+                               <button onClick={() => setOpen(true)} className="relative">
+              <ShoppingCart className="size-6 " />
+              {cartItems && cartItems.length > 0 && (
+                <Badge className="absolute -top-1 bg-gray-800 -right-2 size-4 rounded-full text-xs flex items-center justify-center p-0">
+                  {cartItems.length}
+                </Badge>
+              )}
+            </button>
           </div>
         </div>
       </div>

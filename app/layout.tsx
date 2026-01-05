@@ -70,11 +70,11 @@ export default function RootLayout({
   return (
     <html lang="bn" suppressHydrationWarning>
       <head>
-        {/* ✅ Favicons */}
+
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/logo.svg" />
 
-        {/* ✅ Bangladesh SEO specific */}
+  
         <meta
           name="google-site-verification"
           content="WjC9PZ6_fnkB0mYfs3I9mr3CVQgeauW-japi-LW31cM"
@@ -84,7 +84,7 @@ export default function RootLayout({
         <meta name="geo.position" content="23.1193;91.9847" />
         <meta name="ICBM" content="23.1193, 91.9847" />
 
-        {/* ✅ Organization Schema (so Google shows Hillora, not Vercel) */}
+     
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -98,7 +98,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* ✅ Google Tag Manager */}
+
         <Script id="gtm" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

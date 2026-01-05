@@ -17,7 +17,7 @@ import { useCustomQuery } from "@/hooks/use-custom-query";
 import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
 import { FaRegPlayCircle } from "react-icons/fa";
-import { motion, Transition } from "framer-motion";
+import { motion} from "framer-motion";
 
 interface Props {
   productUrl: string;
@@ -398,7 +398,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 
 <div className="flex flex-col lg:flex-row  lg:items-center  w-full gap-4">
   <motion.button 
-
+onClick={()=> router.push("https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।")}
   className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-green-500 to-green-800 h-9 p-1 flex-1 justify-center rounded-md  text-white">
     <Image
      src={"/icons/whatsapp.svg"}
@@ -410,7 +410,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 Chat with WhatsApp 
   </motion.button>
   <motion.button 
-
+ onClick={()=> router.push("https://m.me/hillorashop?ref=order_now")}
   className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-blue-600 to-pink-600 h-9 p-1 flex-1 justify-center rounded-md  text-white">
         <Image
      src={"/icons/messenger.svg.webp"}

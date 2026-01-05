@@ -384,7 +384,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 <motion.button
   disabled={product.data.inStocks <= 0}
   onClick={() => handleBuyNow(product.data)}
-  className="w-full font-semibold h-9 p-1 bg-black rounded-md text-primary text-sm disabled:opacity-50"
+  className="w-full font-semibold h-9 p-1 bg-black rounded-md text-primary text-sm disabled:opacity-50 cursor-pointer"
          animate={{ scale: [1, 1.1, 1, 1.05, 1] }} 
         transition={{
           duration: 2.5,           
@@ -399,7 +399,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 <div className="flex flex-col lg:flex-row  lg:items-center  w-full gap-4">
   <motion.button 
 onClick={()=> router.push("https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।")}
-  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-green-500 to-green-800 h-9 p-1 flex-1 justify-center rounded-md  text-white">
+  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-green-500 to-green-800 h-9 p-1 flex-1 justify-center rounded-md cursor-pointer text-white">
     <Image
      src={"/icons/whatsapp.svg"}
      alt="Whatsapp"
@@ -411,7 +411,7 @@ Chat with WhatsApp
   </motion.button>
   <motion.button 
  onClick={()=> router.push("https://m.me/hillorashop?ref=order_now")}
-  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-blue-600 to-pink-600 h-9 p-1 flex-1 justify-center rounded-md  text-white">
+  className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-blue-600 to-pink-600 h-9 p-1 flex-1 justify-center rounded-md cursor-pointer  text-white">
         <Image
      src={"/icons/messenger.svg.webp"}
      alt="Messenger"

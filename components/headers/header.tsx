@@ -48,6 +48,14 @@ export function Header() {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm overflow-hidden"
         >
+          <div className="max-w-[120rem] mx-auto">
+                    <div className="bg-black text-primary p-2 text-center">
+          <p className="font-semibold text-base">যে কোন পণ্য অর্ডার করুন 
+Call or WhatsApp 
+01519558558-01581847235</p>
+        </div>
+          </div>
+
           <div className="max-w-[120rem] mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">

@@ -53,6 +53,12 @@ export function MobileHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
+           <div className="bg-black text-primary p-2 text-center">
+          <p className="font-semibold text-sm">যে কোন পণ্য অর্ডার করুন 
+Call or WhatsApp 
+01519558558-01581847235</p>
+        </div>
+
       <div className="px-6">
         
         <div className="flex items-center justify-between h-14 relative">

@@ -118,7 +118,7 @@ export default function RootLayout({
           <UserProvider>
             <main className="max-w-[120rem] mx-auto">
               <Navbar />
-              <div className="mt-22 lg:mt-34">
+              <div className="mt-28 lg:mt-40">
                 {children}
                 <Cart />
               </div>

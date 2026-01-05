@@ -8,6 +8,7 @@ export const Navbar = () => {
 
     return (
         <>
+
             <MobileHeader/>
            <Header/>
               <Navigation/>

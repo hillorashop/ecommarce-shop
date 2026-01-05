@@ -50,9 +50,30 @@ export function Header() {
         >
           <div className="max-w-[120rem] mx-auto">
                     <div className="bg-black text-primary p-2 text-center">
-          <p className="font-semibold text-base">যে কোন পণ্য অর্ডার করুন 
-Call or WhatsApp 
-01519558558-01581847235</p>
+          <p className="font-semibold text-base flex items-center w-full justify-center gap-x-4">যে কোন পণ্য অর্ডার করুন Call or WhatsApp 
+              <span className="flex items-center gap-2">
+              <Image
+                src="/icons/call.svg"
+                alt="Call"
+                width={18}
+                height={18}
+                className="inline-block"
+              />
+              01519558558
+            </span>
+
+
+  <span className="flex items-center gap-2 mt-1">
+    <Image
+      src="/icons/whatsapp.svg"
+      alt="WhatsApp"
+      width={18}
+      height={18}
+      className="inline-block"
+    />
+    01581847235
+  </span>
+</p>
         </div>
           </div>
 

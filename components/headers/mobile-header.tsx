@@ -37,40 +37,28 @@ export function MobileHeader() {
      const { setOpen } = useOpenStore();
   const { cartItems } = useCart();
 
+ const contact = [
+    
+  {
+    href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।",
+    Icon: "/icons/whatsapp.svg",
+    bg: "#16a34a",
+  },
+  {
+    href: "https://m.me/hillorashop?ref=order_now",
+    Icon: "/icons/messenger.svg.webp",
+    bg: "#be123c",
+  },
+];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
       <div className="px-6">
-          <div className="flex items-center gap-4 w-full justify-center py-1">
-              {emergency_contact.map((s, i) => (
-                <a
-                  key={i}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative flex items-center justify-center w-6 h-6"
-                >
-                  <Image
-                    src={s.Icon}
-                    alt={siteMeta.siteName}
-                    width={18}
-                    height={18}
-                    className="rounded-full overflow-hidden z-10"
-                  />
-                  <div
-                    className="absolute inset-1 border rounded-full animate-ping duration-200"
-                    style={{ borderColor: s.bg }}
-                  />
-                      <div
-                    className="absolute -inset-0.5 border rounded-full animate-ping duration-100"
-                    style={{ borderColor: s.bg }}
-                  />
-                </a>
-              ))}
-            </div>
+        
         <div className="flex items-center justify-between h-14 relative">
-          {/* === Hamburger Menu === */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+
+          <div className="flex items-center gap-x-2">
+         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="p-2">
                 <Menu className="size-6" />
@@ -92,7 +80,7 @@ export function MobileHeader() {
               </SheetHeader>
 
               <div className="space-y-6">
-                {/* === Menu Section === */}
+        
                 <div>
                   <h3 className="font-semibold text-white mb-3 w-full bg-primary p-2">
                     Menu
@@ -118,7 +106,7 @@ export function MobileHeader() {
                   </div>
                 </div>
 
-                {/* === Account Section === */}
+     
                 <div className="border-t pt-4">
                   <h3 className="font-semibold text-white mb-3 p-2 w-full bg-primary ">
                     Account
@@ -150,22 +138,54 @@ export function MobileHeader() {
             </SheetContent>
           </Sheet>
 
-          {/* === Logo === */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      
+          <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2">
 
             <Image
               src="/logo.svg"
               alt={`${siteMeta.siteName}`}
-              width={300}
-              height={200}
+              width={250}
+              height={150}
               onClick={()=> router.push("/")}
               className="object-contain overflow-hidden"
             />
           </div>
+          </div>
+     
+ <div className="absolute left-1/2 top-1/2 -translate-x-1/4 -translate-y-1/2">
+ <div className="flex items-center gap-4 w-full ">
+              {contact.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative flex items-center justify-center w-6 h-6"
+                >
+                  <Image
+                    src={s.Icon}
+                    alt={siteMeta.siteName}
+                    width={18}
+                    height={18}
+                    className="rounded-full overflow-hidden z-10"
+                  />
+                  <div
+                    className="absolute inset-1 border rounded-full animate-ping duration-200"
+                    style={{ borderColor: s.bg }}
+                  />
+                      <div
+                    className="absolute -inset-0.5 border rounded-full animate-ping duration-100"
+                    style={{ borderColor: s.bg }}
+                  />
+                </a>
+              ))}
+    </div>
+ </div>
+
+  
 
           <div className="flex items-center gap-x-2">
         
-
             <Button
               variant="ghost"
               size="icon"
@@ -184,10 +204,12 @@ export function MobileHeader() {
               )}
             </button>
           </div>
+
         </div>
+
       </div>
 
-      {/* === Fullscreen Search Overlay === */}
+ 
       <AnimatePresence>
         {showSearch && (
           <motion.div

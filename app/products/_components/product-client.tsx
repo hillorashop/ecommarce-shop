@@ -384,7 +384,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
 <motion.button
   disabled={product.data.inStocks <= 0}
   onClick={() => handleBuyNow(product.data)}
-  className="w-full font-semibold h-9 p-1 bg-black rounded-md text-primary text-sm "
+  className="w-full font-semibold h-9 p-1 bg-black rounded-md text-primary text-sm disabled:opacity-50"
          animate={{ scale: [1, 1.1, 1, 1.05, 1] }} 
         transition={{
           duration: 2.5,           

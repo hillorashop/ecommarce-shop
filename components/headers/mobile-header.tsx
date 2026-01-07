@@ -53,9 +53,9 @@ export function MobileHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
-           <div className="bg-black text-primary p-2 text-center">
+           <div className="bg-primary text-white p-2 text-center">
 <p className="font-semibold text-sm leading-6">
-  যে কোন পণ্য অর্ডার করুন Call or WhatsApp <br />
+  যে কোন পণ্য অর্ডার করুন  <br />
 
 <span className="flex items-center w-full gap-x-2 justify-center">
     <span className="flex items-center gap-2">

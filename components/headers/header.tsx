@@ -49,8 +49,8 @@ export function Header() {
           className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm overflow-hidden"
         >
           <div className="max-w-[120rem] mx-auto">
-                    <div className="bg-black text-primary p-2 text-center">
-          <p className="font-semibold text-base flex items-center w-full justify-center gap-x-4">যে কোন পণ্য অর্ডার করুন Call or WhatsApp 
+                    <div className="bg-primary text-white p-2 text-center">
+          <p className="font-semibold text-base flex items-center w-full justify-center gap-x-4">যে কোন পণ্য অর্ডার করুন  
               <span className="flex items-center gap-2">
               <Image
                 src="/icons/call.svg"

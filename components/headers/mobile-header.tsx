@@ -55,7 +55,7 @@ export function MobileHeader() {
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
            <div className="bg-primary text-white p-2 text-center">
 <p className="font-semibold text-sm leading-6">
-  যে কোন পণ্য অর্ডার করুন  <br />
+  যে কোন পণ্য অর্ডার করুন <br />
 
 <span className="flex items-center w-full gap-x-2 justify-center">
     <span className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export function MobileHeader() {
       height={18}
       className="inline-block"
     />
-    01519558558
+   01581847235
   </span>
 
   <span className="flex items-center gap-2 ">
@@ -77,7 +77,8 @@ export function MobileHeader() {
       height={18}
       className="inline-block"
     />
-    01581847235
+  
+       01519558558
   </span>
 </span>
 

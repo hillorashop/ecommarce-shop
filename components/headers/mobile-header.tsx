@@ -91,7 +91,9 @@ export function MobileHeader() {
         <div className="flex items-center justify-between h-14 relative">
 
           <div className="flex items-center gap-x-2">
-         <Sheet open={isOpen} onOpenChange={setIsOpen}>
+
+         <div className="relative z-20">
+  <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="p-2">
                 <Menu className="size-6" />
@@ -170,6 +172,8 @@ export function MobileHeader() {
               </div>
             </SheetContent>
           </Sheet>
+         </div>
+       
 
       
           <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2">

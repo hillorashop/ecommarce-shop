@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
   },
   icons: [
-    { rel: "icon", url: "/fevicon.svg", type:"image/svg+xml", sizes: "180x180"},
-    { rel: "apple-touch-icon", url: "/fevicon.svg", sizes: "180x180" },
+    { rel: "icon", url: "/fevicon.png", type: "image/png", sizes: "180x180"},
+    { rel: "apple-touch-icon", url: "/fevicon.png", sizes: "180x180" },
   ],
   description: siteMeta.desc,
   keywords: siteMeta.keyWords,
@@ -71,8 +71,8 @@ export default function RootLayout({
     <html lang="bn" suppressHydrationWarning>
       <head>
 
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/logo.svg" />
+        <link rel="icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/fevicon.png" />
 
   
         <meta
@@ -93,7 +93,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: siteMeta.siteName,
               url: process.env.NEXT_PUBLIC_BASE_URL,
-              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.svg`,
+              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/fevicon.png`,
             }),
           }}
         />

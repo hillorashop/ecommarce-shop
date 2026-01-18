@@ -76,14 +76,11 @@ useEffect(() => {
     postOrder,
     ["ordersByUser", user?.id],
     (newOrder) => {
-      setOrderResponse(newOrder.data); // set response; GA will fire in useEffect
+      setOrderResponse(newOrder.data); 
     }
   );
 
 
-  
-
-  // ✅ Safe discount calculation
   const subTotal = checkoutItems.reduce(
     (acc, item) => acc + item.price * item.cartQuantity,
     0
@@ -117,6 +114,7 @@ useEffect(() => {
           item_category: item.packageQuantityType,
         };
       });
+      
       pushToDataLayer("add_payment_info", {
         currency: "BDT",
         value: total,
@@ -126,7 +124,7 @@ useEffect(() => {
     }
   }, [selectedPayment, checkoutItems, total]);
 
-  // React Hook Form
+
   const form = useForm<ShippingForm>({
     resolver: zodResolver(shippingSchema),
     defaultValues: {

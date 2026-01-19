@@ -31,8 +31,8 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
     const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState<boolean>(true);
-  
-;
+  const viewItemFired = useRef(false);
+
 
   const router = useRouter();
 
@@ -59,7 +59,9 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
 
 
   useEffect(() => {
-  if (!product) return;
+
+   if (!product || viewItemFired.current) return;
+  viewItemFired.current = true;
 
   const hasDiscount =
     product.data.discountPrice !== undefined &&
@@ -77,8 +79,8 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
       {
         item_id: product.data.productId,
         item_name: product.data.name,
-        price: displayPrice?.toString(),
-        discount: discountAmount.toString(),
+        price: displayPrice,        
+        discount: discountAmount,   
         item_brand: siteMeta.siteName,
         item_category: product.data.category?.name || "Uncategorized",
         quantity: 1,

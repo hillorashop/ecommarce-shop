@@ -14,10 +14,9 @@ export function BestSelling() {
   const { data: products, isLoading } = useProducts({ page: 1 });
   const [isClient, setIsClient] = useState(false);
     const skeletonCount = 8;
-    // ✅ Mark component as client
+
   useEffect(() => setIsClient(true), []);
 
-  // ✅ Fire view_item_list for Best Selling products
   useEffect(() => {
     if (!isClient || !products?.data || products.data.length === 0) return;
 

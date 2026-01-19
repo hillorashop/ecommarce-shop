@@ -151,6 +151,7 @@ export function ProductCard({ product }: ProductCardProps) {
           item_brand: siteMeta.siteName,
           item_variant: "default",
           in_stock: inStocks > 0,
+          quantity:1,
         },
       ],
     },

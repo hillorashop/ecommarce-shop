@@ -112,11 +112,11 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
         discount: discountAmount,
         item_brand: siteMeta.siteName,
         price,
+        quantity,
       },
     ],
   });
 
-  // Add to cart
   addItem(product, quantity);
 };
 

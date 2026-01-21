@@ -21,7 +21,7 @@ export function BestSelling() {
     if (!isClient || !products?.data || products.data.length === 0) return;
 
     const items = products.data.map((product, index) => ({
-      item_id: product.productId,
+      item_id: product.id,
       item_name: product.name,
       price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
       discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,

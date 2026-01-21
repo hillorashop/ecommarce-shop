@@ -55,7 +55,7 @@ const remove = (id: string) => {
         value: price * item.cartQuantity,
         items: [
           {
-            item_id: item.productId,
+            item_id: item.id,
             item_name: item.name,
             price,
             discount: item.price - price,
@@ -83,7 +83,7 @@ const remove = (id: string) => {
             ? item.discountPrice
             : item.price;
         return {
-          item_id: item.productId,
+          item_id: item.id,
           item_name: item.name,
           price,
           quantity: item.cartQuantity,

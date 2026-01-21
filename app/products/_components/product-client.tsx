@@ -77,7 +77,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     value: displayPrice,
     items: [
       {
-        item_id: product.data.productId,
+        item_id: product.data.id,
         item_name: product.data.name,
         price: displayPrice,        
         discount: discountAmount,   
@@ -106,7 +106,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     value: price,
     items: [
       {
-        item_id: product.productId,
+        item_id: product.id,
         item_name: product.name,
         affiliation: siteMeta.siteName,
         discount: discountAmount,
@@ -138,7 +138,7 @@ const handleBuyNow = (product:dbProductwihtoutAll) => {
     value: price,
     items: [
       {
-        item_id: product.productId,
+        item_id: product.id,
         item_name: product.name,
         affiliation: siteMeta.siteName,
         discount: discountAmount,

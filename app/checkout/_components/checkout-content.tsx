@@ -105,7 +105,7 @@ useEffect(() => {
       const items = checkoutItems.map((item) => {
         const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
         return {
-          item_id: item.productId,
+          item_id: item.id,
           item_name: item.name,
           price,
           discount: item.price - price,
@@ -143,7 +143,7 @@ useEffect(() => {
       const items = checkoutItems.map((item) => {
       const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
       return {
-        item_id: item.productId,
+        item_id: item.id,
         item_name: item.name,
         price,
         discount: item.price - price,

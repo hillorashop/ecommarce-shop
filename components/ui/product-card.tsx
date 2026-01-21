@@ -143,7 +143,7 @@ export function ProductCard({ product }: ProductCardProps) {
       value: displayPrice,
       items: [
         {
-          item_id: productId,
+          item_id: id,
           item_name: name,
           price: displayPrice,
           discount: savingsAmount,
@@ -182,7 +182,7 @@ export function ProductCard({ product }: ProductCardProps) {
       coupon: "", // add coupon if any
       items: [
         {
-          item_id: productId,
+          item_id: id,
           item_name: name,
           affiliation: siteMeta.siteName,
           coupon: "", // add coupon if any

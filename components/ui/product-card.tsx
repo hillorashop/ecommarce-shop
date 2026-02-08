@@ -35,14 +35,13 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addItem, cartItems } = useCart();
   const isInCart = cartItems.some((item) => item.id === id);
 
-  // Rating calculation
+
   const reviewCount = reviews?.length || 0;
   const rating =
     reviewCount > 0
       ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviewCount
       : 0;
 
-  // ✅ Safe discount handling
   const hasDiscount =
     discountPrice !== undefined &&
     discountPrice !== null &&
@@ -65,7 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        {/* Stock Badge */}
+       
         <div
           className={`absolute top-2 right-3 text-xs px-2 py-1 rounded-full font-semibold shadow-md ${
             inStocks > 0 ? "bg-green-500 text-white" : "bg-red-500 text-white"
@@ -74,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {inStocks > 0 ? `${inStocks} in stock` : "Out of stock"}
         </div>
 
-        {/* Product Image */}
+
         <Link href={`/products/${productUrl}`}>
           <div className="w-full h-40 mb-4 relative rounded-xl overflow-hidden">
             <Image
@@ -87,7 +86,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </Link>
 
-        {/* Rating */}
+  
         <div className="flex items-center mb-2">
           {[...Array(5)].map((_, i) => (
             <Star
@@ -102,7 +101,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-xs text-gray-500 ml-2">({reviewCount})</span>
         </div>
 
-        {/* Title & Quantity */}
+
         <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
           {name}
         </h4>
@@ -110,7 +109,6 @@ export function ProductCard({ product }: ProductCardProps) {
           {packageQuantity} {packageQuantityType}
         </p>
 
-        {/* Price */}
         <div className="flex flex-col gap-1 mb-2">
           <div className="flex flex-col lg:flex-row lg:items-baseline gap-2">
             <span className="text-base lg:text-lg font-bold text-gray-900">
@@ -129,7 +127,7 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Action Buttons */}
+
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 w-full">
           <Button
             className="text-xs px-4 py-1 h-7 rounded-md flex-1"

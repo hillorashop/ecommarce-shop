@@ -42,3 +42,4 @@ export const pushToDataLayer = (
     ecommerce: normalizeEcommerce(ecommerceData),
   });
 };
+

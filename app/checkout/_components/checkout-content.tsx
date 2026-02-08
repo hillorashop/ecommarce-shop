@@ -15,12 +15,13 @@ import { Form, FormField } from "@/components/ui/form";
 import { CustomForm } from "@/components/ui/custom-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
-import { useCustomMutation, useCustomQuery } from "@/hooks/use-custom-query";
+import { useCustomMutation,  } from "@/hooks/use-custom-query";
 import { postOrder } from "@/actions/order";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
 import { dbOrder } from "@/types/type";
-import { CategoriesResponse, getCategories } from "@/actions/category";
+import { useSearchParams } from "next/navigation";
+
 
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন"),
@@ -54,12 +55,17 @@ export const CheckoutContent = ({ productId,qty }: Props) => {
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
-const [fbp, setFbp] = useState<string | null>(null);
-const [fbc, setFbc] = useState<string | null>(null);
+  const [fbp, setFbp] = useState<string | null>(null);
+  const [fbc, setFbc] = useState<string | null>(null);
+  const [ttpCookie, setttpCookie] = useState<string | null>(null);
+  const [ttclidValue, setTtclidValue] = useState<string | null>(null);
+  const searchParams = useSearchParams();
 
 useEffect(() => {
   setFbp(document.cookie.match(/_fbp=([^;]+)/)?.[1] || null);
   setFbc(document.cookie.match(/_fbc=([^;]+)/)?.[1] || null);
+  setttpCookie(document.cookie.match(/_ttp=([^;]+)/)?.[1] || null);
+  setTtclidValue(searchParams.get("ttclid"));
 }, []);
 
 
@@ -163,6 +169,8 @@ useEffect(() => {
       userId: user?.id,
       fbc,
       fbp,
+      ttpCookie,
+      ttclidValue,
       name: data.name,
       mobileNumber: data.mobileNumber,
       address: data.address,

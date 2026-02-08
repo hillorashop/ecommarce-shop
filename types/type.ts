@@ -63,6 +63,8 @@ export type dbOrder = {
   userId?: string | null;
   fbc?:string | null;
   fbp?:string | null;
+  ttpCookie?:   string | null;
+  ttclidValue?: string | null;
   createdAt: Date;
   updatedAt: Date;
 

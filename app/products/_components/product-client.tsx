@@ -10,7 +10,7 @@ import { MessageSquareMore, MinusIcon, PlusIcon, Search, Star, Volume2, VolumeX 
 import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ONE_DAY, siteMeta } from "@/data";
 import { useCustomQuery } from "@/hooks/use-custom-query";
@@ -32,6 +32,14 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState<boolean>(true);
   const viewItemFired = useRef(false);
+  const searchParams = useSearchParams()
+  
+  useEffect(() => {
+  const ttclid = searchParams.get("ttclid");
+  if (!ttclid) return;
+  if (document.cookie.includes("ttclid=")) return;
+  document.cookie = `ttclid=${ttclid}; path=/; max-age=2592000; SameSite=Lax`;
+}, [searchParams]);
 
 
   const router = useRouter();

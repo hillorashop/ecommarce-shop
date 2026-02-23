@@ -9,9 +9,9 @@ import { useCart, useOpenStore } from "@/hooks/use-store";
 import { Badge } from "../ui/badge";
 
 export const navLinks = [
-  { Icon: Home, href: "/" },
   { Icon: BiCategory, href: "/categories" },
 { Icon: ShoppingBasket, href: "/products" },
+ { Icon: Home, href: "/" },
   { Icon: Truck, href: "/tracking" },
  
 ];

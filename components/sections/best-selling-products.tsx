@@ -54,7 +54,7 @@ export function BestSelling() {
               grid-cols-2                     /* mobile */
               sm:grid-cols-2
               md:grid-cols-3
-              lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] 
+              lg:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] 
               gap-4
               px-4 sm:px-8 lg:px-10
               min-w-[200px]

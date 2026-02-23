@@ -43,8 +43,9 @@ export const MobileFooterNavbar = () => {
   </Link>
  : (
 
-   <Link href={"/sign-up"}>
+   <Link href={"/sign-up"} className="flex flex-col space-y-1 items-center">
                         <User className="size-6 text-white"/>
+                           <p className="text-sm font-semibold text-white text-shadow-2xs">Sign Up</p>
                     </Link>
                 )}
                

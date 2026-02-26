@@ -68,7 +68,7 @@ export type dbOrder = {
   createdAt: Date;
   updatedAt: Date;
 
-  // Relations
+
   orderItems: dbOrderItem[];
 };
 
@@ -80,3 +80,13 @@ export type dbOrderItem = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+
+export interface dbContactInfo {
+  id: string
+  customerCareNumber?: string | null
+  messengerUsername?: string | null
+  whatsappNumber?: string | null
+  infoEmail?: string | null
+  shopAddress?: string | null
+}

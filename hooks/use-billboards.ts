@@ -9,13 +9,13 @@ export type BillboardsResponse = {
   data: dbBillboard[];
 };
 
-/* ✅ Custom hook for billboards */
+
 export function useBillboards() {
   return useQuery<BillboardsResponse, Error>({
-    queryKey: ["billboards"], // unique cache key
-    queryFn: getBillboards,   // fetch function
-    staleTime: 60 * 60 * 1000,      // cache validity
-    gcTime: 60 * 60 * 1000,         // garbage collection time
+    queryKey: ["billboards"], 
+    queryFn: getBillboards,   
+    staleTime: 60 * 60 * 1000,      
+    gcTime: 60 * 60 * 1000,        
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

@@ -19,13 +19,13 @@ export const MobileFooterNavbar = () => {
     const {user} = useUser()
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-primary backdrop-blur-lg shadow-sm lg:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg shadow-sm lg:hidden">
             <div className="px-6 ">
                 <div className="h-14 relative flex justify-between items-center">
                 {navLinks.map(({href, Icon, label}, i)=> (
-                    <Link href={href} key={i} className="flex flex-col space-y-1 items-center">
-                        <Icon className="size-6 text-white"/>
-                        <p className="text-sm font-semibold text-white text-shadow-2xs">{label}</p>
+                    <Link href={href} key={i} className="flex flex-col  items-center">
+                        <Icon className="size-6 text-black"/>
+                        <p className="text-xs font-semibold text-black">{label}</p>
                     </Link>
                 ))}
 
@@ -43,9 +43,9 @@ export const MobileFooterNavbar = () => {
   </Link>
  : (
 
-   <Link href={"/sign-up"} className="flex flex-col space-y-1 items-center">
-                        <User className="size-6 text-white"/>
-                           <p className="text-sm font-semibold text-white text-shadow-2xs">Sign Up</p>
+   <Link href={"/sign-up"} className="flex flex-col  items-center">
+                        <User className="size-6 text-black"/>
+                           <p className="text-xs font-semibold text-black">Sign Up</p>
                     </Link>
                 )}
                

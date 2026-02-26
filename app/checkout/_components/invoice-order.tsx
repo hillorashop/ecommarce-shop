@@ -8,6 +8,7 @@ import { useProducts } from "@/hooks/use-products";
 import { useRouter } from "next/navigation";
 import { siteMeta } from "@/data";
 import { dbProductwihtoutAll } from "@/actions/product";
+import { useBusinessInfo } from "@/hooks/use-business-info";
 
 interface Props {
   order: dbOrder;
@@ -17,6 +18,7 @@ interface Props {
 export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const { data: products } = useProducts();
+    const { data: businessInfo} = useBusinessInfo();
   const router = useRouter();
 
   const getStatusColor = (status: string) => {
@@ -99,7 +101,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
           color: "#000",
         }}
       >
-        {/* BRAND HEADER */}
+
         <div
           style={{
             textAlign: "center",
@@ -127,10 +129,11 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
           </div>
 
           <p style={{ margin: "4px 0", fontSize: "12px", marginTop: "-52px" }}>
-            KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar
+            {businessInfo?.data?.shopAddress || "KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar"}
+           
           </p>
           <p style={{ margin: "4px 0", fontSize: "12px" }}>
-            Contact: +880 1519558558 | Website:{" "}
+            Contact: {businessInfo?.data?.customerCareNumber || "+880 1519558558 "} | Website:{" "}
             {process.env.NEXT_PUBLIC_BASE_URL ||
               process.env.NEXT_PUBLIC_BASE_WWW_URL}
           </p>
@@ -138,7 +141,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
 
         <hr style={{ margin: "16px 0" }} />
 
-        {/* Invoice Header */}
+
         <div
           style={{
             display: "flex",

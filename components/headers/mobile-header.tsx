@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {  emergency_contact, mobileNavLinks, siteMeta } from "@/data";
+import { mobileNavLinks, siteMeta } from "@/data";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -24,6 +24,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback,  AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useCart, useOpenStore } from "@/hooks/use-store";
+import { useBusinessInfo } from "@/hooks/use-business-info";
 
 export function MobileHeader() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,20 +37,22 @@ export function MobileHeader() {
    const {user} = useUser()
      const { setOpen } = useOpenStore();
   const { cartItems } = useCart();
+     const { data: businessInfo} = useBusinessInfo();
 
  const contact = [
     
-  {
-    href: "https://wa.me/8801516194716?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।",
-    Icon: "/icons/whatsapp.svg",
-    bg: "#16a34a",
-  },
-  {
-    href: "https://m.me/hillorashop?ref=order_now",
+ 
+    { href: `https://wa.me/${businessInfo?.data?.whatsappNumber}?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।`, Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+
+    {
+    href: `https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`,
     Icon: "/icons/messenger.svg.webp",
     bg: "#be123c",
   },
 ];
+
+
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
@@ -66,7 +69,8 @@ export function MobileHeader() {
       height={18}
       className="inline-block"
     />
-   01581847235
+       {businessInfo?.data?.customerCareNumber || "01581847235"}
+
   </span>
 
   <span className="flex items-center gap-2 ">
@@ -78,7 +82,7 @@ export function MobileHeader() {
       className="inline-block"
     />
   
-       01519558558
+     {businessInfo?.data?.whatsappNumber || "01519558558"}
   </span>
 </span>
 

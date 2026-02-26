@@ -14,6 +14,7 @@ import { InvoiceOrder } from "../checkout/_components/invoice-order";
 import { dbOrder } from "@/types/type";
 import { getOrders } from "@/actions/order";
 import { Zap } from "lucide-react";
+import { OrderTimeline } from "./_components/order-timeline";
 
 // Zod schema
 const trackSchema = z.object({
@@ -105,7 +106,12 @@ const TrackingPage = () => {
             </form>
           </Form>
 
-          {order && <InvoiceOrder order={order}/>}
+          {order &&
+          <div className="mt-4">
+          <OrderTimeline order={order}/>
+         <InvoiceOrder order={order}/>
+          </div>
+          }
         </CardContent>
       </Card>
     </div>

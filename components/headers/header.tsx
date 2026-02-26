@@ -8,8 +8,9 @@ import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
 import { dbProduct } from "@/types/type";
 import { Card } from "@/components/ui/card";
-import { emergency_contact, siteMeta } from "@/data";
+import {siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
+import { useBusinessInfo } from "@/hooks/use-business-info";
 
 
 export function Header() {
@@ -20,14 +21,15 @@ export function Header() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Hide header on scroll down
+   const { data: businessInfo} = useBusinessInfo();
+
   useEffect(() => {
     const handleScroll = () => setShowHeader(window.scrollY === 0);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close search results when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -37,6 +39,21 @@ export function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const socialLinks = [
+    { href: `https://www.facebook.com/${businessInfo?.data?.messengerUsername}`, Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
+
+    { href: `https://wa.me/${businessInfo?.data?.whatsappNumber}?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।`, Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+
+    {
+    href: `https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`,
+    Icon: "/icons/messenger.svg.webp",
+    bg: "#be123c",
+  },
+   
+  ];
+
+
 
   return (
     <AnimatePresence>
@@ -59,7 +76,8 @@ export function Header() {
                 height={18}
                 className="inline-block"
               />
-        01581847235
+              {businessInfo?.data?.customerCareNumber || "01581847235"}
+  
             </span>
 
 
@@ -71,7 +89,8 @@ export function Header() {
       height={18}
       className="inline-block"
     />
-   01519558558
+    {businessInfo?.data?.whatsappNumber || "01519558558"}
+
   </span>
 </p>
         </div>
@@ -81,7 +100,7 @@ export function Header() {
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
 
-  {/* Logo (left side) */}
+
 <div className="flex-shrink-0 w-60 h-56 relative">
   <Image
   onClick={()=> router.push("/")}
@@ -177,10 +196,10 @@ export function Header() {
     </div>
   </div>
 
-  {/* Emergency Contact (right side) */}
+
   <div className="flex flex-col items-end gap-1 max-w-md">
     <div className="flex items-center gap-8">
-      {emergency_contact.map((s, i) => (
+      {socialLinks.map((s, i) => (
         <a
           key={i}
           href={s.href}

@@ -61,6 +61,7 @@ export type dbOrder = {
   totalDiscount?: number | null;
   transactionId?: string | null;
   userId?: string | null;
+  ip?:string | null
   fbc?:string | null;
   fbp?:string | null;
   ttpCookie?:   string | null;

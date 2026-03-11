@@ -23,7 +23,6 @@ export function NewProducts() {
    const [isClient, setIsClient] = useState(false);
      useEffect(() => setIsClient(true), []);
 
-  // ✅ Autoplay plugin
   const plugin = useRef(
     Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
@@ -65,14 +64,15 @@ export function NewProducts() {
           <Carousel className="w-full" plugins={[plugin.current]}>
        <CarouselContent
   className="
-    grid grid-flow-col 
-    auto-cols-[calc(50%-0.5rem)]     
-    md:auto-cols-[calc(33.333%-0.67rem)] 
-    lg:auto-cols-[calc(20%-0.8rem)]  
+ grid grid-flow-col
+  auto-cols-[50%]
+  md:auto-cols-[33.333%]
+  lg:auto-cols-[25%]
+  xl:auto-cols-[20%]
     gap-4 
     px-4 sm:px-8 lg:px-10 
     py-2
-    lg:justify-center
+
   "
 >
   {products.data.map((product) => (

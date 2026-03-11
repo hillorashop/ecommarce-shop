@@ -69,7 +69,7 @@ export const ProductState = ({productName, categoryId}:Props) => {
       />
 
       <div className="flex-1 min-h-screen py-10 lg:overflow-y-scroll">
-        <div className="space-y-8 px-4 lg:px-8">
+        <div className="space-y-8 px-4 ">
           <HeadingTitle title="Browse Products" />
           <ProductsContent
             sortBy={sortBy}

@@ -42,7 +42,13 @@ export const ProductsContent = ({
     <>
       {/* Loading State */}
       {isLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 w-full">
+        <div className="
+              grid
+              grid-cols-2                   
+              sm:grid-cols-2
+              md:grid-cols-3
+              lg:grid-cols-3
+              xl:grid-cols-4 gap-2 w-full">
           {[...Array(8)].map((_, i) => (
       
              <div
@@ -65,7 +71,12 @@ export const ProductsContent = ({
       ) : products?.data && products?.data.length > 0 ? (
         <>
           {/* Products Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
+          <div className="grid 
+              grid-cols-2                   
+              sm:grid-cols-2
+              md:grid-cols-3
+              lg:grid-cols-3
+              xl:grid-cols-4 gap-2">
             {products.data.map((product: dbProductwihtoutAll, index: number) => (
               <ProductCard product={product} key={index} />
             ))}

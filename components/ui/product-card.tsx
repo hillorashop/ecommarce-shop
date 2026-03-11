@@ -57,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="relative shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl">
       <CardContent className="p-4">
-        {/* Discount Badge */}
+
         {hasDiscount && (
           <div className="absolute top-2 left-3 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
             -{discountPercentage}%
@@ -75,7 +75,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
 
         <Link href={`/products/${productUrl}`}>
-          <div className="w-full h-40 mb-4 relative rounded-xl overflow-hidden">
+          <div className="w-full aspect-[4/3] mb-4 relative rounded-xl overflow-hidden">
             <Image
               src={productImage || `${siteMeta.siteName}`}
               alt={name}

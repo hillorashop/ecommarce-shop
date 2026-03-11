@@ -70,7 +70,7 @@ const TrackingPage = () => {
 
   return (
     <div className="flex items-center  justify-center py-10 w-full px-4">
-      <Card className="max-w-4xl w-full">
+      <Card className="max-w-7xl w-full">
         <CardHeader className="w-full flex-col flex items-center">
           <CardTitle className="text-xl font-bold">Tracking your order</CardTitle>
           <CardDescription className="text-sm font-semibold">
@@ -80,8 +80,9 @@ const TrackingPage = () => {
 
         <CardContent className="flex flex-col ">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
+            <form onSubmit={form.handleSubmit(onSubmit)} className="gap-4 flex flex-col md:flex-row md:items-end md:justify-between w-full">
+              <div className="md:flex-1">
+        <FormField
                 control={form.control}
                 name="orderId"
                 render={({ field }) => (
@@ -94,8 +95,10 @@ const TrackingPage = () => {
                   />
                 )}
               />
+              </div>
+      
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="" disabled={isLoading}>
                 {isLoading ? (
                        <div className="flex items-center gap-2">
                       <Zap className="w-4 h-4 animate-spin" />

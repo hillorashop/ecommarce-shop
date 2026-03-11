@@ -41,9 +41,9 @@ export function Header() {
   }, []);
 
   const socialLinks = [
-    { href: `https://www.facebook.com/${businessInfo?.data?.messengerUsername}`, Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
+    { href: `https://www.facebook.com/+88${businessInfo?.data?.messengerUsername}`, Icon: "/icons/facebook.svg", bg:"#1d4ed8",},
 
-    { href: `https://wa.me/${businessInfo?.data?.whatsappNumber}?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।`, Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
+    { href: `https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।`, Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
 
     {
     href: `https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`,

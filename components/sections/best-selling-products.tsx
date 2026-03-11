@@ -46,19 +46,22 @@ export function BestSelling() {
       <div className="space-y-8 w-full">
         <HeadingTitle title="Best Selling" />
 
-        {/* Wrapper for centering */}
+    
         <div className="flex justify-center">
           <div
             className="
               grid
-              grid-cols-2                     /* mobile */
+              grid-cols-2                   
               sm:grid-cols-2
               md:grid-cols-3
-              lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] 
+              lg:grid-cols-4
+              xl:grid-cols-5
               gap-4
-              px-4 sm:px-8 lg:px-10
-              min-w-[200px]
-              max-w-[2000px]                 
+              px-4
+              md:px-6
+              lg:px-8
+              w-full 
+                        
             "
           >
             {isLoading
@@ -74,7 +77,7 @@ export function BestSelling() {
           </div>
         </div>
 
-        {/* View All Button */}
+  
         {!isLoading && products?.data && products.data.length > 8 && (
           <div className="text-center mt-4">
             <Link href="/products">
@@ -88,7 +91,7 @@ export function BestSelling() {
           </div>
         )}
 
-        {/* No products fallback */}
+ 
         {!isLoading && (!products?.data || products.data.length === 0) && (
           <p className="text-center text-gray-600 py-10">
             No products found.

@@ -9,11 +9,14 @@ import {
   MapPin,
   XCircle,
   CircleCheckIcon,
+  CheckCircle,
 } from "lucide-react"
 
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { dbOrder } from "@/types/type"
+import { CancelMessage } from "./cancel-message"
+import { ReturnMessage } from "./return-message"
 
 
 
@@ -64,6 +67,13 @@ return [
     timestamp: formatDate(order.createdAt),
     description: "আপনার অর্ডারটি গ্রহণ করা হয়েছে।",
     icon: <Clock className="size-3" />,
+  },
+    {
+    label: "Confirm",
+    status: "CONFIRM",
+    timestamp: formatDate(order.createdAt),
+   description: "আপনার অর্ডারটি নিশ্চিত করা হয়েছে।",
+   icon: <CheckCircle className="size-3" />, 
   },
   {
     label: "Processing",
@@ -140,8 +150,8 @@ const StepIndicator = ({ status, size = "default" }: { status: "completed" | "ac
       )
     case "active":
       return (
-        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full border-[3px] border-foreground bg-background shadow-[0_0_0_5px_hsl(0_0%_5%/0.08)]`}>
-          <div className={`${dotSize} animate-pulse rounded-full bg-foreground`} />
+        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full bg-green-600 text-white shadow-md`}>
+           <Check className={checkSize} strokeWidth={3} />
         </div>
       )
     default:
@@ -173,7 +183,8 @@ const progressPercent =
 
   return (
    <section className="mt-4 lg:mt-6 overflow-hidden">
-        <>
+    {order.status === "CANCELLED" ? <CancelMessage/> : order.status === "RETURNED" ? <ReturnMessage/> : (
+     <>
           <div className="hidden md:block">
             <div className="relative flex items-center justify-between">
               <div className="absolute left-0 right-0 top-5 h-[2px] bg-border" />
@@ -193,14 +204,19 @@ const progressPercent =
             <div className="mt-10 grid gap-3" style={{ gridTemplateColumns: `repeat(${stepsWithStatus.length}, 1fr)` }}>
               {stepsWithStatus.map(step => (
                 <div key={step.label} className={`rounded-xl p-3 transition-all ${
-                  step.displayStatus === "active" ? "border border bg-input/60" : step.displayStatus === "completed" ? "bg-input/60" : step.displayStatus === "upcoming" ? "opacity-60" : "bg-red-100"
+                 step.displayStatus === "active" ? "border-2 border-green-600 bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
                 }`}>
-                  <div className="flex items-center justify-between w-full mb-2">
+                  <div className="flex items-center gap-x-1 w-full mb-2">
                     <div className={` inline-flex rounded-lg p-1.5 ${
-                    step.displayStatus === "active" ? "bg-primary text-primary-foreground" : step.displayStatus === "completed" ? "bg-accent text-foreground" : "bg-accent text-muted-foreground"
+                    step.displayStatus === "active" ? "text-foreground" : step.displayStatus === "completed" ? "bg-accent text-foreground" : "bg-accent text-muted-foreground"
                   }`}>
                     {step.icon}
                   </div>
+                       <h3 className={`text-sm font-semibold ${
+                          step.displayStatus === "upcoming" ? "text-muted-foreground" : step.displayStatus === "completed" ? "text-foreground/60" : "text-foreground"
+                        }`}>
+                          {step.label}
+                        </h3>
                   </div>
               
                   <p className="text-xs  font-semibold text-muted-foreground">{step.timestamp}</p>
@@ -212,7 +228,6 @@ const progressPercent =
               ))}
             </div>
           </div>
-
           <div className="md:hidden">
             <div className="relative">
               <div className="absolute bottom-0 left-[15px] top-4 w-[2px] bg-border" />
@@ -222,11 +237,11 @@ const progressPercent =
                   <div key={step.label} className="relative flex gap-3.5">
                     <StepIndicator status={step.displayStatus!} size="small" />
                     <div className={`min-w-0 flex-1 rounded-xl p-3 transition-all ${
-                      step.displayStatus === "active" ? "border-2 border-foreground bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
+                      step.displayStatus === "active" ? "border-2 border-green-600 bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
                     }`}>
                       <div className="flex items-center gap-2">
                         <div className={`inline-flex shrink-0 rounded-lg p-1.5 ${
-                          step.displayStatus === "active" ? "bg-primary text-primary-foreground" : step.displayStatus === "completed" ? "bg-accent text-foreground" : "bg-accent text-muted-foreground"
+                          step.displayStatus === "active" ? "text-foreground" : step.displayStatus === "completed" ? "bg-accent text-foreground" : "bg-accent text-muted-foreground"
                         }`}>
                           {step.icon}
                         </div>
@@ -235,9 +250,6 @@ const progressPercent =
                         }`}>
                           {step.label}
                         </h3>
-                        {step.displayStatus === "active" && (
-                          <span className="ml-auto shrink-0 text-[9px] font-bold uppercase tracking-widest text-white bg-blue-600 p-1 rounded-lg">Current</span>
-                        )}
                       </div>
                       <p className="mt-1 text-[10px] font-medium text-muted-foreground">{step.timestamp}</p>
                       <p className={`mt-0.5 text-[11px] leading-relaxed ${step.displayStatus === "upcoming" ? "text-muted-foreground/60" : "text-foreground/80"}`}>{step.description}</p>
@@ -248,6 +260,8 @@ const progressPercent =
             </div>
           </div>
         </>
+    )}
+   
   
     </section>
         

@@ -55,27 +55,12 @@ export function ProductCard({ product }: ProductCardProps) {
   const savingsAmount = hasDiscount ? price - discountPrice! : 0;
 
   return (
-    <Card className="relative shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl">
-      <CardContent className="p-4">
+    <Card className="relative shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-none py-0">
+      <CardContent className="px-0 ">
 
-        {hasDiscount && (
-          <div className="absolute top-2 left-3 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-            -{discountPercentage}%
-          </div>
-        )}
-
-       
-        <div
-          className={`absolute top-2 right-3 text-xs px-2 py-1 rounded-full font-semibold shadow-md ${
-            inStocks > 0 ? "bg-green-500 text-white" : "bg-red-500 text-white"
-          }`}
-        >
-          {inStocks > 0 ? `${inStocks} in stock` : "Out of stock"}
-        </div>
-
-
+     
         <Link href={`/products/${productUrl}`}>
-          <div className="w-full aspect-[4/3] mb-4 relative rounded-xl overflow-hidden">
+          <div className="w-full aspect-[4/4] mb-2 relative rounded-none overflow-hidden">
             <Image
               src={productImage || `${siteMeta.siteName}`}
               alt={name}
@@ -83,26 +68,20 @@ export function ProductCard({ product }: ProductCardProps) {
               className="object-contain"
               loading="lazy"
             />
+
+              <div
+          className={`absolute top-0 right-0 text-xs px-2 py-1  font-semibold shadow-md ${
+            inStocks > 0 ? "bg-green-500 text-white" : "bg-red-500 text-white"
+          }`}
+        >
+          {inStocks > 0 ? `${inStocks}  Stock` : "Out  Stock"}
+        </div>
           </div>
         </Link>
 
   
-        <div className="flex items-center mb-2">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`h-4 w-4 ${
-                i < Math.round(rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
-              }`}
-            />
-          ))}
-          <span className="text-xs text-gray-500 ml-2">({reviewCount})</span>
-        </div>
-
-
-        <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
+<div className="px-4 pb-4">
+       <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
           {name}
         </h4>
         <p className="text-xs text-gray-500 mb-3">
@@ -173,17 +152,17 @@ export function ProductCard({ product }: ProductCardProps) {
     const priceToUse = hasDiscount ? discountPrice : price;
     const discountAmount = hasDiscount ? price - discountPrice! : 0;
 
-    // Fire begin_checkout event
+   
     pushToDataLayer("begin_checkout", {
       currency: "BDT",
       value: priceToUse,
-      coupon: "", // add coupon if any
+      coupon: "", 
       items: [
         {
           item_id: id,
           item_name: name,
           affiliation: siteMeta.siteName,
-          coupon: "", // add coupon if any
+          coupon: "", 
           discount: discountAmount,
           index: 0,
           item_brand: siteMeta.siteName,
@@ -202,6 +181,9 @@ export function ProductCard({ product }: ProductCardProps) {
 </Button>
 
         </div>
+</div>
+ 
+
       </CardContent>
     </Card>
   );

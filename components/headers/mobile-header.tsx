@@ -223,7 +223,6 @@ export function MobileHeader() {
     </div>
  </div>
 
-  
 
           <div className="flex items-center gap-x-2">
         

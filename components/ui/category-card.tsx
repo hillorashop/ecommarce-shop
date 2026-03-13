@@ -14,7 +14,7 @@ export const CategoryCard = ({ category }: Props) => {
 
   return (
     <Link href={`/products?categoryId=${id}`} className="w-full">
-      <Card className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow rounded-xl">
+      <Card className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow rounded-none">
         <CardContent className="flex flex-col items-center p-0">
           {/* Circle Image */}
           <div

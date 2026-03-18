@@ -1,9 +1,10 @@
 
-import { BestSelling } from "@/components/sections/best-selling-products"
+
 import { HeroSection } from "@/components/sections/hero-section"
-import { NewProducts } from "@/components/sections/new-products"
 import { PromotionalBanners } from "@/components/sections/promotional-banners"
 import { TopCategories } from "@/components/sections/top-categories"
+import { AllProducts } from "@/components/sections/all-products"
+import { BestSellingProducts } from "@/components/sections/best-selling-products"
 
 
 export default async function  HomePage () {
@@ -12,10 +13,10 @@ export default async function  HomePage () {
   return (
     <div className="min-h-screen">
       <HeroSection/>
-      <NewProducts/>
+      <BestSellingProducts/>
       <TopCategories/>
       <PromotionalBanners />
-      <BestSelling/>
+      <AllProducts/>
     </div>
   )
 }

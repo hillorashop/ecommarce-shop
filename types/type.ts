@@ -21,6 +21,7 @@ export type dbProduct = {
   subDescription: string;
   productImage: string;
   gallery: string[];
+  productType?:"BEST_SELLING" | null;
   price: number;
   discountPrice?: number;
   packageQuantity: string;

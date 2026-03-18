@@ -13,16 +13,16 @@ interface UseProductsOptions {
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
-  // Set defaults inside the hook
-  const page = options.page ?? 1;
+
+  const page = options.page;
   const sortBy = options.sortBy ?? "createdAt";
   const sortOrder = options.sortOrder ?? "desc";
   const productName = options.productName ?? "";
-  const minPrice = options.minPrice ?? undefined; // undefined = no filter
+  const minPrice = options.minPrice ?? undefined; 
   const maxPrice = options.maxPrice ?? undefined;
   const categoryIds = options.categoryIds ?? [];
 
-  // Build a stable query key
+
   const queryKey = [
     "products",
     page,

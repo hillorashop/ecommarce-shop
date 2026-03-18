@@ -11,6 +11,7 @@ export type dbProductwihtoutAll = {
     discountPrice?: number;
     packageQuantity: string;
     packageQuantityType: string;
+    productType?:"BEST_SELLING" | null;
     inStocks: number;
     reviews: dbReview[];    
   
@@ -32,7 +33,7 @@ export const getProducts = async (
   productName?: string,
   minPrice?: number,
   maxPrice?: number,
-  categoryIds?: string[] // new optional filter
+  categoryIds?: string[] 
 ): Promise<ProductsResponse> => {
   let url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products`;
 

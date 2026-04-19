@@ -11,7 +11,7 @@ export type dbProductwihtoutAll = {
     discountPrice?: number;
     packageQuantity: string;
     packageQuantityType: string;
-    productType?:"BEST_SELLING" | null;
+    productType?:"BEST_SELLING" | "ALL_PRODUCT" | null;
     inStocks: number;
     reviews: dbReview[];    
   
@@ -64,7 +64,19 @@ export type ProductResponse = {
 };
 
 export const getProduct = async (productUrl: string): Promise<ProductResponse> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/products/${productUrl}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/${productUrl}`);
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
 };
+
+
+export type BestSellingProductResponse = {
+  data: dbProductwihtoutAll[];
+  total: number;
+};
+
+export const getBestSellingProducts = async ():Promise<BestSellingProductResponse> => {
+const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/best-selling-products`);
+  if (!res.ok) throw new Error("Failed to fetch best selling product");
+  return res.json();
+}

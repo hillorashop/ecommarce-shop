@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProducts, ProductsResponse } from "@/actions/product";
+import { BestSellingProductResponse, getBestSellingProducts, getProducts, ProductsResponse } from "@/actions/product";
 
 
 interface UseProductsOptions {
@@ -44,3 +44,20 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     refetchOnReconnect: false,
   });
 };
+
+
+export const useBestSellingProducts = () => {
+      const queryKey = [
+    "best-selling-products",
+     ];
+  return useQuery<BestSellingProductResponse, Error>({
+
+    queryKey,
+    queryFn: () =>
+    getBestSellingProducts(),
+    staleTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}

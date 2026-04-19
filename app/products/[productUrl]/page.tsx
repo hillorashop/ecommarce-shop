@@ -48,7 +48,7 @@ export async function generateMetadata({ params}: Props): Promise<Metadata> {
   };
 }
 
-const ProductIdPage = async ({ params}: Props) => {
+const ProductUrlPage = async ({ params}: Props) => {
   const resolvedParams = await params;
   const productUrl = (resolvedParams.productUrl);
 
@@ -91,4 +91,4 @@ const ProductIdPage = async ({ params}: Props) => {
   );
 };
 
-export default ProductIdPage;
+export default ProductUrlPage;

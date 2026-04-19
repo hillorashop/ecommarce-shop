@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "../ui/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProducts } from "@/hooks/use-products";
+
 import {
   Carousel,
   CarouselContent,
@@ -16,11 +16,12 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
+import { useBestSellingProducts } from "@/hooks/use-products";
 
 export function BestSellingProducts() {
-  const { data: products, isLoading } = useProducts()
+  const { data: bestSellingProducts, isLoading } = useBestSellingProducts()
 
-  const bestSellingProducts = products?.data?.filter((p) => p.productType === "BEST_SELLING") || []
+
 
    const [isClient, setIsClient] = useState(false);
      useEffect(() => setIsClient(true), []);
@@ -30,26 +31,26 @@ export function BestSellingProducts() {
   );
 
     useEffect(() => {
-    if (!isClient || !products?.data || products.data.length === 0) return;
+    if (!isClient || !bestSellingProducts?.data || bestSellingProducts.data.length === 0) return;
 
-    const items = products.data.map((product, index) => ({
+    const items = bestSellingProducts?.data.map((product, index) => ({
       item_id: product.id,
       item_name: product.name,
       price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
       discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,
       index,
       item_brand: siteMeta.siteName,
-      item_list_id: "new_products",
-      item_list_name: "New products",
+      item_list_id: "best_selling_products",
+      item_list_name: "Best selling products",
       quantity: 1,
     }));
 
     pushToDataLayer("view_item_list", {
-      item_list_id: "new_products",
-      item_list_name: "New products",
+      item_list_id: "best_selling_products",
+      item_list_name: "Best selling products",
       items,
     });
-  }, [isClient, products]);
+  }, [isClient, bestSellingProducts]);
 
 
 
@@ -63,7 +64,7 @@ export function BestSellingProducts() {
             <Skeleton key={i} className="h-64 w-full rounded-xl" />
           ))}
         </div>
-      ) : products?.data && products.data.length > 0 ? (
+      ) : bestSellingProducts?.data && bestSellingProducts.data.length > 0 ? (
         <div className="relative mt-8">
           <Carousel className="w-full" plugins={[plugin.current]}>
        <CarouselContent
@@ -79,7 +80,7 @@ export function BestSellingProducts() {
 
   "
 >
-  {!bestSellingProducts || bestSellingProducts.length === 0 ? null :  bestSellingProducts?.map((product) => (
+  {!bestSellingProducts.data || bestSellingProducts.data.length === 0 ? null :  bestSellingProducts?.data.map((product) => (
     <CarouselItem key={product.id} className="w-full lg:w-auto">
       <ProductCard product={product} />
     </CarouselItem>

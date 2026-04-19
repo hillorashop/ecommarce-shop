@@ -8,6 +8,8 @@ export type dbBillboard = {
 export type dbCategory = {
   id: string;
   name: string;
+  categoryUrl:string | null;
+  description?:string | null;
   categoryImage: string;
   products: dbProduct[];
 };
@@ -22,6 +24,7 @@ export type dbProduct = {
   productImage: string;
   gallery: string[];
   productType?:"BEST_SELLING" | "ALL_PRODUCT" | null;
+  lastBestSellingAt?: Date | null;  
   price: number;
   discountPrice?: number;
   packageQuantity: string;

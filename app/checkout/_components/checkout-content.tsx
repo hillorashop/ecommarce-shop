@@ -24,7 +24,7 @@ import { useSearchParams } from "next/navigation";
 
 
 const shippingSchema = z.object({
-  name: z.string().min(2, "নাম লিখুন"),
+  name: z.string().min(2, "নাম লিখুন").max(20, "সর্বোচ্চ ৩০ অক্ষর"),
   mobileNumber: z
     .string()
     .regex(/^(?:\+88)?01[3-9]\d{8}$/, "একটি সঠিক মোবাইল নাম্বার লিখুন"),
@@ -83,7 +83,8 @@ useEffect(() => {
     postOrder,
     ["ordersByUser", user?.id],
     (newOrder) => {
-      setOrderResponse(newOrder.data); 
+      setOrderResponse(newOrder.data);
+       
     }
   );
 

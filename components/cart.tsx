@@ -120,7 +120,7 @@ const remove = (id: string) => {
                   key={item.id}
                   className="flex items-center justify-between border-b pb-4 px-2 last:border-0"
                 >
-                  {/* Product Image */}
+                 
                   <Image
                     src={item.productImage}
                     alt={item.name}

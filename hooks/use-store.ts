@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { dbProduct } from "@/types/type";
 import { dbProductwihtoutAll } from "@/actions/product";
 
 export interface CartItem extends dbProductwihtoutAll {

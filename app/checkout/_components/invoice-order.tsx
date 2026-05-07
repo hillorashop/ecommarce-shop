@@ -133,7 +133,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
            
           </p>
           <p style={{ margin: "4px 0", fontSize: "12px" }}>
-            Contact: {businessInfo?.data?.customerCareNumber || "+880 1519558558 "} | Website:{" "}
+            Contact: {businessInfo?.data?.whatsappNumber || "+880 1519558558 "} | Website:{" "}
             {process.env.NEXT_PUBLIC_BASE_URL ||
               process.env.NEXT_PUBLIC_BASE_WWW_URL}
           </p>

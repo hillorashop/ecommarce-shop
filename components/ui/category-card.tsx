@@ -13,7 +13,7 @@ export const CategoryCard = ({ category }: Props) => {
   const { name, categoryImage, id, categoryUrl } = category;
 
   return (
-    <Link href={`/categories/${categoryUrl}/products`} className="w-full">
+    <Link href={`/categories/${categoryUrl}`} className="w-full">
       <Card className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow rounded-none">
         <CardContent className="flex flex-col items-center p-0">
           

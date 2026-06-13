@@ -34,7 +34,9 @@ export const Cart = () => {
         quantity: item.cartQuantity,
         discount: item.price - price,
         item_brand: siteMeta.siteName,
-        item_category: item.packageQuantityType,
+        item_category: item.selectedUnit && item.unitLabel
+      ? `${item.selectedUnit}${item.unitLabel}` 
+      : "",
       };
     });
 
@@ -61,7 +63,9 @@ const remove = (id: string) => {
             discount: item.price - price,
             quantity: item.cartQuantity,
             item_brand: siteMeta.siteName,
-            item_category: item.packageQuantityType,
+            item_category: item.selectedUnit && item.unitLabel
+      ? `${item.selectedUnit}${item.unitLabel}`  
+      : "",
           },
         ],
       });
@@ -89,7 +93,9 @@ const remove = (id: string) => {
           quantity: item.cartQuantity,
           discount: item.price - price,
           item_brand: siteMeta.siteName,
-          item_category: item.packageQuantityType,
+          item_category: item.selectedUnit && item.unitLabel
+      ? `${item.selectedUnit}${item.unitLabel}` 
+      : "",
         };
       });
 
@@ -132,6 +138,12 @@ const remove = (id: string) => {
                   {/* Product Info */}
                   <div className="flex flex-col flex-1 mx-4">
                     <p className="text-sm font-medium ">{item.name}</p>
+
+                      {item.selectedUnit && item.unitLabel && (
+    <span className="text-xs text-gray-600 font-medium mt-0.5">
+      {item.selectedUnit} {item.unitLabel}
+    </span>
+  )}
 
                     <p className="text-sm text-gray-600">
                       {item.discountPrice && item.discountPrice > 0 ? (

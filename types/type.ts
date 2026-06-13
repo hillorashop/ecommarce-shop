@@ -14,6 +14,12 @@ export type dbCategory = {
   products: dbProduct[];
 };
 
+export type UnitPricing = {
+  price: number;
+  discountPrice?: number;
+};
+
+
 export type dbProduct = {
   id: string;
   productId:string;
@@ -27,8 +33,9 @@ export type dbProduct = {
   lastBestSellingAt?: Date | null;  
   price: number;
   discountPrice?: number;
-  packageQuantity: string;
-  packageQuantityType: string;
+  kgUnit?:     Record<number, UnitPricing>;
+  piecesUnit?: Record<number, UnitPricing>;
+  gramUnit?:   Record<number, UnitPricing>;
   inStocks: number;
   categoryId: string;
   orderItems: dbOrderItem[];
@@ -83,6 +90,8 @@ export type dbOrderItem = {
   orderId: string;
   productId: string;
   quantity: number;
+  variant?: string | null;
+  price?:   number | null;
   createdAt: Date;
   updatedAt: Date;
 };

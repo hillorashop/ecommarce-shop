@@ -1,4 +1,4 @@
-import { dbProduct, dbCategory, dbReview } from "@/types/type";
+import { dbProduct, dbCategory, dbReview, UnitPricing } from "@/types/type";
 
 export type dbProductwihtoutAll = {
 
@@ -9,8 +9,9 @@ export type dbProductwihtoutAll = {
     productImage: string;
     price: number;
     discountPrice?: number;
-    packageQuantity: string;
-    packageQuantityType: string;
+  kgUnit?:     Record<number, UnitPricing>;
+  piecesUnit?: Record<number, UnitPricing>;
+  gramUnit?:   Record<number, UnitPricing>;
     productType?:"BEST_SELLING" | "ALL_PRODUCT" | null;
     inStocks: number;
     reviews: dbReview[];    

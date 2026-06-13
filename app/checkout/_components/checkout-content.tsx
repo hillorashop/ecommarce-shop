@@ -23,6 +23,7 @@ import { dbOrder } from "@/types/type";
 import { useSearchParams } from "next/navigation";
 
 
+
 const shippingSchema = z.object({
   name: z.string().min(2, "নাম লিখুন").max(20, "সর্বোচ্চ ৩০ অক্ষর"),
   mobileNumber: z
@@ -44,12 +45,8 @@ const paymentMethods = [
   },
 ];
 
-interface Props {
-  productId?: string;
-  qty?: number;
-}
 
-export const CheckoutContent = ({ productId,qty }: Props) => {
+export const CheckoutContent = () => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
@@ -59,6 +56,10 @@ export const CheckoutContent = ({ productId,qty }: Props) => {
   const [fbc, setFbc] = useState<string | null>(null);
   const [ttpCookie, setttpCookie] = useState<string | null>(null);
   const [ttclidValue, setTtclidValue] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const unitParam = searchParams.get("unit");
+  const productId = searchParams.get("productId");
+  const qty = searchParams.get("qty")
 
 
 useEffect(() => {
@@ -70,13 +71,47 @@ useEffect(() => {
 }, []);
 
 
-  const checkoutItems: CartItem[] = useMemo(() => {
-    if (productId && products) {
-      const found = products.data.find((p) => p.id === productId);
-      return found ? [{ ...found, cartQuantity: qty ?? 1 }] : [];
-    }
-    return cartItems;
-  }, [productId, products, cartItems]);
+const checkoutItems: CartItem[] = useMemo(() => {
+  if (productId && products) {
+    const found = products.data.find((p) => p.id === productId);
+    if (!found) return [];
+
+    let activePrice = found.price;
+    let activeDiscountPrice = found.discountPrice;
+
+
+if (unitParam) {
+  type UnitMap = Record<string, { price: number; discountPrice: number }>;
+
+  const kg = found.kgUnit && typeof found.kgUnit === "object" && Object.keys(found.kgUnit).length > 0
+    ? (found.kgUnit as UnitMap) : null;
+  const gram = found.gramUnit && typeof found.gramUnit === "object" && Object.keys(found.gramUnit).length > 0
+    ? (found.gramUnit as UnitMap) : null;
+  const pcs = found.piecesUnit && typeof found.piecesUnit === "object" && Object.keys(found.piecesUnit).length > 0
+    ? (found.piecesUnit as UnitMap) : null;
+
+  const unitMap = kg ?? gram ?? pcs ?? null;
+
+  const keyMatch = unitParam.match(/^(\d+(?:\.\d+)?)/);
+  const key = keyMatch?.[1] ?? null;
+
+  if (unitMap && key && unitMap[key]) {
+    activePrice = unitMap[key].price;
+    activeDiscountPrice = unitMap[key].discountPrice;
+  }
+}
+
+    return [{
+      ...found,
+      price: activePrice,
+      discountPrice: activeDiscountPrice,
+      cartQuantity: qty ? parseInt(qty) : 1,
+    }];
+  }
+  return cartItems;
+}, [productId, products, cartItems, qty, unitParam]);
+
+
 
  const { mutate: submitOrder, isPending, error } = useCustomMutation(
     ["post-order"],
@@ -87,6 +122,8 @@ useEffect(() => {
        
     }
   );
+
+
 
 
   const subTotal = checkoutItems.reduce(
@@ -119,7 +156,7 @@ useEffect(() => {
           discount: item.price - price,
           quantity: item.cartQuantity,
           item_brand: siteMeta.siteName,
-          item_category: item.packageQuantityType,
+          item_category:"",
         };
       });
       
@@ -142,7 +179,15 @@ useEffect(() => {
     },
   });
 
-
+  useEffect(() => {
+  if (user) {
+    form.reset({
+      name: "",
+      mobileNumber: user.mobileNumber || "",
+      address: user.address || "",
+    });
+  }
+}, [user]);
 
 
   const handlePlaceOrder = async (data: ShippingForm) => {
@@ -157,7 +202,7 @@ useEffect(() => {
         discount: item.price - price,
         quantity: item.cartQuantity,
         item_brand: siteMeta.siteName,
-        item_category: item.packageQuantityType,
+        item_category: "",
       };
     });
 
@@ -179,18 +224,21 @@ useEffect(() => {
       paymentMethod: selectedPayment,
       totalDiscount,
       total,
-      orderItems: checkoutItems.map((item) => {
-        const hasDiscount =
-          item.discountPrice &&
-          item.discountPrice > 0 &&
-          item.discountPrice < item.price;
-
-        return {
-          productId: item.id,
-          quantity: item.cartQuantity,
-          price: hasDiscount ? item.discountPrice : item.price,
-        };
-      }),
+   orderItems: checkoutItems.map((item) => {
+   const hasDiscount = item.discountPrice && item.discountPrice > 0 && item.discountPrice < item.price;
+   const baseProductId = item.id.includes("-") ? item.id.split("-")[0] : item.id;
+   const variant = unitParam 
+    ? unitParam 
+    : item.id.includes("-") 
+    ? item.id.split("-").slice(1).join("-") 
+    : null;
+  return {
+    productId: baseProductId,
+    quantity: item.cartQuantity,
+    price: hasDiscount ? item.discountPrice! : item.price,
+    variant: variant ?? "default",
+  };
+}),
     };
 
     try {
@@ -250,20 +298,22 @@ useEffect(() => {
                       <p className="text-xs text-gray-500">
                         Qty: {item.cartQuantity}
                       </p>
-
+{unitParam && (
+  <p className="text-xs text-gray-400">Variant: {unitParam}</p>
+)}
                       <div className="flex items-center gap-2 mt-1">
                         {hasDiscount ? (
                           <>
                             <span className="text-sm font-semibold text-green-600">
-                              BDT {item.discountPrice}
+                              BDT {item.discountPrice?.toLocaleString()}
                             </span>
                             <span className="text-xs line-through text-gray-400">
-                              BDT {item.price}
+                              BDT {item.price.toLocaleString()}
                             </span>
                           </>
                         ) : (
                           <span className="text-sm font-semibold">
-                            BDT {item.price}
+                            BDT {item.price.toLocaleString()}
                           </span>
                         )}
                       </div>
@@ -274,7 +324,7 @@ useEffect(() => {
                       {(
                         (hasDiscount ? item.discountPrice! : item.price) *
                         item.cartQuantity
-                      )}
+                      ).toLocaleString()}
                     </p>
                   </div>
                 );
@@ -286,15 +336,15 @@ useEffect(() => {
           <div className="space-y-1 border-t pt-3">
             <div className="flex justify-between text-sm">
               <span>Sub Total:</span>
-              <span>BDT {subTotal}</span>
+              <span>BDT {subTotal.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-sm text-green-600">
               <span>Discount:</span>
-              <span>- BDT {totalDiscount}</span>
+              <span>- BDT {totalDiscount.toLocaleString()}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total:</span>
-              <span>BDT {total}</span>
+              <span>BDT {total.toLocaleString()}</span>
             </div>
           </div>
 

@@ -233,14 +233,12 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
                   Product
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  Package
+                  Variant
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   Price
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  Discount
-                </th>
+        
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   Qty
                 </th>
@@ -256,37 +254,23 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
     );
     if (!product) return null;
 
-    // Ensure numbers
-    const price = product.price;
-
-    const discountPrice = product.discountPrice 
-      ? product.discountPrice : 0;
-
-const effectivePrice = discountPrice > 0 ? discountPrice : price;
-
+const originalPrice = product.price;
+const effectivePrice = item.price ?? (product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price);
 const subtotal = effectivePrice * item.quantity;
-const discountAmount = (price - effectivePrice) * item.quantity;
+const discountAmount = originalPrice > effectivePrice ? (originalPrice - effectivePrice) * item.quantity : 0;
 
     return (
       <tr key={item.productId}>
-        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+        <td style={{ border: "1px solid #ddd", padding: "8px",  textAlign: "center", }}>
           {product.name}
         </td>
-        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-          {product.packageQuantity} {product.packageQuantityType}
+        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", }}>
+         {item.variant && item.variant !== "default" ? item.variant : "-"}
         </td>
-        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-          BDT {price}
+        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", }}>
+          BDT {item?.price?.toLocaleString()}
         </td>
-        <td
-          style={{
-            border: "1px solid #ddd",
-            padding: "8px",
-            color: "#16a34a",
-          }}
-        >
-          {discountAmount > 0 ? `BDT -${discountAmount}` : "-"}
-        </td>
+
         <td
           style={{
             border: "1px solid #ddd",
@@ -301,9 +285,10 @@ const discountAmount = (price - effectivePrice) * item.quantity;
             border: "1px solid #ddd",
             padding: "8px",
             fontWeight: "bold",
+            textAlign: "center",
           }}
         >
-          BDT {subtotal}
+          BDT {subtotal.toLocaleString()}
         </td>
       </tr>
     );
@@ -319,7 +304,7 @@ const discountAmount = (price - effectivePrice) * item.quantity;
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Discount:</span>
               <span style={{ color: "#16a34a" }}>
-                BDT -{order.totalDiscount || 0}
+                BDT -{order.totalDiscount?.toLocaleString() || 0}
               </span>
             </div>
             <hr />
@@ -332,7 +317,7 @@ const discountAmount = (price - effectivePrice) * item.quantity;
               }}
             >
               <span>Total:</span>
-              <span>BDT {order.total}</span>
+              <span>BDT {order.total.toLocaleString()}</span>
             </div>
           </div>
         </div>

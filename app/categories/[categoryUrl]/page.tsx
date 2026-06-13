@@ -3,7 +3,8 @@ import { Metadata } from "next";
 import Script from "next/script";
 import { siteMeta } from "@/data";
 import { getCategoryProducts } from "@/actions/category";
-import { CategoryState } from "../../_components/category-state";
+import { CategoryState } from "../_components/category-state";
+
 
 
 type Props = {
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: category.name,
       description: category.description || "",
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/categories/${categoryUrl}/products`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/categories/${categoryUrl}`,
       type: "website",
       siteName: siteMeta.siteName,
       images: [

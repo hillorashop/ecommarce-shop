@@ -7,11 +7,11 @@ import { BiCategory } from "react-icons/bi"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 
-export const navLinks = [
+const navLinks = [
   { Icon: BiCategory, href: "/categories", label:"Categories" },
-{ Icon: ShoppingBasket, href: "/products", label:"Products" },
+ { Icon: ShoppingBasket, href: "/products", label:"Products" },
  { Icon: Home, href: "/" , label:"Home"},
-  { Icon: Truck, href: "/tracking", label:"Tracking" },
+{ Icon: Truck, href: "/tracking", label:"Tracking" },
  
 ];
 

@@ -12,6 +12,8 @@ import { siteMeta } from "@/data";
 import { ReactQueryClientProvider } from "@/provider/queryClient-provider";
 import TopLoadingBar from "@/components/top-loading-bar";
 import Script from "next/script";
+import { StyleMobileFooterNavbar } from "@/components/footer/style-mobile-footer-navbar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -126,7 +128,8 @@ export default function RootLayout({
               <Footer />
             </main>
             <Toaster />
-            <MobileFooterNavbar />
+            <StyleMobileFooterNavbar/>
+            {/* <MobileFooterNavbar /> */}
           </UserProvider>
         </ReactQueryClientProvider>
       </body>

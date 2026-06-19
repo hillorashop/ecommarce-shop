@@ -18,7 +18,7 @@ interface Props {
 export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const { data: products } = useProducts();
-    const { data: businessInfo} = useBusinessInfo();
+  const { data: businessInfo} = useBusinessInfo();
   const router = useRouter();
 
   const getStatusColor = (status: string) => {
@@ -247,54 +247,53 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
                 </th>
               </tr>
             </thead>
-         <tbody>
-  {order.orderItems?.map((item: dbOrderItem) => {
-    const product = products?.data.find(
-      (p: dbProductwihtoutAll) => p.id === item.productId
-    );
-    if (!product) return null;
+            <tbody>
+              {order.orderItems?.map((item: dbOrderItem, index: number) => {
+                const product = products?.data.find(
+                  (p: dbProductwihtoutAll) => p.id === item.productId
+                );
+                if (!product) return null;
 
-const originalPrice = product.price;
-const effectivePrice = item.price ?? (product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price);
-const subtotal = effectivePrice * item.quantity;
-const discountAmount = originalPrice > effectivePrice ? (originalPrice - effectivePrice) * item.quantity : 0;
+                const effectivePrice = item.price ?? (product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price);
+                const subtotal = effectivePrice * item.quantity;
 
-    return (
-      <tr key={item.productId}>
-        <td style={{ border: "1px solid #ddd", padding: "8px",  textAlign: "center", }}>
-          {product.name}
-        </td>
-        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", }}>
-         {item.variant && item.variant !== "default" ? item.variant : "-"}
-        </td>
-        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", }}>
-          BDT {item?.price?.toLocaleString()}
-        </td>
+                // Create a unique key using productId + variant + index
+                const uniqueKey = `${item.productId}-${item.variant || 'default'}-${index}`;
 
-        <td
-          style={{
-            border: "1px solid #ddd",
-            padding: "8px",
-            textAlign: "center",
-          }}
-        >
-          {item.quantity}
-        </td>
-        <td
-          style={{
-            border: "1px solid #ddd",
-            padding: "8px",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          BDT {subtotal.toLocaleString()}
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
-
+                return (
+                  <tr key={uniqueKey}>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                      {product.name}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                      {item.variant && item.variant !== "default" ? item.variant : "-"}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center" }}>
+                      BDT {item?.price?.toLocaleString()}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #ddd",
+                        padding: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.quantity}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #ddd",
+                        padding: "8px",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
+                      BDT {subtotal.toLocaleString()}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
 

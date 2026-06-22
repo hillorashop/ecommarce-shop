@@ -11,7 +11,7 @@ export type BlogResponse = {
 };
 
 export type SingleBlogResponse = {
-  blog: dbBlog;
+  data: dbBlog;
 };
 
 export const getBlogs = async (page?: number): Promise<BlogResponse> => {
@@ -23,6 +23,8 @@ export const getBlogs = async (page?: number): Promise<BlogResponse> => {
 
   const res = await fetch(url.toString());
 
+  console.log(res)
+
   if (!res.ok) throw new Error("Failed to load blogs");
   return await res.json();
 };
@@ -31,6 +33,7 @@ export const getBlogByUrl = async (blogUrl: string): Promise<SingleBlogResponse>
   const url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/blogs/${blogUrl}`;
 
   const res = await fetch(url);
+
   if (!res.ok) throw new Error("Failed to fetch blog");
   return res.json();
 };

@@ -7,7 +7,7 @@ import { dbCategory } from "@/types/type";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowBigLeft, ArrowBigRight, ArrowLeft, ArrowRight } from "lucide-react";
+import {  ArrowLeft, ArrowRight } from "lucide-react";
 
 interface Props {
   initialPage: number;

@@ -13,6 +13,7 @@ import { ReactQueryClientProvider } from "@/provider/queryClient-provider";
 import TopLoadingBar from "@/components/top-loading-bar";
 import Script from "next/script";
 import { StyleMobileFooterNavbar } from "@/components/footer/style-mobile-footer-navbar";
+import { CookiesProvider } from "@/provider/cookies-provider";
 
 
 const geistSans = Geist({
@@ -115,6 +116,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+          <CookiesProvider>
         <TopLoadingBar />
         <ReactQueryClientProvider>
           <UserProvider>
@@ -132,6 +134,7 @@ export default function RootLayout({
             {/* <MobileFooterNavbar /> */}
           </UserProvider>
         </ReactQueryClientProvider>
+        </CookiesProvider>
       </body>
     </html>
   );

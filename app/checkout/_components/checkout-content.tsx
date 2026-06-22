@@ -46,6 +46,17 @@ const paymentMethods = [
 ];
 
 
+function getCookie(name: string) {
+  if (typeof document === "undefined") return null;
+
+  return (
+    document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(`${name}=`))
+      ?.split("=")[1] ?? null
+  );
+}
+
 export const CheckoutContent = () => {
   const { cartItems } = useCart();
   const { data: products, isLoading } = useProducts();
@@ -56,6 +67,7 @@ export const CheckoutContent = () => {
   const [fbc, setFbc] = useState<string | null>(null);
   const [ttpCookie, setttpCookie] = useState<string | null>(null);
   const [ttclidValue, setTtclidValue] = useState<string | null>(null);
+  const [gclid, setGclid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const unitParam = searchParams.get("unit");
   const productId = searchParams.get("productId");
@@ -63,10 +75,11 @@ export const CheckoutContent = () => {
 
 
 useEffect(() => {
-  setFbp(document.cookie.match(/_fbp=([^;]+)/)?.[1] || null);
-  setFbc(document.cookie.match(/_fbc=([^;]+)/)?.[1] || null);
-  setttpCookie(document.cookie.match(/_ttp=([^;]+)/)?.[1] || null);
-  setTtclidValue(document.cookie.match(/ttclid=([^;]+)/)?.[1] || null);
+  setFbp(getCookie("_fbp"));
+  setFbc(getCookie("_fbc"));
+  setttpCookie(getCookie("_ttp"));
+  setTtclidValue(getCookie("ttclid"));
+  setGclid(getCookie("gclid"));
 
 }, []);
 
@@ -218,6 +231,7 @@ if (unitParam) {
       fbp,
       ttpCookie,
       ttclidValue,
+      gclid,
       name: data.name,
       mobileNumber: data.mobileNumber,
       address: data.address,

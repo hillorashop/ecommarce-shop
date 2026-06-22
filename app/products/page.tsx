@@ -7,7 +7,6 @@ interface Props {
 }
 
 
-// ✅ Dynamic metadata
 export async function generateMetadata(
   { searchParams }: Props
 ): Promise<Metadata> {

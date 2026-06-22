@@ -4,6 +4,7 @@ export const navLinks = [
   { name: "Shop", href: "/products" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
+  { name: "Blogs", href: "/blogs" },
   { name: "Become a Seller", href: "/become-seller" },
 ];
 
@@ -15,6 +16,7 @@ export const mobileNavLinks = [
   { name: "Categories", href: "/categories" },
   { name: "Faq", href: "/faq" },
   { name: "About", href: "/about" },
+  { name: "Blogs", href: "/blogs" },
   { name: "Become a Seller", href: "/become-seller" },
 ];
 

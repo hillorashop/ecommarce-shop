@@ -1,3 +1,18 @@
+export interface dbBlog {
+  id: string;
+  title: string;
+  content: string;
+  url: string;
+  visibility: 'PUBLIC' | 'PRIVATE';
+  desktopCoverImage: string;
+  mobileCoverImage: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaKeyWords: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type dbBillboard = {
   id: string;
   billboardImage: string;

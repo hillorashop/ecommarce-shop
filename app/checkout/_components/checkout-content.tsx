@@ -183,31 +183,51 @@ if (unitParam) {
   }, [selectedPayment, checkoutItems, total]);
 
 
-    useEffect(() => {
-    if (orderResponse) {
-      const items = checkoutItems.map((item) => {
-        const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-        return {
-          item_id: item.id,
-          item_name: item.name,
-          price,
-          discount: item.price - price,
-          quantity: item.cartQuantity,
-          item_brand: siteMeta.siteName,
-          item_category: "",
-        };
-      });
+useEffect(() => {
+  if (orderResponse) {
+    const items = checkoutItems.map((item) => {
+      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+      return {
+        item_id: item.id,
+        item_name: item.name,
+        price,
+        discount: item.price - price,
+        quantity: item.cartQuantity,
+        item_brand: siteMeta.siteName,
+        item_category:  "",
+        item_variant:  "",
+      };
+    });
 
-      pushToDataLayer("purchase", {
-        transaction_id: orderResponse.id,
-        currency: "BDT",
-        value: total,
-        shipping: 0,
-        payment_type: selectedPayment,
-        items,
-      });
-    }
-  }, [orderResponse]);
+    pushToDataLayer("purchase", {
+      transaction_id: orderResponse.id,
+      order_id: orderResponse.orderId,
+      currency: "BDT",
+      value: total,
+      shipping: 0,
+      payment_type: selectedPayment,
+      payment_method: orderResponse.paymentMethod,
+      is_paid: orderResponse.isPaid,
+      transaction_id_real: orderResponse.transactionId || undefined,
+      customer_name: orderResponse.name,
+      customer_mobile: orderResponse.mobileNumber,
+      customer_address: orderResponse.address,
+      customer_account_type: orderResponse.accountType,
+      customer_id: orderResponse.userId || undefined,
+      order_status: orderResponse.status,
+      discount_total: orderResponse.totalDiscount || 0,
+      user_agent: orderResponse.userAgent || undefined,
+      ip_address: orderResponse.ip || undefined,
+      fbc: orderResponse.fbc || undefined,
+      fbp: orderResponse.fbp || undefined,
+      ttclid: orderResponse.ttclidValue || undefined,
+      ttp_cookie: orderResponse.ttpCookie || undefined,
+      created_at: orderResponse.createdAt,
+      updated_at: orderResponse.updatedAt,
+      items,
+    });
+  }
+}, [orderResponse, checkoutItems, total, selectedPayment]);
 
 
   const form = useForm<ShippingForm>({

@@ -183,6 +183,33 @@ if (unitParam) {
   }, [selectedPayment, checkoutItems, total]);
 
 
+    useEffect(() => {
+    if (orderResponse) {
+      const items = checkoutItems.map((item) => {
+        const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+        return {
+          item_id: item.id,
+          item_name: item.name,
+          price,
+          discount: item.price - price,
+          quantity: item.cartQuantity,
+          item_brand: siteMeta.siteName,
+          item_category: "",
+        };
+      });
+
+      pushToDataLayer("purchase", {
+        transaction_id: orderResponse.id,
+        currency: "BDT",
+        value: total,
+        shipping: 0,
+        payment_type: selectedPayment,
+        items,
+      });
+    }
+  }, [orderResponse]);
+
+
   const form = useForm<ShippingForm>({
     resolver: zodResolver(shippingSchema),
     defaultValues: {

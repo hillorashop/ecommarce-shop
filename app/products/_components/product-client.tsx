@@ -137,7 +137,7 @@ useEffect(() => {
   }, [product, displayPrice, savingsAmount]);
 
   const handleAddToCart = (product: dbProductwihtoutAll) => {
-    const discountAmount = hasDiscount ? activePrice - activeDiscountPrice! : 0;
+
     pushToDataLayer("add_to_cart", {
       currency: "BDT",
       value: displayPrice,
@@ -145,10 +145,10 @@ useEffect(() => {
         item_id: product.id,
         item_name: product.name,
         affiliation: siteMeta.siteName,
-        discount: discountAmount,
+        price: displayPrice,
+        discount: savingsAmount,
         item_brand: siteMeta.siteName,
         item_variant: variantLabel,
-        price: displayPrice,
         quantity,
       }],
     });

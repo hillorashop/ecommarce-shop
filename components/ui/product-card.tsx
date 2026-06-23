@@ -159,23 +159,19 @@ const isInCart = cartItems.some((item) => item.id === cartKey);
   );
   toast.success(`${name} added to cart`);
   pushToDataLayer("add_to_cart", {
-    ecommerce: {
       currency: "BDT",
       value: displayPrice,
-      items: [
-        {
+      items: [{
           item_id: id,
           item_name: name,
+          affiliation: siteMeta.siteName,
           price: displayPrice,
           discount: savingsAmount,
-          item_category: "",
           item_brand: siteMeta.siteName,
           item_variant: variantLabel,
-          in_stock: inStocks > 0,
           quantity: 1,
-        },
-      ],
-    },
+        }],
+    
   });
 }}
             >
@@ -190,15 +186,13 @@ const isInCart = cartItems.some((item) => item.id === cartKey);
                 pushToDataLayer("begin_checkout", {
                   currency: "BDT",
                   value: displayPrice,
-                  coupon: "",
+               
                   items: [
                     {
                       item_id: id,
                       item_name: name,
                       affiliation: siteMeta.siteName,
-                      coupon: "",
                       discount: savingsAmount,
-                      index: 0,
                       item_brand: siteMeta.siteName,
                       item_category: "",
                       quantity: 1,

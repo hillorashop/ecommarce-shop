@@ -16,99 +16,115 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
+import { trackEcommerceEvent } from "@/lib/custom-tm";
 
 export const Cart = () => {
   const router = useRouter();
   const { cartItems, removeItem, updateQuantity } = useCart();
   const { open, setOpen } = useOpenStore();
 
+useEffect(() => {
+  if (!open || cartItems.length === 0) return;
 
-  useEffect(() => {
-  if (open && cartItems.length > 0) {
-    const items = cartItems.map((item) => {
-      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-      return {
-        item_id: item.productId,
-        item_name: item.name,
-        price,
-        quantity: item.cartQuantity,
-        discount: item.price - price,
-        item_brand: siteMeta.siteName,
-        item_category: item.selectedUnit && item.unitLabel
-      ? `${item.selectedUnit}${item.unitLabel}` 
-      : "",
-      };
-    });
+  const items = cartItems.map((item) => {
+    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+    const discount = item.price - price;
 
-    pushToDataLayer("view_cart", {
-      currency: "BDT",
-      value: items.reduce((total, i) => total + i.price * i.quantity, 0),
-      items,
-    });
-  }
+    return {
+      item_id: item.productId || item.id,
+      item_name: item.name,
+      price,
+      quantity: item.cartQuantity,
+      discount,
+      item_brand: siteMeta?.siteName || "Online Store",
+      item_variant: item.selectedUnit && item.unitLabel
+        ? `${item.selectedUnit}${item.unitLabel}`
+        : undefined,
+    };
+  });
+
+  const ecommerce = {
+    currency: "BDT",
+    value: items.reduce((total, i) => total + i.price * i.quantity, 0),
+    affiliation: siteMeta?.siteName || "Online Store",
+    items,
+  };
+
+  pushToDataLayer("view_cart", ecommerce);
+  trackEcommerceEvent("view_cart", ecommerce);
 }, [open, cartItems]);
 
 const remove = (id: string) => {
-    const item = cartItems.find((i) => i.id === id);
-    if (item) {
-      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-      pushToDataLayer("remove_from_cart", {
-        currency: "BDT",
-        value: price * item.cartQuantity,
-        items: [
-          {
-            item_id: item.id,
-            item_name: item.name,
-            price,
-            discount: item.price - price,
-            quantity: item.cartQuantity,
-            item_brand: siteMeta.siteName,
-            item_category: item.selectedUnit && item.unitLabel
-      ? `${item.selectedUnit}${item.unitLabel}`  
-      : "",
-          },
-        ],
-      });
-    }
-    removeItem(id); 
-    toast.success(`${item?.name} removed from cart`);
-  }
+  const item = cartItems.find((i) => i.id === id);
+  if (!item) return;
+
+  const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+  const discount = item.price - price;
+
+  const ecommerce = {
+    currency: "BDT",
+    value: price * item.cartQuantity,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: [
+      {
+        item_id: item.productId || item.id,
+        item_name: item.name,
+        price,
+        discount,
+        quantity: item.cartQuantity,
+        item_brand: siteMeta?.siteName || "Online Store",
+        item_variant: item.selectedUnit && item.unitLabel
+          ? `${item.selectedUnit}${item.unitLabel}`
+          : undefined,
+      },
+    ],
+  };
+
+  pushToDataLayer("remove_from_cart", ecommerce);
+  trackEcommerceEvent("remove_from_cart", ecommerce);
+
+  removeItem(id);
+  toast.success(`${item.name} removed from cart`);
+};
 
   const totalPrice = cartItems.reduce((total, item) => {
     const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
     return total + price * item.cartQuantity;
   }, 0);
 
-  const onCheckout = () => {
-    if (cartItems.length > 0) {
-      const items = cartItems.map((item) => {
-        const price =
-          item.discountPrice && item.discountPrice > 0
-            ? item.discountPrice
-            : item.price;
-        return {
-          item_id: item.id,
-          item_name: item.name,
-          price,
-          quantity: item.cartQuantity,
-          discount: item.price - price,
-          item_brand: siteMeta.siteName,
-          item_category: item.selectedUnit && item.unitLabel
-      ? `${item.selectedUnit}${item.unitLabel}` 
-      : "",
-        };
-      });
+const onCheckout = () => {
+  if (cartItems.length === 0) return;
 
-      pushToDataLayer("begin_checkout", {
-        currency: "BDT",
-        value: totalPrice,
-        items,
-      });
-    }
+  const items = cartItems.map((item) => {
+    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+    const discount = item.price - price;
 
-    router.push("/checkout");
-    setOpen(false);
+    return {
+      item_id: item.productId || item.id,
+      item_name: item.name,
+      price,
+      quantity: item.cartQuantity,
+      discount,
+      item_brand: siteMeta?.siteName || "Online Store",
+      item_variant: item.selectedUnit && item.unitLabel
+        ? `${item.selectedUnit}${item.unitLabel}`
+        : undefined,
+    };
+  });
+
+  const ecommerce = {
+    currency: "BDT",
+    value: totalPrice,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items,
   };
+
+  pushToDataLayer("begin_checkout", ecommerce);
+  trackEcommerceEvent("begin_checkout", ecommerce);
+
+  router.push("/checkout");
+  setOpen(false);
+};
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

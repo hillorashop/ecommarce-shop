@@ -1,26 +1,43 @@
 const DEFAULT_EXP_DAYS = 90;
 
 const CLICK_IDS = [
-  "gclid",      // Google Ads click ID
-  "gbraid",     // Google Ads iOS app-to-web attribution
-  "wbraid",     // Google Ads web-to-app / privacy-safe attribution
+  // Google
+  "gclid",       // Google Ads click ID
+  "gbraid",      // Google Ads iOS app-to-web attribution  
+  "wbraid",      // Google Ads web-to-app / privacy-safe attribution
+  "dclid",       // ✅ ADD — Google Display & Video 360 click ID
+  "uuid",
+  // Microsoft
+  "msclkid",     // Microsoft Ads click ID
 
-  "msclkid",    // Microsoft Ads click ID
+  // Meta
+  "fbclid",      // Meta (Facebook/Instagram) click ID
 
-  "ttclid",     // TikTok Ads click ID
+  // TikTok
+  "ttclid",      // TikTok Ads click ID
 
-  "twclid",     // X (Twitter) Ads click ID
+  // X (Twitter)
+  "twclid",      // X Ads click ID
 
-  "li_fat_id",  // LinkedIn Ads click ID
+  // LinkedIn
+  "li_fat_id",   // LinkedIn First-party Ad Tracking ID
 
-  "rdt_cid",    // Reddit Ads click ID
+  // Reddit
+  "rdt_cid",     // Reddit Ads click ID
 
-  "epik",       // Pinterest Ads click ID
+  // Pinterest
+  "epik",        // Pinterest Enhanced Match click ID
 
-  "ScCid",      // Snapchat Ads click ID (official casing)
-  "sccid",      // Snapchat Ads click ID (alternative casing)
+  // Snapchat
+  "ScCid",       // Snapchat click ID (official casing)
+  "sccid",       // Snapchat click ID (lowercase fallback)
 
-  "qclid",      // Quora Ads click ID
+  // Quora
+  "qclid",       // Quora Ads click ID
+
+  // ✅ ADD these:
+  "irclickid",   // Impact (affiliate network) — common in mixed setups
+  "awc",         // Awin affiliate click ID
 ];
 
 function setCookie(name: string, value: string, days = DEFAULT_EXP_DAYS) {
@@ -32,14 +49,11 @@ function setCookie(name: string, value: string, days = DEFAULT_EXP_DAYS) {
   )}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
 }
 
-export function initClickIdCookies() {
+export function initClickIdCookiesFromParams(params: URLSearchParams) {
   if (typeof window === "undefined") return;
-
-  const params = new URLSearchParams(window.location.search);
 
   CLICK_IDS.forEach((id) => {
     const value = params.get(id);
-
     if (value) {
       setCookie(id, value);
     }

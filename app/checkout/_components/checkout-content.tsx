@@ -21,6 +21,7 @@ import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
 import { dbOrder } from "@/types/type";
 import { useSearchParams } from "next/navigation";
+import { trackEcommerceEvent } from "@/lib/custom-tm";
 
 
 
@@ -63,11 +64,29 @@ export const CheckoutContent = () => {
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
+
   const [fbp, setFbp] = useState<string | null>(null);
   const [fbc, setFbc] = useState<string | null>(null);
   const [ttpCookie, setttpCookie] = useState<string | null>(null);
   const [ttclidValue, setTtclidValue] = useState<string | null>(null);
   const [gclid, setGclid] = useState<string | null>(null);
+
+  const [li_fat_id, setLi_fat_id] = useState<string | null>(null);
+  const [gbraid, setGbraid] = useState<string | null>(null);
+  const [wbraid, setWbraid] = useState<string | null>(null);
+  const [dclid, setDclid] = useState<string | null>(null);
+  const [uuid, setUuid] = useState<string | null>(null);
+  const [msclkid, setMsclkid] = useState<string | null>(null);
+  const [fbclid, setFbclid] = useState<string | null>(null);
+  const [twclid, setTwclid] = useState<string | null>(null);
+  const [rdt_cid, setRdt_cid] = useState<string | null>(null);
+  const [epik, setEpik] = useState<string | null>(null);
+  const [ScCid, setScCid] = useState<string | null>(null);
+  const [sccid, setSccid] = useState<string | null>(null);
+  const [qclid, setQclid] = useState<string | null>(null);
+  const [irclickid, setIrclickid] = useState<string | null>(null);
+  const [awc, setAwc] = useState<string | null>(null);
+
   const searchParams = useSearchParams();
   const unitParam = searchParams.get("unit");
   const productId = searchParams.get("productId");
@@ -80,6 +99,21 @@ useEffect(() => {
   setttpCookie(getCookie("_ttp"));
   setTtclidValue(getCookie("ttclid"));
   setGclid(getCookie("gclid"));
+  setLi_fat_id(getCookie('li_fat_id'));
+  setGbraid(getCookie('gbraid'));
+  setWbraid(getCookie('wbraid'));
+  setDclid(getCookie('dclid'));
+  setUuid(getCookie('uuid'));
+  setMsclkid(getCookie('msclkid'));
+  setFbclid(getCookie('fbclid'));
+  setTwclid(getCookie('twclid'));
+  setRdt_cid(getCookie('rdt_cid'));
+  setEpik(getCookie('epik'));
+  setScCid(getCookie('ScCid'));
+  setSccid(getCookie('sccid'));
+  setQclid(getCookie('qclid'));
+  setIrclickid(getCookie('irclickid'));
+  setAwc(getCookie('awc'));
 
 }, []);
 
@@ -158,75 +192,97 @@ if (unitParam) {
 
   const total = subTotal - totalDiscount;
 
-    useEffect(() => {
-    if (selectedPayment) {
-      const items = checkoutItems.map((item) => {
-        const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-        return {
-          item_id: item.id,
-          item_name: item.name,
-          price,
-          discount: item.price - price,
-          quantity: item.cartQuantity,
-          item_brand: siteMeta.siteName,
-          item_category:"",
-        };
-      });
-      
-      pushToDataLayer("add_payment_info", {
-        currency: "BDT",
-        value: total,
-        payment_type: selectedPayment,
-        items,
-      });
-    }
-  }, [selectedPayment, checkoutItems, total]);
+useEffect(() => {
+  if (!selectedPayment) return;
+
+  const items = checkoutItems.map((item) => {
+    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+    const discount = item.price - price;
+
+    return {
+      item_id: item.id,
+      item_name: item.name,
+      price,
+      discount,
+      quantity: item.cartQuantity,
+      item_brand: siteMeta?.siteName || "Online Store",
+      item_variant: item.selectedUnit && item.unitLabel
+        ? `${item.selectedUnit}${item.unitLabel}`
+        : undefined,
+      item_category:  "",
+    };
+  });
+
+  const ecommerce = {
+    currency: "BDT",
+    value: total,
+    affiliation: siteMeta?.siteName || "Online Store",
+    payment_type: selectedPayment,
+    items,
+  };
+
+  pushToDataLayer("add_payment_info", ecommerce);
+  trackEcommerceEvent("add_payment_info", ecommerce);
+}, [selectedPayment, checkoutItems, total]);
 
 
 useEffect(() => {
-  if (orderResponse) {
-    const items = checkoutItems.map((item) => {
-      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-      return {
-        item_id: item.id,
-        item_name: item.name,
-        price,
-        discount: item.price - price,
-        quantity: item.cartQuantity,
-        item_brand: siteMeta.siteName,
-        item_category:  "",
-        item_variant:  "",
-      };
-    });
+  if (!orderResponse) return;
 
-    pushToDataLayer("purchase", {
-      transaction_id: orderResponse.id,
-      order_id: orderResponse.orderId,
-      currency: "BDT",
-      value: total,
-      shipping: 0,
-      payment_type: selectedPayment,
-      payment_method: orderResponse.paymentMethod,
-      is_paid: orderResponse.isPaid,
-      transaction_id_real: orderResponse.transactionId || undefined,
-      customer_name: orderResponse.name,
-      customer_mobile: orderResponse.mobileNumber,
-      customer_address: orderResponse.address,
-      customer_account_type: orderResponse.accountType,
-      customer_id: orderResponse.userId || undefined,
-      order_status: orderResponse.status,
-      discount_total: orderResponse.totalDiscount || 0,
-      user_agent: orderResponse.userAgent || undefined,
-      ip_address: orderResponse.ip || undefined,
-      fbc: orderResponse.fbc || undefined,
-      fbp: orderResponse.fbp || undefined,
-      ttclid: orderResponse.ttclidValue || undefined,
-      ttp_cookie: orderResponse.ttpCookie || undefined,
-      created_at: orderResponse.createdAt,
-      updated_at: orderResponse.updatedAt,
-      items,
-    });
-  }
+  const items = checkoutItems.map((item) => {
+    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+    const discount = item.price - price;
+
+    return {
+      item_id: item.id,
+      item_name: item.name,
+      price,
+      discount,
+      quantity: item.cartQuantity,
+      item_brand: siteMeta?.siteName || "Online Store",
+      item_variant: item.selectedUnit && item.unitLabel
+        ? `${item.selectedUnit}${item.unitLabel}`
+        : undefined,
+      item_category: "",
+    };
+  });
+
+  const {
+    name, mobileNumber, paymentMethod, address, userAgent, userId, createdAt, ip,accountType, status, updatedAt,
+    fbc, fbp, ttclidValue, ttpCookie,
+    gclid, li_fat_id, gbraid, wbraid, dclid, uuid, msclkid, fbclid, twclid, rdt_cid, epik, ScCid, sccid, qclid, irclickid, awc,
+
+  } = orderResponse
+
+  const ecommerce = {
+    transaction_id: orderResponse.id || orderResponse.orderId,
+    currency: "BDT",
+    value: total,
+    affiliation: siteMeta?.siteName || "Online Store",
+    shipping: 0,
+    payment_type: selectedPayment,
+    payment_method: paymentMethod,
+    is_paid: orderResponse.isPaid,
+    discount_total: totalDiscount || 0,
+    items,
+    // Additional order details (optional top‑level)
+    customer_name: name,
+    customer_mobile: mobileNumber,
+    customer_address: address,
+    customer_account_type: accountType,
+    customer_id: userId,
+    order_status: status,
+    user_agent: userAgent,
+    ip_address: ip,
+    fbc, fbp, gclid, li_fat_id, gbraid, wbraid, dclid, uuid, msclkid, fbclid, twclid, rdt_cid, epik, ScCid, sccid, qclid, irclickid, awc,
+    ttclid: ttclidValue,
+    ttp_cookie: ttpCookie,
+    created_at: createdAt,
+    updated_at: updatedAt,
+  };
+
+  pushToDataLayer("purchase", ecommerce);
+  trackEcommerceEvent("purchase", ecommerce);
 }, [orderResponse, checkoutItems, total, selectedPayment]);
 
 
@@ -250,64 +306,88 @@ useEffect(() => {
 }, [user]);
 
 
-  const handlePlaceOrder = async (data: ShippingForm) => {
-    if (!selectedPayment) return;
+const handlePlaceOrder = async (data: ShippingForm) => {
+  if (!selectedPayment) return;
 
-      const items = checkoutItems.map((item) => {
-      const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-      return {
-        item_id: item.id,
-        item_name: item.name,
-        price,
-        discount: item.price - price,
-        quantity: item.cartQuantity,
-        item_brand: siteMeta.siteName,
-        item_category: "",
-      };
-    });
+  const items = checkoutItems.map((item) => {
+    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
+    const discount = item.price - price;
 
-    pushToDataLayer("add_shipping_info", {
-      currency: "BDT",
-      value: total,
-      items,
-    });
-
-    const orderData = {
-      userId: user?.id,
-      fbc,
-      fbp,
-      ttpCookie,
-      ttclidValue,
-      gclid,
-      name: data.name,
-      mobileNumber: data.mobileNumber,
-      address: data.address,
-      paymentMethod: selectedPayment,
-      totalDiscount,
-      total,
-   orderItems: checkoutItems.map((item) => {
-   const hasDiscount = item.discountPrice && item.discountPrice > 0 && item.discountPrice < item.price;
-   const baseProductId = item.id.includes("-") ? item.id.split("-")[0] : item.id;
-   const variant = unitParam 
-    ? unitParam 
-    : item.id.includes("-") 
-    ? item.id.split("-").slice(1).join("-") 
-    : null;
-  return {
-    productId: baseProductId,
-    quantity: item.cartQuantity,
-    price: hasDiscount ? item.discountPrice! : item.price,
-    variant: variant ?? "default",
-  };
-}),
+    return {
+      item_id: item.id,
+      item_name: item.name,
+      price,
+      discount,
+      quantity: item.cartQuantity,
+      item_brand: siteMeta?.siteName || "Online Store",
+      item_variant: item.selectedUnit && item.unitLabel
+        ? `${item.selectedUnit}${item.unitLabel}`
+        : undefined,
+      item_category: "",
     };
+  });
 
-    try {
-      submitOrder(orderData);
-    } catch (err) {
-      console.error("Order failed:", err);
-    }
+  const ecommerce = {
+    currency: "BDT",
+    value: total,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items,
   };
+
+  pushToDataLayer("add_shipping_info", ecommerce);
+  trackEcommerceEvent("add_shipping_info", ecommerce); 
+
+  const orderData = {
+    userId: user?.id,
+    fbc,
+    fbp,
+    ttpCookie,
+    ttclidValue,
+    gclid,
+    li_fat_id,
+    gbraid,
+    wbraid,
+    dclid,
+    uuid,
+    msclkid,
+    fbclid,
+    twclid,
+    rdt_cid,
+    epik,
+    ScCid,
+    sccid,
+    qclid,
+    irclickid,
+    awc,
+    name: data.name,
+    mobileNumber: data.mobileNumber,
+    address: data.address,
+    paymentMethod: selectedPayment,
+    totalDiscount,
+    total,
+    orderItems: checkoutItems.map((item) => {
+      const hasDiscount = item.discountPrice && item.discountPrice > 0 && item.discountPrice < item.price;
+      const baseProductId = item.id.includes("-") ? item.id.split("-")[0] : item.id;
+      const variant = unitParam 
+        ? unitParam 
+        : item.id.includes("-") 
+        ? item.id.split("-").slice(1).join("-") 
+        : null;
+      return {
+        productId: baseProductId,
+        quantity: item.cartQuantity,
+        price: hasDiscount ? item.discountPrice! : item.price,
+        variant: variant ?? "default",
+      };
+    }),
+  };
+
+  try {
+    submitOrder(orderData);
+  } catch (err) {
+    console.error("Order failed:", err);
+  }
+};
 
   if (orderResponse) return <InvoiceOrder order={orderResponse} />;
 

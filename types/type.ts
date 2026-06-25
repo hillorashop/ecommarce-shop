@@ -93,6 +93,22 @@ export type dbOrder = {
   fbp?:string | null;
   ttpCookie?:   string | null;
   ttclidValue?: string | null;
+  gclid?: string | null;
+  li_fat_id?: string | null;
+  gbraid?: string | null;
+  wbraid?: string | null;
+  dclid?: string | null;
+  uuid?: string | null;
+  msclkid?: string | null;
+  fbclid?: string | null;
+  twclid?: string | null;
+  rdt_cid?: string | null;
+  epik?: string | null;
+  ScCid?: string | null;
+  sccid?: string | null;
+  qclid?: string | null;
+  irclickid?: string | null;
+  awc?: string | null;
   createdAt: Date;
   updatedAt: Date;
 

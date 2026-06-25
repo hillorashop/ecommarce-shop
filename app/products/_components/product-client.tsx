@@ -18,6 +18,8 @@ import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/prod
 import { pushToDataLayer } from "@/lib/gtm";
 import { FaRegPlayCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { trackEcommerceEvent } from "@/lib/custom-tm";
+import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
 
 interface Props {
   productUrl: string;
@@ -31,7 +33,6 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState<boolean>(true);
-  const viewItemFired = useRef(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -116,68 +117,86 @@ useEffect(() => {
       : gallery;
   }, [product]);
 
-  useEffect(() => {
-    if (!product || viewItemFired.current) return;
-    viewItemFired.current = true;
-    pushToDataLayer("view_item", {
-      currency: "BDT",
-      value: displayPrice,
-      items: [
-        {
-          item_id: product.data.id,
-          item_name: product.data.name,
-          price: displayPrice,
-          discount: savingsAmount,
-          item_brand: siteMeta.siteName,
-          item_category: product.data.category?.name || "Uncategorized",
-          quantity: 1,
-        },
-      ],
-    });
-  }, [product, displayPrice, savingsAmount]);
+useEffect(() => {
+  if (!product) return;
+  const key = `view_item:${product.data.id}`;
+  if (hasFiredEvent(key)) return;
+  markEventFired(key);
 
-  const handleAddToCart = (product: dbProductwihtoutAll) => {
-
-    pushToDataLayer("add_to_cart", {
-      currency: "BDT",
-      value: displayPrice,
-      items: [{
-        item_id: product.id,
-        item_name: product.name,
-        affiliation: siteMeta.siteName,
+  const ecommerce = {
+    currency: "BDT",
+    value: displayPrice,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: [
+      {
+        item_id: product.data.id,
+        item_name: product.data.name,
         price: displayPrice,
         discount: savingsAmount,
-        item_brand: siteMeta.siteName,
-        item_variant: variantLabel,
-        quantity,
-      }],
-    });
-    addItem(
-      { ...product, price: activePrice, discountPrice: activeDiscountPrice },
-      quantity,
-      selectedKey,
-      unitData?.label ?? null
-    );
+        item_brand: siteMeta?.siteName || "Online Store",
+        item_category: product.data.category?.name || "Uncategorized",
+        quantity: 1,
+      },
+    ],
   };
 
-  const handleBuyNow = (product: dbProductwihtoutAll) => {
-    const discountAmount = hasDiscount ? activePrice - activeDiscountPrice! : 0;
-    pushToDataLayer("begin_checkout", {
-      currency: "BDT",
-      value: displayPrice,
-      items: [{
+  pushToDataLayer("view_item", ecommerce);
+  trackEcommerceEvent("view_item", ecommerce);
+}, [product, displayPrice, savingsAmount]);
+
+const handleAddToCart = (product: dbProductwihtoutAll) => {
+  const ecommerce = {
+    currency: "BDT",
+    value: displayPrice,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: [
+      {
         item_id: product.id,
         item_name: product.name,
-        affiliation: siteMeta.siteName,
-        discount: discountAmount,
-        item_brand: siteMeta.siteName,
-        item_variant: variantLabel,
         price: displayPrice,
-      }],
-    });
-    router.push(`/checkout?productId=${product.id}&qty=${quantity}${selectedKey ? `&unit=${variantLabel}` : ""}`);
+        discount: savingsAmount,
+        item_brand: siteMeta?.siteName || "Online Store",
+        item_variant: variantLabel,
+        quantity,
+      },
+    ],
   };
 
+  pushToDataLayer("add_to_cart", ecommerce);
+  trackEcommerceEvent("add_to_cart", ecommerce);
+
+  addItem(
+    { ...product, price: activePrice, discountPrice: activeDiscountPrice },
+    quantity,
+    selectedKey,
+    unitData?.label ?? null
+  );
+};
+const handleBuyNow = (product: dbProductwihtoutAll) => {
+  const discountAmount = hasDiscount ? activePrice - activeDiscountPrice! : 0;
+
+  const ecommerce = {
+    currency: "BDT",
+    value: displayPrice,
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: [
+      {
+        item_id: product.id,
+        item_name: product.name,
+        price: displayPrice,
+        discount: discountAmount,
+        item_brand: siteMeta?.siteName || "Online Store",
+        item_variant: variantLabel,
+        quantity,
+      },
+    ],
+  };
+
+  pushToDataLayer("begin_checkout", ecommerce);
+  trackEcommerceEvent("begin_checkout", ecommerce);
+
+  router.push(`/checkout?productId=${product.id}&qty=${quantity}${selectedKey ? `&unit=${variantLabel}` : ""}`);
+};
   const toggleMute = () => {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;

@@ -17,6 +17,37 @@ import { useEffect, useRef, useState } from "react";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
 import { useBestSellingProducts } from "@/hooks/use-products";
+import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
+import { trackEcommerceEvent } from "@/lib/custom-tm";
+
+export function getEffectivePrice(product: any) {
+
+  const unitFields = [
+    { data: product.kgUnit, label: "kg" },
+    { data: product.gramUnit, label: "g" },
+    { data: product.piecesUnit, label: "pcs" },
+  ];
+
+  for (const { data } of unitFields) {
+    if (data && typeof data === "object") {
+      const entries = Object.entries(data);
+      if (entries.length > 0) {
+        const firstUnit = entries[0][1] as { price: number; discountPrice: number };
+        return {
+          price: firstUnit.price,
+          discountPrice: firstUnit.discountPrice,
+        };
+      }
+    }
+  }
+
+  return {
+    price: product.price,
+    discountPrice: product.discountPrice,
+  };
+}
+
+
 
 export function BestSellingProducts() {
   const { data: bestSellingProducts, isLoading } = useBestSellingProducts()
@@ -30,27 +61,41 @@ export function BestSellingProducts() {
     Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
 
-    useEffect(() => {
-    if (!isClient || !bestSellingProducts?.data || bestSellingProducts.data.length === 0) return;
+ useEffect(() => {
+  if (!isClient || !bestSellingProducts?.data || bestSellingProducts.data.length === 0) return;
 
-    const items = bestSellingProducts?.data.map((product, index) => ({
-      item_id: product.id,
-      item_name: product.name,
-      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
-      discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,
-      index,
-      item_brand: siteMeta.siteName,
-      item_list_id: "best_selling_products",
-      item_list_name: "Best selling products",
-      quantity: 1,
-    }));
+  const key = "view_item_list:best_selling"; 
+  if (hasFiredEvent(key)) return;
+  markEventFired(key);
 
-    pushToDataLayer("view_item_list", {
-      item_list_id: "best_selling_products",
-      item_list_name: "Best selling products",
-      items,
-    });
-  }, [isClient, bestSellingProducts]);
+  const ecommerce = {
+    item_list_id: "best_selling",
+    item_list_name: "Best Selling",
+    currency: "BDT",
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: bestSellingProducts.data.map((product, index) => {
+      const effective = getEffectivePrice(product);
+      const price = effective.price;
+      const discountPrice = effective.discountPrice;
+      const hasDiscount = discountPrice && discountPrice > 0 && discountPrice < price;
+      const finalPrice = hasDiscount ? discountPrice : price;
+      const discountAmount = hasDiscount ? price - discountPrice : 0;
+
+      return {
+        item_id: product.id,
+        item_name: product.name,
+        price: finalPrice,
+        discount: discountAmount,
+        item_brand: siteMeta?.siteName || "Online Store",
+        index: index + 1,
+        quantity: 1,
+      };
+    }),
+  };
+
+  pushToDataLayer("view_item_list", ecommerce);
+  trackEcommerceEvent("view_item_list", ecommerce);
+}, [isClient, bestSellingProducts]);
 
 
 

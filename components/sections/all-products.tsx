@@ -9,6 +9,9 @@ import { HeadingTitle } from "../heading-title";
 import { useEffect, useState } from "react";
 import { pushToDataLayer } from "@/lib/gtm";
 import { siteMeta } from "@/data";
+import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
+import { trackEcommerceEvent } from "@/lib/custom-tm";
+import { getEffectivePrice } from "./best-selling-products";
 
 export function AllProducts() {
   const { data: products, isLoading } = useProducts({ page: 1 });
@@ -17,27 +20,40 @@ export function AllProducts() {
 
   useEffect(() => setIsClient(true), []);
 
-  useEffect(() => {
-    if (!isClient || !products?.data || products.data.length === 0) return;
+useEffect(() => {
+  if (!isClient || !products?.data || products.data.length === 0) return;
+  const key = "view_item_list:all_products";
+  if (hasFiredEvent(key)) return;
+  markEventFired(key);
 
-    const items = products.data.map((product, index) => ({
-      item_id: product.id,
-      item_name: product.name,
-      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
-      discount: product.discountPrice && product.discountPrice > 0 ? product.price - product.discountPrice : 0,
-      index,
-      item_brand: siteMeta.siteName,
-      item_list_id: "best_selling",
-      item_list_name: "Best Selling",
-      quantity: 1,
-    }));
+ const ecommerce = {
+    item_list_id: "all_products",
+    item_list_name: "All Products",
+    currency: "BDT",
+    affiliation: siteMeta?.siteName || "Online Store",
+    items: products.data.map((product, index) => {
+      const effective = getEffectivePrice(product);
+      const price = effective.price;
+      const discountPrice = effective.discountPrice;
+      const hasDiscount = discountPrice && discountPrice > 0 && discountPrice < price;
+      const finalPrice = hasDiscount ? discountPrice : price;
+      const discountAmount = hasDiscount ? price - discountPrice : 0;
 
-    pushToDataLayer("view_item_list", {
-      item_list_id: "best_selling",
-      item_list_name: "Best Selling",
-      items,
-    });
-  }, [isClient, products]);
+      return {
+        item_id: product.id,
+        item_name: product.name,
+        price: finalPrice,
+        discount: discountAmount,
+        item_brand: siteMeta?.siteName || "Online Store",
+        index: index + 1,
+        quantity: 1,
+      };
+    }),
+  };
+
+  pushToDataLayer("view_item_list", ecommerce);
+  trackEcommerceEvent("view_item_list", ecommerce);
+}, [isClient, products]);
 
 
 

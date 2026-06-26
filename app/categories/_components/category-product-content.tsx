@@ -77,7 +77,7 @@ export const CategoryProductsContent = ({
               lg:grid-cols-3
               xl:grid-cols-4 gap-2">
             {category.data.map((product: dbProductwihtoutAll, index: number) => (
-              <ProductCard product={product} key={index} />
+              <ProductCard product={product} key={index}  index={index}/>
             ))}
           </div>
 

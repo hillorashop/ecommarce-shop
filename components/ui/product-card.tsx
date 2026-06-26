@@ -14,11 +14,12 @@ import { useState } from "react";
 
 interface ProductCardProps {
   product: dbProductwihtoutAll;
+  index:number;
 }
 
 type UnitEntry = { price: number; discountPrice: number };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, index }: ProductCardProps) {
   const {
     id,
     productUrl,
@@ -95,7 +96,8 @@ const isInCart = cartItems.some((item) => item.id === cartKey);
               alt={name}
               fill
               className="object-contain"
-              loading="lazy"
+              priority={index < 12}       
+              loading={index < 12 ? "eager" : "lazy"}  
             />
             <div
               className={`absolute top-0 right-0 text-xs px-2 py-1 font-semibold shadow-md ${

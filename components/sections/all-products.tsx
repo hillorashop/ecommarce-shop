@@ -88,7 +88,7 @@ useEffect(() => {
                   />
                 ))
               : products?.data?.map((product, index) => (
-                  <ProductCard key={index} product={product} />
+                  <ProductCard key={index} product={product} index={index}/>
                 ))}
           </div>
         </div>

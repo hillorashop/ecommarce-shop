@@ -125,9 +125,9 @@ export function BestSellingProducts() {
 
   "
 >
-  {!bestSellingProducts.data || bestSellingProducts.data.length === 0 ? null :  bestSellingProducts?.data.map((product) => (
+  {!bestSellingProducts.data || bestSellingProducts.data.length === 0 ? null :  bestSellingProducts?.data.map((product, index) => (
     <CarouselItem key={product.id} className="w-full lg:w-auto">
-      <ProductCard product={product} />
+      <ProductCard product={product} index={index}/>
     </CarouselItem>
   ))}
 </CarouselContent>

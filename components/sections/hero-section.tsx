@@ -77,6 +77,7 @@ export const HeroSection = () => {
             src={item.billboardImageMobileDevice}
             alt={siteMeta.siteName}
             fill
+            sizes="100vw"
             className="object-contain object-center block lg:hidden"
             priority
           />
@@ -85,6 +86,7 @@ export const HeroSection = () => {
             src={item.billboardImage}
             alt={siteMeta.siteName}
             fill
+            sizes="100vw"
             className="object-contain object-center hidden lg:block"
             priority
           />
@@ -95,6 +97,7 @@ export const HeroSection = () => {
           src={item.billboardImage}
           alt={siteMeta.siteName}
           fill
+          sizes="100vw"
           className="object-contain object-center"
           priority
         />

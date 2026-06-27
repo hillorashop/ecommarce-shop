@@ -20,7 +20,7 @@ const toRelativePath = (url: string) => {
     const parsed = new URL(url);
     return parsed.pathname + parsed.search + parsed.hash; // only path + query + hash
   } catch {
-    return url; // already relative
+    return url; 
   }
 }
 

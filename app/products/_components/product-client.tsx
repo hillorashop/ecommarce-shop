@@ -33,28 +33,16 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState<boolean>(true);
-  const searchParams = useSearchParams();
   const router = useRouter();
 
-  useEffect(() => {
-    const ttclid = searchParams.get("ttclid");
-    if (!ttclid) return;
-    if (document.cookie.includes("ttclid=")) return;
-    document.cookie = `ttclid=${ttclid}; path=/; max-age=2592000; SameSite=Lax`;
-  }, [searchParams]);
 
-  useEffect(() => {
-    if (!fbclid) return;
-    if (document.cookie.includes("fbclid=")) return;
-    document.cookie = `fbclid=${fbclid}; path=/; max-age=2592000; SameSite=Lax`;
-  }, [fbclid]);
 
   const { data: product, isLoading } = useCustomQuery<ProductResponse>(
     ["product", productUrl],
     () => getProduct(productUrl),
     {
-      staleTime: ONE_DAY,
-      refetchOnMount: false,
+      staleTime:  60 * 60 * 1000,
+      gcTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     }

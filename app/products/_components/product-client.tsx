@@ -473,8 +473,7 @@ const isInCart = cartItems.some((item) => item.id === cartKey);
         </TabsContent>
       </Tabs>
 
-      <div className="mt-12">
-        <h2 className="text-xl font-semibold mb-4">You may also like</h2>
+      <div className="mt-8">
         <RelatedProducts products={relatedProducts || []} />
       </div>
     </>

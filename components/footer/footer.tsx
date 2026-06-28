@@ -68,10 +68,10 @@ export const  Footer = () =>  {
                 <span className="font-medium">Address: </span>{businessInfo?.data?.shopAddress || "Shop No:06 Sohag Complex, 2nd Floor Chengi Square, khagachari Sadar Chittagong."} 
               </li>
               <li>
-                <span className="font-medium">Email:</span>{businessInfo?.data?.infoEmail || "mail@hillora.com" } 
+                <span className="font-medium">Email: </span>{businessInfo?.data?.infoEmail || "mail@hillora.com" } 
               </li>
               <li>
-                <span className="font-medium">Mobile:</span>{businessInfo?.data?.whatsappNumber || "+880 1519558558" }  
+                <span className="font-medium">Mobile: </span>{businessInfo?.data?.whatsappNumber || "+880 1519558558" }  
               </li>
             </ul>
           </div>

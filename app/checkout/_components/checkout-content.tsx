@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { CartItem, useCart } from "@/hooks/use-store";
 import { useProducts } from "@/hooks/use-products";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -86,6 +86,8 @@ export const CheckoutContent = () => {
   const [qclid, setQclid] = useState<string | null>(null);
   const [irclickid, setIrclickid] = useState<string | null>(null);
   const [awc, setAwc] = useState<string | null>(null);
+
+  const purchaseFiredRef = useRef(false);
 
   const searchParams = useSearchParams();
   const unitParam = searchParams.get("unit");
@@ -229,33 +231,38 @@ useEffect(() => {
 useEffect(() => {
   if (!orderResponse) return;
 
-  const items = checkoutItems.map((item) => {
-    const price = item.discountPrice && item.discountPrice > 0 ? item.discountPrice : item.price;
-    const discount = item.price - price;
+  if (purchaseFiredRef.current) return; 
+  purchaseFiredRef.current = true;
+
+    const {
+    name, mobileNumber, paymentMethod, address, userAgent, userId, createdAt, ip,accountType, status, updatedAt,
+    fbc, fbp, ttclidValue, ttpCookie,
+    gclid, li_fat_id, gbraid, wbraid, dclid, uuid, msclkid, fbclid, twclid, rdt_cid, epik, ScCid, sccid, qclid, irclickid, awc,
+    orderItems
+
+  } = orderResponse
+
+  const items = orderItems.map((item) => {
+  const price = item.price 
+  const productName = products?.data?.find((p) => p.id === item.productId)?.name;
 
     return {
-      item_id: item.id,
-      item_name: item.name,
+      item_id: item.productId,
+      item_name: productName,
       price,
-      discount,
-      quantity: item.cartQuantity,
+      quantity: item.quantity,
       item_brand: siteMeta?.siteName || "Online Store",
-      item_variant: item.selectedUnit && item.unitLabel
-        ? `${item.selectedUnit}${item.unitLabel}`
+      item_variant: item.variant ? item.variant 
         : undefined,
       item_category: "",
     };
   });
 
-  const {
-    name, mobileNumber, paymentMethod, address, userAgent, userId, createdAt, ip,accountType, status, updatedAt,
-    fbc, fbp, ttclidValue, ttpCookie,
-    gclid, li_fat_id, gbraid, wbraid, dclid, uuid, msclkid, fbclid, twclid, rdt_cid, epik, ScCid, sccid, qclid, irclickid, awc,
 
-  } = orderResponse
 
   const ecommerce = {
-    transaction_id: orderResponse.id || orderResponse.orderId,
+    order_id: orderResponse.orderId,
+    transaction_id: orderResponse.transactionId,
     currency: "BDT",
     value: total,
     affiliation: siteMeta?.siteName || "Online Store",
@@ -265,7 +272,6 @@ useEffect(() => {
     is_paid: orderResponse.isPaid,
     discount_total: totalDiscount || 0,
     items,
-    // Additional order details (optional top‑level)
     customer_name: name,
     customer_mobile: mobileNumber,
     customer_address: address,
@@ -283,7 +289,7 @@ useEffect(() => {
 
   pushToDataLayer("purchase", ecommerce);
   trackEcommerceEvent("purchase", ecommerce);
-}, [orderResponse, checkoutItems, total, selectedPayment]);
+}, [orderResponse]);
 
 
   const form = useForm<ShippingForm>({

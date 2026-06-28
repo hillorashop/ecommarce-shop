@@ -1,4 +1,4 @@
-import { dbContactInfo } from "@/types/type";
+import { dbAbout, dbContactInfo } from "@/types/type";
 
 export type BusinessResponse = {
   data: dbContactInfo | null;
@@ -10,6 +10,21 @@ export const getBusinessInfo = async (): Promise<BusinessResponse> => {
   );
 
   if (!res.ok) throw new Error("Failed to load business info");
+
+  return await res.json();
+};
+
+
+export type AboutResponse = {
+  data: dbAbout | null;
+};
+
+export const getAboutInfo = async (): Promise<AboutResponse> => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/about`
+  );
+
+  if (!res.ok) throw new Error("Failed to load about info");
 
   return await res.json();
 };

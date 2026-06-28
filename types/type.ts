@@ -1,3 +1,12 @@
+export interface dbAbout {
+  id: string;
+  aboutContent: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeyWords: string[];
+}
+
+
 export interface dbBlog {
   id: string;
   title: string;

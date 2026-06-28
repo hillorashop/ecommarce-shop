@@ -1,5 +1,5 @@
 
-import { ONE_DAY } from "@/data";
+import { FOURHOUR, ONE_DAY } from "@/data";
 import { queryClient } from "@/provider/queryClient-provider";
 
 import { useQuery, QueryFunction, QueryKey, UseQueryResult, UseQueryOptions,   useMutation, MutationKey} from "@tanstack/react-query"; 
@@ -19,11 +19,11 @@ export const useCustomQuery = <
   return useQuery<TQueryFnData, TError>({
     queryKey,
     queryFn: queryFunction,
-    staleTime: ONE_DAY,
-    gcTime: ONE_DAY,
+    staleTime: FOURHOUR,
+    gcTime: FOURHOUR,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    ...options, // now you can pass keepPreviousData or any other option
+    ...options, 
   });
 };
 
@@ -32,14 +32,14 @@ export const useCustomQuery = <
 export const useCustomMutation = (
   mutationKey: MutationKey,
   mutationFn: MutateFunction,
-  queryKey: QueryKey, // the query root to invalidate
+  queryKey: QueryKey, 
   onSuccess?: (data: any) => void
 ) => {
   const { mutate, isPending, data, error } = useMutation({
     mutationKey,
     mutationFn,
     onSuccess: (data: any) => {
-      // ✅ invalidate all queries starting with this key
+    
       queryClient.invalidateQueries({ queryKey, exact: false });
 
       if (onSuccess) {

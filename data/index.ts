@@ -129,6 +129,7 @@ export const siteMeta = {
 }
 
 
+export const FOURHOUR = 8 * 60 * 60 * 1000
 
 export const  ONE_DAY = 24 * 60 * 60 * 1000
 export const  TWODAY = 48 * 60 * 60 * 1000

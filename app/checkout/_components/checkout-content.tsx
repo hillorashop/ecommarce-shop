@@ -87,8 +87,6 @@ export const CheckoutContent = () => {
   const [irclickid, setIrclickid] = useState<string | null>(null);
   const [awc, setAwc] = useState<string | null>(null);
 
-  const purchaseFiredRef = useRef(false);
-
   const searchParams = useSearchParams();
   const unitParam = searchParams.get("unit");
   const productId = searchParams.get("productId");
@@ -231,8 +229,6 @@ useEffect(() => {
 useEffect(() => {
   if (!orderResponse) return;
 
-  if (purchaseFiredRef.current) return; 
-  purchaseFiredRef.current = true;
 
     const {
     name, mobileNumber, paymentMethod, address, userAgent, userId, createdAt, ip,accountType, status, updatedAt,

@@ -50,12 +50,6 @@ export const emitEvent = (eventName: string, payload?: EventPayload): void => {
     }
   };
 
-  if (typeof window !== 'undefined' && (window as any).dataLayer) {
-    (window as any).dataLayer.push({
-      event: eventName,
-      ...enrichedPayload
-    });
-  }
 
   socket.emit("event", {
     event: eventName,

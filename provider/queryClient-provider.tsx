@@ -41,7 +41,6 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
     setHydrated(true);
   }, []);
 
-  if (!hydrated) return null;
 
   return (
     <QueryClientProvider client={queryClient}>

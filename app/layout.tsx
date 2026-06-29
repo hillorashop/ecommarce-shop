@@ -14,6 +14,7 @@ import TopLoadingBar from "@/components/top-loading-bar";
 import Script from "next/script";
 import { StyleMobileFooterNavbar } from "@/components/footer/style-mobile-footer-navbar";
 import { TrackingProvider } from "@/provider/tracking-provider";
+import { FloatingContactIcons } from "@/components/footer/floating-contact-button";
 
 
 
@@ -124,7 +125,7 @@ export default function RootLayout({
           <UserProvider>
             <main className="max-w-[120rem] mx-auto">
               <Navbar />
-              <div className="mt-32 lg:mt-44">
+              <div className="mt-14 lg:mt-30">
                 {children}
                 <Cart />
               </div>
@@ -132,6 +133,7 @@ export default function RootLayout({
               <Footer />
             </main>
             <Toaster />
+            <FloatingContactIcons/>
             <StyleMobileFooterNavbar/>
             {/* <MobileFooterNavbar /> */}
           </UserProvider>

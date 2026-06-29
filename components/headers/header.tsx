@@ -65,37 +65,7 @@ export function Header() {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed top-0 left-0 right-0 z-50 hidden lg:block bg-white shadow-sm overflow-hidden"
         >
-          <div className="max-w-[120rem] mx-auto">
-                    <div className="bg-primary text-white p-2 text-center">
-          <p className="font-semibold text-base flex items-center w-full justify-center gap-x-4">যে কোন পণ্য অর্ডার করুন  
-              <span className="flex items-center gap-2">
-              <Image
-                src="/icons/call.svg"
-                alt="Call"
-                width={18}
-                height={18}
-                className="inline-block"
-              />
-              {businessInfo?.data?.customerCareNumber || "01581847235"}
-  
-            </span>
-
-
-  <span className="flex items-center gap-2 mt-1">
-    <Image
-      src="/icons/whatsapp.svg"
-      alt="WhatsApp"
-      width={18}
-      height={18}
-      className="inline-block"
-    />
-    {businessInfo?.data?.whatsappNumber || "01519558558"}
-
-  </span>
-</p>
-        </div>
-          </div>
-
+       
           <div className="max-w-[120rem] mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
@@ -195,7 +165,6 @@ export function Header() {
       )}
     </div>
   </div>
-
 
   <div className="flex flex-col items-end gap-1 max-w-md">
     <div className="flex items-center gap-8">

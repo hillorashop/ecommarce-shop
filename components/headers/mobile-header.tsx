@@ -56,44 +56,11 @@ export function MobileHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b shadow-sm lg:hidden">
-           <div className="bg-primary text-white p-2 text-center">
-<p className="font-semibold text-sm leading-6">
-  যে কোন পণ্য অর্ডার করুন <br />
-
-<span className="flex items-center w-full gap-x-2 justify-center">
-    <span className="flex items-center gap-2">
-    <Image
-      src="/icons/call.svg"
-      alt="Call"
-      width={18}
-      height={18}
-      className="inline-block"
-    />
-       {businessInfo?.data?.customerCareNumber || "01581847235"}
-
-  </span>
-
-  <span className="flex items-center gap-2 ">
-    <Image
-      src="/icons/whatsapp.svg"
-      alt="WhatsApp"
-      width={18}
-      height={18}
-      className="inline-block"
-    />
-  
-     {businessInfo?.data?.whatsappNumber || "01519558558"}
-  </span>
-</span>
-
-</p>
-
-        </div>
+        
 
       <div className="px-6">
         
         <div className="flex items-center justify-between h-14 relative">
-
           <div className="flex items-center gap-x-2">
 
          <div className="relative z-20">
@@ -178,8 +145,6 @@ export function MobileHeader() {
           </Sheet>
          </div>
        
-
-      
           <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2">
 
             <Image
@@ -191,6 +156,7 @@ export function MobileHeader() {
               className="object-contain overflow-hidden"
             />
           </div>
+
           </div>
      
  <div className="absolute left-1/2 top-1/2 -translate-x-1/4 -translate-y-1/2">

@@ -35,7 +35,7 @@ export function Navigation() {
 
   return (
     <motion.div
-  animate={{ top: headerHidden ? 0 : 110 }} 
+  animate={{ top: headerHidden ? 0 : 70 }} 
       transition={{ duration: 0.4, ease: "easeInOut" }}
   className="fixed top-[110px] left-0 right-0 z-40 backdrop-blur-lg border-b shadow-sm hidden lg:block"
 >

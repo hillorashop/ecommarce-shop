@@ -17,7 +17,7 @@ export const AboutClient = () => {
 
   if (isLoading) {
     return (
-      <main className="w-full px-6 py-8 space-y-4 min-h-[60vh] flex items-center justify-center">
+      <main className="mx-auto max-w-7xl w-full px-6 py-8 space-y-4 min-h-[60vh] flex items-center justify-center">
         <Loader className="h-8 w-8 animate-spin text-muted-foreground" />
       </main>
     );
@@ -25,7 +25,7 @@ export const AboutClient = () => {
 
   if (error) {
     return (
-      <main className="w-full px-6 py-8 space-y-4 min-h-[60vh]">
+      <main className="mx-auto max-w-7xl w-full px-6 py-8 space-y-4 min-h-[60vh]">
         <HeadingTitle title="About Hillora" />
         <p className="text-red-500">Failed to load about content. Please try again later.</p>
       </main>
@@ -33,7 +33,7 @@ export const AboutClient = () => {
   }
 
   return (
-    <main className="w-full px-6 py-8 space-y-4 min-h-[60vh]">
+    <main className="mx-auto max-w-7xl w-full px-6 py-8 space-y-4 min-h-[60vh]">
       <HeadingTitle title="About Hillora" />
       {aboutContent ? (
         <>

@@ -23,7 +23,7 @@ export const queryClient = new QueryClient({
 });
 
 export const ReactQueryClientProvider = ({ children }: Props) => {
-  const [hydrated, setHydrated] = useState(false);
+  // const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -38,7 +38,7 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
       maxAge: 60 * 60 * 1000,
     });
 
-    setHydrated(true);
+    // setHydrated(true);
   }, []);
 
 

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.MEDIA_HOST_NAME!, // e.g., your CDN or backend
+        hostname: process.env.MEDIA_HOST_NAME! || "res.cloudinary.com" , // e.g., your CDN or backend
       },
       {
         protocol: "https",

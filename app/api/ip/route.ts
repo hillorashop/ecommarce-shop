@@ -5,7 +5,6 @@ export async function GET(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0] ||
     req.headers.get("x-real-ip");
 
-  console.log(`IP address: ${directIP}`);
 
   return NextResponse.json({ ip: directIP });
 }

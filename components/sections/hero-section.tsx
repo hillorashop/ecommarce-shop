@@ -8,6 +8,7 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import Image from "next/image";
 import Link from "next/link";
 import { useBillboards } from "@/hooks/use-billboards";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -72,30 +73,33 @@ export const HeroSection = () => {
       {item.billboardImageMobileDevice ? (
         <>
           {/* Mobile & MD devices */}
-          <img
+          <Image
             src={item.billboardImageMobileDevice}
             alt={siteMeta.siteName}
-            className="absolute inset-0 w-full h-full object-contain object-center block lg:hidden"
-            fetchPriority="high"
-            loading="eager"
+            fill
+            sizes="100vw"
+            className="object-contain object-center block lg:hidden"
+            priority
           />
           {/* Large devices */}
-          <img
+          <Image
             src={item.billboardImage}
             alt={siteMeta.siteName}
-            className="absolute inset-0 w-full h-full object-contain object-center hidden lg:block"
-            fetchPriority="high"
-            loading="eager"
+            fill
+            sizes="100vw"
+            className="object-contain object-center hidden lg:block"
+            priority
           />
         </>
       ) : (
         // Only LG → show on all devices
-        <img
+        <Image
           src={item.billboardImage}
           alt={siteMeta.siteName}
-          className="absolute inset-0 w-full h-full object-contain object-center"
-          fetchPriority="high"
-          loading="eager"
+          fill
+          sizes="100vw"
+          className="object-contain object-center"
+          priority
         />
       )}
     </Link>

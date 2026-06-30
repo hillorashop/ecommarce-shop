@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/hooks/use-store";
 import { useRouter } from "next/navigation";
@@ -90,12 +91,13 @@ const isInCart = cartItems.some((item) => item.id === cartKey);
       <CardContent className="px-0">
         <Link href={`/products/${productUrl}`}>
           <div className="w-full aspect-[4/4] mb-2 relative rounded-none overflow-hidden">
-            <img
+            <Image
               src={productImage || siteMeta.siteName}
               alt={name}
-              className="absolute inset-0 w-full h-full object-contain"
-              fetchPriority={index < 6 ? "high" : "auto"}
-              loading={index < 6 ? "eager" : "lazy"}
+              fill
+              className="object-contain"
+              priority={index < 12}       
+              loading={index < 12 ? "eager" : "lazy"}  
             />
             <div
               className={`absolute top-0 right-0 text-xs px-2 py-1 font-semibold shadow-md ${

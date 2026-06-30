@@ -80,6 +80,7 @@ export const HeroSection = () => {
             sizes="100vw"
             className="object-contain object-center block lg:hidden"
             priority
+            unoptimized
           />
           {/* Large devices */}
           <Image
@@ -89,6 +90,7 @@ export const HeroSection = () => {
             sizes="100vw"
             className="object-contain object-center hidden lg:block"
             priority
+              unoptimized
           />
         </>
       ) : (

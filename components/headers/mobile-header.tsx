@@ -24,7 +24,9 @@ import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback,  AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useCart, useOpenStore } from "@/hooks/use-store";
-import { useBusinessInfo } from "@/hooks/use-business-info";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getLogos, LogoResponse } from "@/actions/business-info";
+
 
 export function MobileHeader() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,25 +35,18 @@ export function MobileHeader() {
   const [searchResults, setSearchResults] = useState<dbProduct[]>([]);
   const router = useRouter();
  
-   const { data: products, isLoading } = useProducts();
-   const {user} = useUser()
-     const { setOpen } = useOpenStore();
+  const { data: products, isLoading } = useProducts(); 
+  const {user} = useUser()
+  const { setOpen } = useOpenStore();
   const { cartItems } = useCart();
-    //  const { data: businessInfo} = useBusinessInfo();
 
-//  const contact = [
-    
- 
-//     { href: `https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।`, Icon: "/icons/whatsapp.svg", bg:"#16a34a",},
-
-//     {
-//     href: `https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`,
-//     Icon: "/icons/messenger.svg.webp",
-//     bg: "#be123c",
-//   },
-// ];
-
-
+  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+      ["get-logos"],
+      () => getLogos()
+  )
+  
+    const headerLogo =
+      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
 
 
   return (
@@ -76,13 +71,17 @@ export function MobileHeader() {
             >
               <SheetHeader className="p-0 relative mb-14">
                 <SheetTitle className="sr-only"> Mobile Header</SheetTitle>
-                <Image
-                  src={"/logo.svg"}
-                  alt={`${siteMeta.siteName}`}
-                  width={130}
-                  height={60}
-                  className="object-contain overflow-hidden absolute -top-2 -left-6"
-                />
+                       {!logosLoading && (
+            <Image
+              src={headerLogo}
+              alt={`${siteMeta.siteName}` || ""}
+               width={140}
+              height={90}
+           
+              className="object-contain mt-2"
+            />
+            )}
+         
               </SheetHeader>
 
               <div className="space-y-6">
@@ -145,50 +144,22 @@ export function MobileHeader() {
           </Sheet>
          </div>
        
-          <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2">
-
+          <div className="">
+       {!logosLoading && (
             <Image
-              src="/logo.svg"
-              alt={`${siteMeta.siteName}`}
-              width={250}
-              height={150}
+              src={headerLogo}
+              alt={`${siteMeta.siteName}` || ""}
+              width={140}
+              height={90}
               onClick={()=> router.push("/")}
-              className="object-contain overflow-hidden"
+              className="object-contain"
             />
+            )}
           </div>
 
           </div>
      
- {/* <div className="absolute left-1/2 top-1/2 -translate-x-1/4 -translate-y-1/2">
- <div className="flex items-center gap-4 w-full ">
-              {contact.map((s, i) => (
-                <a
-                  key={i}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative flex items-center justify-center w-6 h-6"
-                >
-                  <Image
-                    src={s.Icon}
-                    alt={siteMeta.siteName}
-                    width={18}
-                    height={18}
-                    className="rounded-full overflow-hidden z-10"
-                  />
-                  <div
-                    className="absolute inset-1 border rounded-full animate-ping duration-200"
-                    style={{ borderColor: s.bg }}
-                  />
-                      <div
-                    className="absolute -inset-0.5 border rounded-full animate-ping duration-100"
-                    style={{ borderColor: s.bg }}
-                  />
-                </a>
-              ))}
-    </div>
- </div>
- */}
+
 
           <div className="flex items-center gap-x-2">
         
@@ -229,7 +200,7 @@ export function MobileHeader() {
   <Input
     type="text"
     placeholder="Search product..."
-    className="pr-10 h-10" // add right padding so text doesn't overlap button
+    className="pr-10 h-10"
     autoFocus
           value={productName}
                    onChange={(e) => {
@@ -290,7 +261,7 @@ export function MobileHeader() {
       <div className="w-16 h-16 flex-shrink-0 overflow-hidden relative">
         <Image
           src={product.productImage || `${siteMeta.siteName}`}
-          alt={product.name}
+          alt={product.name || ""}
           width={64}
           height={64}
           className="object-cover rounded"

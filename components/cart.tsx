@@ -145,7 +145,7 @@ export const Cart = () => {
 
                   <Image
                     src={item.productImage}
-                    alt={item.name}
+                    alt={item.name || ""}
                     width={64}
                     height={64}
                     className="rounded-md object-cover"

@@ -96,7 +96,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           <div className="w-full aspect-[4/4] mb-2 relative rounded-none overflow-hidden">
             <Image
               src={productImage || siteMeta.siteName}
-              alt={name}
+              alt={name || ""}
               fill
               className="object-contain"
               priority={index < 12}       

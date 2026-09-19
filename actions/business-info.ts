@@ -58,3 +58,26 @@ export const getReturnPolicy = async (): Promise<ReturnPolicyResponse> => {
 
   return await res.json();
 };
+
+
+export type LogoData = {
+  primaryLogo: string;
+  secondaryLogo?: string;
+  favicon: string;
+};
+
+export type LogoResponse = {
+  status: number;
+  message: string;
+  data: LogoData;
+};
+
+export const getLogos = async (): Promise<LogoResponse> => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/logos`
+  );
+
+  if (!res.ok) throw new Error("Failed to load logos");
+
+  return await res.json();
+};

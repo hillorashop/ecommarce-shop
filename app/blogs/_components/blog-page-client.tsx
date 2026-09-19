@@ -66,14 +66,14 @@ export const BlogPageClient = ({ blog }: Props) => {
       <div className="relative w-full aspect-[16/9] md:aspect-[9/3] overflow-hidden mb-8">
         <Image
           src={blog.desktopCoverImage}
-          alt={blog.title}
+          alt={blog.title || ""}
           fill
           className="object-contain hidden md:block"
           priority
         />
         <Image
           src={blog.mobileCoverImage}
-          alt={blog.title}
+          alt={blog.title || ""}
           fill
           className="object-contain block md:hidden"
           priority

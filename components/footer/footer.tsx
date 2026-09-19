@@ -6,12 +6,20 @@ import { siteMeta } from "@/data";
 import { useBusinessInfo } from "@/hooks/use-business-info";
 import { FacebookSvg, WhatsAppSvg, MessengerSvg, BRAND_COLORS } from "@/components/social-icons";
 import { FileText, Mail, MapPin, Phone } from "lucide-react";
-import { Separator } from "../ui/separator";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getLogos, LogoResponse } from "@/actions/business-info";
+
 
 export const  Footer = () =>  {
 
    const { data: businessInfo} = useBusinessInfo();
-
+const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+    ["get-logos"],
+    () => getLogos()
+  );
+ 
+  const footerLogo =
+    logos?.data?.secondaryLogo || logos?.data?.primaryLogo || "/logo.svg";
 
   const year = new Date().getFullYear();
   const quickLinks = [
@@ -63,20 +71,22 @@ export const  Footer = () =>  {
   };
 
   return (
-    <footer className="bg-gray-50">
+    <footer className="bg-[#353534] text-gray-200">
       <div className="py-4 lg:py-6 px-6">
   
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
   
-          <div className="relative mt-8 space-y-2">
-            <Image
-              src="/logo.svg"
-              alt={siteMeta.siteName}
-              width={180}
-              height={70}
-              className="object-contain  absolute -translate-20 left-6"
-            />
-            <p className="text-sm text-gray-700 leading-relaxed">
+          <div className="space-y-2">
+              {!logosLoading && (
+              <Image
+                src={footerLogo}
+                alt={siteMeta.siteName}
+                width={180}
+                height={70}
+                className="object-contain mb-4"
+              />
+            )}
+            <p className="text-sm text-gray-200 leading-relaxed">
               Hillora works directly with local farmers and artisans in
               Khagrachari, bringing you authentic traditional goods while
               supporting the community.
@@ -84,7 +94,7 @@ export const  Footer = () =>  {
 
              
   
-      <div className="space-y-2 text-sm text-gray-700">
+      <div className="space-y-2 text-sm text-gray-200">
         <div className="flex items-center gap-2">
           <FileText className="h-4 w-4" />
           <span className="font-medium">e-TIN:</span>
@@ -92,7 +102,7 @@ export const  Footer = () =>  {
         </div>
 
         <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4 text-gray-700" />
+          <FileText className="h-4 w-4 text-gray-200" />
           <span className="font-medium">Trade License No:</span>
           <span className="">{businessInfo?.data?.tradeLicenseNumber}</span>
         </div>
@@ -127,10 +137,10 @@ export const  Footer = () =>  {
 
        
           <div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+            <h4 className="text-lg font-semibold text-gray-200 mb-3">
               Contact Info
             </h4>
-    <ul className="space-y-3 text-sm text-gray-700">
+    <ul className="space-y-3 text-sm text-gray-200">
   <li className="flex items-start gap-2">
     <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
     <span>
@@ -159,7 +169,7 @@ export const  Footer = () =>  {
 
 
           <div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+            <h4 className="text-lg font-semibold text-gray-200 mb-3">
               Quick Links
             </h4>
             <ul className="space-y-1 text-sm">
@@ -167,7 +177,7 @@ export const  Footer = () =>  {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-gray-700 hover:text-yellow-600 transition-colors hover:underline"
+                    className="text-gray-200 hover:text-primary transition-colors hover:underline"
                   >
                     {link.label}
                   </Link>
@@ -178,8 +188,6 @@ export const  Footer = () =>  {
 
   
         </div>
-
-<Separator className="my-4 bg-foreground/40"/>
 
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-x-6 ">
           <p className="text-xs lg:text-sm  font-semibold text-center lg:text-left">

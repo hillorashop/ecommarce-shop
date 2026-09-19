@@ -22,7 +22,7 @@ export function PromotionalBanners() {
             <Link href="/products" className="block w-full h-full relative">
               <Image
                 src="/banners/hillora-banner.jpg"
-                alt={siteMeta.siteName}
+                alt={siteMeta.siteName || ""}
                 width={600}
                 height={900} // increased height
                 className="w-full h-full object-contain object-center"
@@ -45,7 +45,7 @@ export function PromotionalBanners() {
               <Link href="/products" className="block w-full h-full relative">
                 <Image
                   src="/banners/hillora-red-chilli.jpg"
-                  alt={siteMeta.siteName}
+                  alt={siteMeta.siteName || ""}
                   width={1200}
                   height={300}
                   className="w-full h-auto object-contain"
@@ -64,7 +64,7 @@ export function PromotionalBanners() {
               <Link href="/products" className="block w-full h-full relative">
                 <Image
                   src="/banners/hillora-turmeric-powder.jpg"
-                  alt={siteMeta.siteName}
+                  alt={siteMeta.siteName || ""}
                   width={1200}
                   height={300}
                   className="w-full h-auto object-contain"

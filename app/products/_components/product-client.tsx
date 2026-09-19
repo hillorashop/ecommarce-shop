@@ -289,7 +289,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-lg md:text-2xl pointer-events-none" />
             </div>
           ) : (
-            <Image src={mediaUrl} alt={product.data.name} fill className="object-cover" />
+            <Image src={mediaUrl} alt={product.data.name || ""} fill className="object-cover" />
           )}
         </div>
       );
@@ -332,7 +332,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           ) : (
             <Image
               src={mediaUrl}
-              alt={product.data.name}
+              alt={product.data.name || ""}
               width={800}
               height={800}
               className="w-full h-full object-contain"

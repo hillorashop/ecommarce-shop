@@ -24,58 +24,84 @@ const openSans = Open_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
-    template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
-  },
-  icons: [
-    { rel: "icon", url: "/fevicon.png", type: "image/png", sizes: "180x180"},
-    { rel: "apple-touch-icon", url: "/fevicon.png", sizes: "180x180" },
-  ],
-  description: siteMeta.desc,
-  keywords: siteMeta.keyWords,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL! || process.env.NEXT_PUBLIC_BASE_WWW_URL!),
-  openGraph: {
-    title: siteMeta.openGraph.title,
-    description: siteMeta.openGraph.desc,
-    url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
-    siteName: siteMeta.siteName,
-    locale: "bn_BD",
-    type: "website",
-    images: [
-      {
-        url: `${siteMeta.openGraph.image}`,
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteMeta.twitter.title,
-    description: siteMeta.twitter.description,
-    creator: siteMeta.twitter.creator,
-    images: siteMeta.twitter.image,
-  },
-  alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
-  },
+type SiteLogos = {
+  primaryLogo: string;
+  secondaryLogo?: string;
+  favicon: string;
 };
 
-export default function RootLayout({
+const getSiteLogos = async (): Promise<SiteLogos | null> => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/logos`,
+      { next: { revalidate: 3600 } }
+    );
+
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    return json?.data ?? null;
+  } catch (error) {
+    console.error("Failed to load site logos:", error);
+    return null;
+  }
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const logos = await getSiteLogos();
+  const favicon = logos?.favicon || "/fevicon.png";
+
+  return {
+    title: {
+      default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
+      template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
+    },
+    icons: {
+      icon: [{ url: favicon }],
+      shortcut: [{ url: favicon }],
+      apple: [{ url: favicon }],
+    },
+    description: siteMeta.desc,
+    keywords: siteMeta.keyWords,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL! || process.env.NEXT_PUBLIC_BASE_WWW_URL!),
+    openGraph: {
+      title: siteMeta.openGraph.title,
+      description: siteMeta.openGraph.desc,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
+      siteName: siteMeta.siteName,
+      locale: "bn_BD",
+      type: "website",
+      images: [
+        {
+          url: `${siteMeta.openGraph.image}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteMeta.twitter.title,
+      description: siteMeta.twitter.description,
+      creator: siteMeta.twitter.creator,
+      images: siteMeta.twitter.image,
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const logos = await getSiteLogos();
+
   return (
     <html lang="bn" suppressHydrationWarning>
       <head>
-
-        <link rel="icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/fevicon.png" />
-
-  
         <meta
           name="google-site-verification"
           content="WjC9PZ6_fnkB0mYfs3I9mr3CVQgeauW-japi-LW31cM"
@@ -94,7 +120,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: siteMeta.siteName,
               url: process.env.NEXT_PUBLIC_BASE_URL,
-              logo: `${process.env.NEXT_PUBLIC_BASE_URL}/fevicon.png`,
+              logo: logos?.primaryLogo || `${process.env.NEXT_PUBLIC_BASE_URL}/fevicon.png`,
             }),
           }}
         />

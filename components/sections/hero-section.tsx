@@ -75,7 +75,7 @@ export const HeroSection = () => {
           {/* Mobile & MD devices */}
           <Image
             src={item.billboardImageMobileDevice}
-            alt={siteMeta.siteName}
+            alt={siteMeta.siteName || ""}
             fill
             sizes="100vw"
             className="object-contain object-center block lg:hidden"
@@ -84,7 +84,7 @@ export const HeroSection = () => {
           {/* Large devices */}
           <Image
             src={item.billboardImage}
-            alt={siteMeta.siteName}
+            alt={siteMeta.siteName || ""}
             fill
             sizes="100vw"
             className="object-contain object-center hidden lg:block"
@@ -95,7 +95,7 @@ export const HeroSection = () => {
         // Only LG → show on all devices
         <Image
           src={item.billboardImage}
-          alt={siteMeta.siteName}
+          alt={siteMeta.siteName || ""}
           fill
           sizes="100vw"
           className="object-contain object-center"

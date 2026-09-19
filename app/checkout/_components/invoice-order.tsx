@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { siteMeta } from "@/data";
 import { dbProductwihtoutAll } from "@/actions/product";
 import { useBusinessInfo } from "@/hooks/use-business-info";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getLogos, LogoResponse } from "@/actions/business-info";
 
 interface Props {
   order: dbOrder;
@@ -31,6 +33,15 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const { data: products } = useProducts();
   const { data: businessInfo} = useBusinessInfo();
   const router = useRouter();
+
+  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+      ["get-logos"],
+      () => getLogos()
+  )
+  
+    const headerLogo =
+      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+  
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -56,11 +67,9 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const handlePrint = () => {
     if (!invoiceRef.current) return;
 
-    const logoSrc = `${
-      process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL
-    }/logo.svg`;
+
     const img = new Image();
-    img.src = logoSrc;
+    img.src = headerLogo;
 
     img.onload = () => {
       const printContent = invoiceRef.current!.innerHTML;
@@ -128,13 +137,10 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
             }}
           >
             <img
-              src={`${
-                process.env.NEXT_PUBLIC_BASE_URL ||
-                process.env.NEXT_PUBLIC_BASE_WWW_URL
-              }/logo.svg`}
+              src={headerLogo}
               alt={siteMeta.siteName}
-              width={200}
-              height={200}
+              width={180}
+              height={80}
               style={{ display: "block", margin: "12px auto" }}
             />
           </div>
@@ -144,7 +150,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
            
           </p>
           <p style={{ margin: "4px 0", fontSize: "12px" }}>
-            Contact: {businessInfo?.data?.whatsappNumber || "+880 1519558558 "} | Website:{" "}
+            Contact: {businessInfo?.data?.whatsappNumber || ""} | Website:{" "}
             {process.env.NEXT_PUBLIC_BASE_URL ||
               process.env.NEXT_PUBLIC_BASE_WWW_URL}
           </p>

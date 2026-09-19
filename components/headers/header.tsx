@@ -10,6 +10,8 @@ import { dbProduct } from "@/types/type";
 import { Card } from "@/components/ui/card";
 import {siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getLogos, LogoResponse } from "@/actions/business-info";
 
 
 
@@ -20,7 +22,13 @@ export function Header() {
   const [showHeader, setShowHeader] = useState(true);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+    ["get-logos"],
+    () => getLogos()
+)
 
+  const headerLogo =
+    logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
 
   useEffect(() => {
     const handleScroll = () => setShowHeader(window.scrollY === 0);
@@ -56,15 +64,18 @@ export function Header() {
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
 
-<div className="flex-shrink-0 w-60 h-56 relative">
+<div className="">
+       {!logosLoading && (
   <Image
   onClick={()=> router.push("/")}
-    src="/logo.svg"
-    width={250}
-    height={100}
-    alt={siteMeta.siteName}
-    className="object-contain absolute translate-y-1/5 -translate-x-15"
+    src={headerLogo}
+    width={190}
+    height={80}
+    alt={siteMeta.siteName || ""}
+    className="object-contain cursor-pointer"
   />
+  )}
+
 </div>
 
   {/* Search (center) */}
@@ -124,7 +135,7 @@ export function Header() {
                 <div className="w-14 h-14 flex-shrink-0 relative">
                   <Image
                     src={product.productImage || `${siteMeta.siteName}`}
-                    alt={product.name}
+                    alt={product.name || ""}
                     width={56}
                     height={56}
                     className="object-cover rounded"

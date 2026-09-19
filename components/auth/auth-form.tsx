@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { siteMeta } from "@/data";
 import { SiGnuprivacyguard } from "react-icons/si";
+import { getLogos, LogoResponse } from "@/actions/business-info";
+import { useCustomQuery } from "@/hooks/use-custom-query";
 
 export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -38,7 +40,12 @@ export function AuthForm() {
   const router = useRouter()
    const {refreshUser } = useUser();
 
-
+  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+      ["get-logos"],
+      () => getLogos()
+  )
+    const headerLogo =
+      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
 
 
     const registerForm = useForm<z.infer <typeof registerSchema>>({
@@ -173,19 +180,20 @@ const providerSubmit = (provider: "google" | "facebook") => {
       <div className="w-full max-w-xl">
 
 
-        <div className="text-center mb-6 lg:mb-8 relative mt-9">
-         
-               <Image
-                         src={"/logo.svg"}
-                         alt={siteMeta.siteName}
-                         width={150}
-                         height={80}
-                         className="object-contain overflow-hidden absolute top-0 translate-x-28 md:translate-x-36  lg:translate-x-52 -translate-y-18 "
-                         /> 
-          
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-          <p className="text-gray-600 font-medium text-sm">Sign in to your account or create a new one</p>
-        </div>
+<div className="text-center mb-6 lg:mb-8 relative mt-9">
+  {!logosLoading && (
+    <Image
+      src={headerLogo}
+      width={150}
+      height={80}
+      alt={siteMeta.siteName || ""}
+      className="object-contain mx-auto mb-4"
+    />
+  )}
+
+  <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+  <p className="text-gray-600 font-medium text-sm">Sign in to your account or create a new one</p>
+</div>
 
 
         <Card className="border shadow-2xl">

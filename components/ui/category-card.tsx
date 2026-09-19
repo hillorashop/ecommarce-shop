@@ -11,29 +11,32 @@ interface Props {
 
 export const CategoryCard = ({ category }: Props) => {
   const { name, categoryImage, id, categoryUrl } = category;
+  const hasImage = Boolean(categoryImage);
 
   return (
     <Link href={`/categories/${categoryUrl}`} className="w-full">
       <Card className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow rounded-none">
         <CardContent className="flex flex-col items-center p-0">
-          
+
           <div
             className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 
                        rounded-full overflow-hidden relative 
+                       bg-gray-100
                        transition-transform duration-300 
                        group-hover:scale-110 group-hover:shadow-lg"
           >
-            <Image
-              src={categoryImage}
-              alt={name}
-              fill
-              sizes="(max-width: 768px) 100vw, 200px"
-              className="object-cover"
-               priority
-            />
+            {hasImage && (
+              <Image
+                src={categoryImage}
+                alt={name || ""}
+                fill
+                sizes="(max-width: 768px) 100vw, 200px"
+                className="object-cover"
+                priority
+              />
+            )}
           </div>
 
-          
           <p
             className="mt-3 text-sm sm:text-base md:text-lg 
                        font-medium text-gray-700 

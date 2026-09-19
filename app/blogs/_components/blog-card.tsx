@@ -54,14 +54,14 @@ export const BlogCard = ({ blog, className }: BlogCardProps) => {
         <div className="relative w-full aspect-[16/9] md:aspect-[9/3]">
           <Image
             src={blog.desktopCoverImage}
-            alt={blog.title}
+            alt={blog.title || ""}
             fill
             className="object-contain hidden md:block"
             priority={false}
           />
           <Image
             src={blog.mobileCoverImage}
-            alt={blog.title}
+            alt={blog.title || ""}
             fill
             className="object-contain block md:hidden"
             priority={false}

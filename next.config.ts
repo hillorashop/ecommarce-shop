@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.MEDIA_HOST_NAME! || "res.cloudinary.com" ,
+        hostname:  "res.cloudinary.com" ,
       },
             {
         protocol: "https",
@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: process.env.GOOGLE_IMAGE_HOST_NAME || "lh3.googleusercontent.com",
+        hostname:  "lh3.googleusercontent.com",
       },
     ],
   },

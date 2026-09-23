@@ -6,8 +6,7 @@ import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Home, ShoppingBasket, Truck, LogIn } from "lucide-react";
-import { BiCategory } from "react-icons/bi";
+import { Home, ShoppingBasket, Truck, LogIn, LayoutGrid } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons";
 import { cn } from "@/lib/utils";
@@ -39,7 +38,7 @@ export const StyleMobileFooterNavbar = () => {
   }, [pathname]);
 
   const navItems: NavItem[] = [
-    { id: "categories", Icon: BiCategory, href: "/categories", label: "Categories" },
+    { id: "categories", Icon: LayoutGrid, href: "/categories", label: "Categories" },
     { id: "products", Icon: ShoppingBasket, href: "/products", label: "Products" },
     { id: "home", Icon: Home, href: "/", label: "Home" },
     { id: "tracking", Icon: Truck, href: "/tracking", label: "Tracking" },

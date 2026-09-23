@@ -1,14 +1,13 @@
 "use client";
 
 import { useUser } from "@/contexts/UserContext";
-import {Home, ShoppingBasket, Truck, User } from "lucide-react";
+import {Home, LayoutGrid, ShoppingBasket, Truck, User } from "lucide-react";
 import Link from "next/link";
-import { BiCategory } from "react-icons/bi"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 
 const navLinks = [
-  { Icon: BiCategory, href: "/categories", label:"Categories" },
+  { Icon: LayoutGrid, href: "/categories", label:"Categories" },
  { Icon: ShoppingBasket, href: "/products", label:"Products" },
  { Icon: Home, href: "/" , label:"Home"},
 { Icon: Truck, href: "/tracking", label:"Tracking" },

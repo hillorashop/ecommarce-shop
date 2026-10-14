@@ -124,33 +124,28 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
 
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
             textAlign: "center",
             marginBottom: "20px",
-            position: "relative",
+            gap: "6px",
           }}
         >
-          <div
-            style={{
-              display: "inline-block",
-              position: "relative",
-              marginTop: "-40px",
-            }}
-          >
-            <img
-              src={headerLogo}
-              alt={siteMeta.siteName}
-              width={180}
-              height={80}
-              style={{ display: "block", margin: "12px auto" }}
-            />
-          </div>
+          <img
+            src={headerLogo}
+            alt={siteMeta.siteName}
+            width={180}
+            height={80}
+            style={{ display: "block", margin: 0, objectFit: "contain" }}
+          />
 
-          <p style={{ margin: "4px 0", fontSize: "12px", marginTop: "-52px" }}>
+          <p style={{ margin: 0, fontSize: "12px" }}>
             {businessInfo?.data?.shopAddress || "KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar"}
-           
           </p>
-          <p style={{ margin: "4px 0", fontSize: "12px" }}>
-            Contact: {businessInfo?.data?.whatsappNumber || ""} | Website:{" "}
+          <p style={{ margin: 0, fontSize: "12px" }}>
+            Contact: {businessInfo?.data?.whatsappNumber || ""} | Website: {" "}
             {process.env.NEXT_PUBLIC_BASE_URL ||
               process.env.NEXT_PUBLIC_BASE_WWW_URL}
           </p>

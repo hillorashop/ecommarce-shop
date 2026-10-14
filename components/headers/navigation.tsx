@@ -55,6 +55,8 @@ export function Navigation() {
               <Link
                 key={index}
                 href={link.href}
+                target={link.isExternal ? "_self" : undefined}
+                rel={link.isExternal ? "noopener noreferrer" : undefined}
                 className="text-gray-700 hover:text-primary font-medium hover:underline"
               >
                 {link.name}

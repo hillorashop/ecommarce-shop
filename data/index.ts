@@ -2,24 +2,22 @@
 export const navLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "Acho Fashion", href: "https://achofashion.com" },
+  { name: "Acho Fashion", href: "https://achofashion.com", isExternal: true },
   { name: "About", href: "/about" },
   { name: "Blogs", href: "/blogs" },
   { name: "Become a Seller", href: "/become-seller" },
 ];
-
 
 
 export const mobileNavLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
   { name: "Categories", href: "/categories" },
-  { name: "Acho Fashion", href: "https://achofashion.com" },
+  { name: "Acho Fashion", href: "https://achofashion.com", isExternal: true },
   { name: "About", href: "/about" },
   { name: "Blogs", href: "/blogs" },
   { name: "Become a Seller", href: "/become-seller" },
 ];
-
 
 
 

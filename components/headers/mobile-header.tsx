@@ -95,7 +95,7 @@ export function MobileHeader() {
                       <Link
                         key={idx}
                         href={link.href}
-                        target={link.isExternal ? "_self" : undefined}
+                        target={link.isExternal ? "_blank" : undefined}
                         rel={link.isExternal ? "noopener noreferrer" : undefined}
                         onClick={() => setIsOpen(false)}
                         className="block w-full text-left text-gray-700 hover:text-primary py-2 rounded-md transition-colors"

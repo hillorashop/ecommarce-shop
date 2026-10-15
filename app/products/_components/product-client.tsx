@@ -289,7 +289,13 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-lg md:text-2xl pointer-events-none" />
             </div>
           ) : (
-            <Image src={mediaUrl} alt={product.data.name || ""} fill className="object-cover" />
+            <Image
+              src={mediaUrl}
+              alt={product.data.name || ""}
+              fill
+              sizes="80px"
+              className="object-cover"
+            />
           )}
         </div>
       );
@@ -299,6 +305,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
   <div className="relative flex-1 min-w-0 self-start aspect-square overflow-hidden">
     {mergedMedia.map((mediaUrl, index) => {
+      if (index !== currentIndex) return null;
       const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaUrl);
       return (
         <div
@@ -335,6 +342,8 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               alt={product.data.name || ""}
               width={800}
               height={800}
+              sizes="(max-width: 1023px) 100vw, 50vw"
+              priority={index === 0}
               className="w-full h-full object-contain"
             />
           )}

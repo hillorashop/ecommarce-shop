@@ -98,9 +98,9 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               src={productImage || siteMeta.siteName}
               alt={name || ""}
               fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-contain"
-              priority={index < 12}       
-              loading={index < 12 ? "eager" : "lazy"}  
+              priority={index === 0}
             />
 
                     {discountPercentage && (

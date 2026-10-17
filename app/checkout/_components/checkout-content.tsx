@@ -160,12 +160,15 @@ const hasFreeDelivery = useMemo(() => {
     const methods: ShippingMethod[] = [
       { id: "insideDhaka", label: "Inside Dhaka", cost: charges.insideDhaka ?? 0 },
       { id: "outsideDhaka", label: "Outside Dhaka", cost: charges.outsideDhaka ?? 0 },
-      {
+    ];
+
+    if (charges.insideKhagrachari != null) {
+      methods.push({
         id: "insideKhagrachari",
         label: "Inside Khagrachari",
-        cost: charges.insideKhagrachari ?? 0,
-      },
-    ];
+        cost: charges.insideKhagrachari,
+      });
+    }
 
     return methods;
   }, [charges]);

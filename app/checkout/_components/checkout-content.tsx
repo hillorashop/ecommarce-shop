@@ -157,11 +157,17 @@ const hasFreeDelivery = useMemo(() => {
 
   const shippingMethods: ShippingMethod[] = useMemo(() => {
     if (!charges) return [];
-    return [
+    const methods: ShippingMethod[] = [
       { id: "insideDhaka", label: "Inside Dhaka", cost: charges.insideDhaka ?? 0 },
       { id: "outsideDhaka", label: "Outside Dhaka", cost: charges.outsideDhaka ?? 0 },
-
+      {
+        id: "insideKhagrachari",
+        label: "Inside Khagrachari",
+        cost: charges.insideKhagrachari ?? 0,
+      },
     ];
+
+    return methods;
   }, [charges]);
 
 

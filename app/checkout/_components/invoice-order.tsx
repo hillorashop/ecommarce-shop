@@ -21,6 +21,7 @@ const SHIPPING_METHOD_LABELS: Record<string, string> = {
   insideDhaka: "Inside Dhaka",
   outsideDhaka: "Outside Dhaka",
   postOffice: "Post Office",
+  insideKhagrachari: "Inside Khagrachari",
 };
 
 const getShippingMethodLabel = (method?: string | null) => {

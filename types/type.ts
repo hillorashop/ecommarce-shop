@@ -206,4 +206,5 @@ export interface dbDeliveryCharge {
   insideDhaka : number 
   outsideDhaka: number
   postOffice:number 
+  insideKhagrachari: number | null
 }

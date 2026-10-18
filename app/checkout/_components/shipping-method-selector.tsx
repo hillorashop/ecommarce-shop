@@ -85,7 +85,9 @@ export function ShippingMethodSelector({
               </span>
             </Label>
             <p className="text-[10px] ml-4 text-muted-foreground">
-              খাগড়াছড়ি থেকে যাবে, তাই!
+              {method.id === "insideKhagrachari"
+                ? "৩০ মিনিটে ডেলিভারি! সারাজীবন ফ্রি"
+                : "খাগড়াছড়ি থেকে যাবে, তাই!"}
             </p>
           </div>
         ))}

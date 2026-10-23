@@ -1,6 +1,5 @@
 import { io, Socket } from "socket.io-client";
 import { generateEventId, getAllCookies, getClientId, getDocumentInfo, getPageInfo, getSessionId, getUserInfo } from "./analytics-core";
-import { getClientIp } from "./get-ip";
 
 const normalizeEcommerce = (ecommerce: any) => {
   if (!ecommerce) return ecommerce;
@@ -52,8 +51,6 @@ export const getSocket = () => {
     socket = io(process.env.NEXT_PUBLIC_EVENTS_SERVER_URL!, {
       transports: ["websocket"],
     });
-
-        getClientIp();
   }
   return socket;
 };
@@ -63,6 +60,23 @@ export const getSocket = () => {
 interface EventPayload {
   [key: string]: any;
 }
+
+// Cache the performance context once per session to avoid redundant calculations
+let _perfContext: { loadTime?: number; domReady?: number } | null = null;
+
+const getPerfContext = () => {
+  if (_perfContext) return _perfContext;
+  try {
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    _perfContext = {
+      loadTime: nav ? Math.round(nav.loadEventEnd - nav.startTime) : undefined,
+      domReady: nav ? Math.round(nav.domContentLoadedEventEnd - nav.startTime) : undefined,
+    };
+  } catch {
+    _perfContext = {};
+  }
+  return _perfContext;
+};
 
 export const emitEvent = (eventName: string, payload?: EventPayload): void => {
   if (typeof window === "undefined") return;
@@ -82,18 +96,9 @@ export const emitEvent = (eventName: string, payload?: EventPayload): void => {
       sessionId: getSessionId(),
       timestamp: Date.now(),
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      performance: {
-        loadTime: performance.timing ? 
-          performance.timing.loadEventEnd - performance.timing.navigationStart : 
-          undefined,
-        domReady: performance.timing ?
-          performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart :
-          undefined,
-      }
+      performance: getPerfContext(),
     }
   };
-
-
 
   socket.emit("event", {
     event: eventName,

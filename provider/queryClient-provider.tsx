@@ -1,29 +1,37 @@
 "use client";
 
-import { QueryClient, QueryClientProvider, HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { useEffect, useState } from "react";
-import FirstTimeDataToast from "./first-time-data-toast";
+import dynamic from "next/dynamic";
+
+// Lazy-load the toast — it only shows once per user lifetime
+const FirstTimeDataToast = dynamic(() => import("./first-time-data-toast"), {
+  ssr: false,
+});
 
 interface Props {
   children: React.ReactNode;
 }
 
-// ✅ Create a single QueryClient outside the component (no hooks needed)
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 60 * 1000,
-      gcTime: 60 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+      },
     },
-  },
-});
+  });
+}
 
 export const ReactQueryClientProvider = ({ children }: Props) => {
-  const [hydrated, setHydrated] = useState(false);
+  // Create the client inside useState so it is created once per component
+  // mount (not shared across SSR requests)
+  const [queryClient] = useState(() => makeQueryClient());
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -37,18 +45,14 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
       persister,
       maxAge: 60 * 60 * 1000,
     });
+  }, [queryClient]);
 
-    setHydrated(true);
-  }, []);
-
-  if (!hydrated) return null;
-
+  // Render children immediately — no blank-screen flash while persister loads.
+  // React Query merges cached data as it becomes available.
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        {children}
-        <FirstTimeDataToast/>
-      </HydrationBoundary>
+      {children}
+      <FirstTimeDataToast />
     </QueryClientProvider>
   );
 };

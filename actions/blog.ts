@@ -23,8 +23,6 @@ export const getBlogs = async (page?: number): Promise<BlogResponse> => {
 
   const res = await fetch(url.toString());
 
-  console.log(res)
-
   if (!res.ok) throw new Error("Failed to load blogs");
   return await res.json();
 };

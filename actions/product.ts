@@ -45,7 +45,7 @@ export const getProducts = async (
   if (page) params.append("page", page.toString());
   if (sortBy) params.append("sortBy", sortBy);
   if (sortOrder) params.append("sortOrder", sortOrder);
-  if (productName) params.append("productName", encodeURIComponent(productName));
+  if (productName) params.append("productName", productName);
   if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
   if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
   if (categoryIds && categoryIds.length > 0)

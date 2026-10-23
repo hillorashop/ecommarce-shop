@@ -1,8 +1,7 @@
 
-import { FOURHOUR, ONE_DAY } from "@/data";
-import { queryClient } from "@/provider/queryClient-provider";
+import { FOURHOUR } from "@/data";
 
-import { useQuery, QueryFunction, QueryKey, UseQueryResult, UseQueryOptions,   useMutation, MutationKey} from "@tanstack/react-query"; 
+import { useQuery, QueryFunction, QueryKey, UseQueryResult, UseQueryOptions, useMutation, MutationKey, useQueryClient } from "@tanstack/react-query"; 
 import { toast } from "sonner";
 
 type MutateFunction = (variables: any) => Promise<any>;
@@ -35,6 +34,7 @@ export const useCustomMutation = (
   queryKey: QueryKey, 
   onSuccess?: (data: any) => void
 ) => {
+  const queryClient = useQueryClient();
   const { mutate, isPending, data, error } = useMutation({
     mutationKey,
     mutationFn,
@@ -57,5 +57,4 @@ export const useCustomMutation = (
 
   return { mutate, isPending, data, error };
 };
-
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquareMore, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
+import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,11 +16,8 @@ import { ONE_DAY, siteMeta } from "@/data";
 import { useCustomQuery } from "@/hooks/use-custom-query";
 import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
-import { FaRegPlayCircle } from "react-icons/fa";
-import { motion } from "framer-motion";
 import { trackEcommerceEvent } from "@/lib/custom-tm";
 import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
-import { FaBagShopping } from "react-icons/fa6";
 import { useBusinessInfo } from "@/hooks/use-business-info";
 
 interface Props {
@@ -286,7 +283,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           {isVideo ? (
             <div className="relative w-full h-full">
               <video src={mediaUrl} muted className="w-full h-full object-cover" />
-              <FaRegPlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-lg md:text-2xl pointer-events-none" />
+              <PlayCircle className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white w-6 h-6 md:w-8 md:h-8 pointer-events-none" />
             </div>
           ) : (
             <Image
@@ -433,29 +430,27 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
                <ShoppingCart className="w-4 h-4" />
               {addToCartLabel}
             </Button>
-              <motion.button
+              <button
             disabled={isBuyDisabled}
             onClick={() => handleBuyNow(product.data)}
-            className="w-full flex items-center justify-center font-semibold h-10 p-1 bg-black rounded-md text-primary text-sm disabled:opacity-50 cursor-pointer font-semibold"
-            animate={{ scale: [1, 1.1, 1, 1.05, 1] }}
-            transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+            className="w-full flex items-center justify-center font-semibold h-10 p-1 bg-black rounded-md text-primary text-sm disabled:opacity-50 cursor-pointer hover:bg-neutral-900 transition-colors"
           >
-             <span className="mr-2"> <FaBagShopping className="w-4 h-4"/></span> Order Now
-          </motion.button>
-            <motion.button
+             <span className="mr-2"> <ShoppingBag className="w-4 h-4"/></span> Order Now
+          </button>
+            <button
               onClick={() => window.open(`https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=${encodeURIComponent("হ্যালো, আমি একটি পণ্য অর্ডার করতে চাই।")}`, "_blank")}
               className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-green-500 to-green-800 h-10 p-1 flex-1 justify-center rounded-md cursor-pointer text-white"
             >
               <Image src="/icons/whatsapp.svg" alt="Whatsapp" height={20} width={20} className="object-contain hidden md:block" />
               Chat with WhatsApp
-            </motion.button>
-            <motion.button
+            </button>
+            <button
               onClick={() => window.open(`https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`, "_blank")}
               className="flex items-center gap-x-2 text-sm font-semibold bg-gradient-to-bl from-blue-600 to-pink-600 h-10 p-1 flex-1 justify-center rounded-md cursor-pointer text-white"
             >
               <Image src="/icons/messenger.svg.webp" alt="Messenger" height={20} width={20} className="object-contain hidden md:block" />
               Chat with Messenger
-            </motion.button>
+            </button>
           </div>
 
           <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>

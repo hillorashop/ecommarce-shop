@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import React, { createContext, useContext, ReactNode, useState, useEffect, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getUser, User, UserResponse } from "@/actions/user";
 import { useUserQuery } from "@/hooks/use-user";
@@ -45,22 +45,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [fetchedUser]);
 
   // Refresh user manually
-  const refreshUser = async (newToken: string) => {
+  const refreshUser = useCallback(async (newToken: string) => {
     localStorage.setItem("auth_token", newToken);
 
-    try {
-      const response: UserResponse = await getUser(newToken);
-      if (response.success && response.user) {
-        setUser(prev => ({ ...(prev ?? {}), ...response.user }));
-      }
-    } catch (error) {
-      console.error("Failed to refresh user:", error);
+    const response: UserResponse = await getUser(newToken);
+    if (!response.success || !response.user) {
+      throw new Error(response.error || "Failed to refresh user");
     }
 
-    queryClient.setQueryData(["user", newToken], () =>
-      getUser(newToken).then(res => res.user!)
-    );
-  };
+    setUser(prev => ({ ...(prev ?? {}), ...response.user }));
+    queryClient.setQueryData(["user", newToken], response.user);
+  }, [queryClient]);
 
   const logout = () => {
     localStorage.removeItem("auth_token");

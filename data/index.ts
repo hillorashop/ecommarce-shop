@@ -112,8 +112,8 @@ export const siteMeta = {
     "খাগড়াছড়ি শপ",
   ],
    openGraph:{
-    title:"",
-    desc:"",
+    title:"Hillora – পাহাড়ি ঐতিহ্যের ই-কমার্স",
+    desc:"Hillora – A Bangladesh based Ecommerce Website (বাংলাদেশের খাগড়াছড়ি ভিত্তিক ই-কমার্স ওয়েবসাইট)।",
     image:"/banners/hillora-meta.jpg"
    },
    twitter:{

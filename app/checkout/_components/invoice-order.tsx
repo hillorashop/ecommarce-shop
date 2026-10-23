@@ -11,6 +11,7 @@ import { dbProductwihtoutAll } from "@/actions/product";
 import { useBusinessInfo } from "@/hooks/use-business-info";
 import { useCustomQuery } from "@/hooks/use-custom-query";
 import { getLogos, LogoResponse } from "@/actions/business-info";
+import NextImage from "next/image";
 
 interface Props {
   order: dbOrder;

@@ -49,27 +49,8 @@ export const CheckoutContent = () => {
 
 
 
-  const [fbp, setFbp] = useState<string | null>(null);
-  const [fbc, setFbc] = useState<string | null>(null);
-  const [ttpCookie, setttpCookie] = useState<string | null>(null);
-  const [ttclidValue, setTtclidValue] = useState<string | null>(null);
-  const [gclid, setGclid] = useState<string | null>(null);
-
-  const [li_fat_id, setLi_fat_id] = useState<string | null>(null);
-  const [gbraid, setGbraid] = useState<string | null>(null);
-  const [wbraid, setWbraid] = useState<string | null>(null);
-  const [dclid, setDclid] = useState<string | null>(null);
-  const [uuid, setUuid] = useState<string | null>(null);
-  const [msclkid, setMsclkid] = useState<string | null>(null);
-  const [fbclid, setFbclid] = useState<string | null>(null);
-  const [twclid, setTwclid] = useState<string | null>(null);
-  const [rdt_cid, setRdt_cid] = useState<string | null>(null);
-  const [epik, setEpik] = useState<string | null>(null);
-  const [ScCid, setScCid] = useState<string | null>(null);
-  const [sccid, setSccid] = useState<string | null>(null);
-  const [qclid, setQclid] = useState<string | null>(null);
-  const [irclickid, setIrclickid] = useState<string | null>(null);
-  const [awc, setAwc] = useState<string | null>(null);
+  // Single state object for all tracking cookies — avoids 20+ sequential re-renders on mount
+  const [trackingCookies, setTrackingCookies] = useState<Record<string, string | null>>({});
 
   const router = useRouter();
   const pathname = usePathname();
@@ -78,27 +59,17 @@ export const CheckoutContent = () => {
   const productId = searchParams.get("productId");
   const qty = searchParams.get("qty");
 
+  // Read all tracking cookies in one shot → one re-render instead of 20
   useEffect(() => {
-    setFbp(getCookie("_fbp"));
-    setFbc(getCookie("_fbc"));
-    setttpCookie(getCookie("_ttp"));
-    setTtclidValue(getCookie("ttclid"));
-    setGclid(getCookie("gclid"));
-    setLi_fat_id(getCookie("li_fat_id"));
-    setGbraid(getCookie("gbraid"));
-    setWbraid(getCookie("wbraid"));
-    setDclid(getCookie("dclid"));
-    setUuid(getCookie("uuid"));
-    setMsclkid(getCookie("msclkid"));
-    setFbclid(getCookie("fbclid"));
-    setTwclid(getCookie("twclid"));
-    setRdt_cid(getCookie("rdt_cid"));
-    setEpik(getCookie("epik"));
-    setScCid(getCookie("ScCid"));
-    setSccid(getCookie("sccid"));
-    setQclid(getCookie("qclid"));
-    setIrclickid(getCookie("irclickid"));
-    setAwc(getCookie("awc"));
+    const names = [
+      "_fbp", "_fbc", "_ttp", "ttclid", "gclid", "li_fat_id",
+      "gbraid", "wbraid", "dclid", "uuid", "msclkid", "fbclid",
+      "twclid", "rdt_cid", "epik", "ScCid", "sccid", "qclid",
+      "irclickid", "awc",
+    ];
+    const result: Record<string, string | null> = {};
+    names.forEach((name) => { result[name] = getCookie(name); });
+    setTrackingCookies(result);
   }, []);
 
   const checkoutItems: CartItem[] = useMemo(() => {
@@ -392,26 +363,26 @@ const hasFreeDelivery = useMemo(() => {
 
     const orderData = {
       userId: user?.id,
-      fbc,
-      fbp,
-      ttpCookie,
-      ttclidValue,
-      gclid,
-      li_fat_id,
-      gbraid,
-      wbraid,
-      dclid,
-      uuid,
-      msclkid,
-      fbclid,
-      twclid,
-      rdt_cid,
-      epik,
-      ScCid,
-      sccid,
-      qclid,
-      irclickid,
-      awc,
+      fbc: trackingCookies["_fbc"],
+      fbp: trackingCookies["_fbp"],
+      ttpCookie: trackingCookies["_ttp"],
+      ttclidValue: trackingCookies["ttclid"],
+      gclid: trackingCookies["gclid"],
+      li_fat_id: trackingCookies["li_fat_id"],
+      gbraid: trackingCookies["gbraid"],
+      wbraid: trackingCookies["wbraid"],
+      dclid: trackingCookies["dclid"],
+      uuid: trackingCookies["uuid"],
+      msclkid: trackingCookies["msclkid"],
+      fbclid: trackingCookies["fbclid"],
+      twclid: trackingCookies["twclid"],
+      rdt_cid: trackingCookies["rdt_cid"],
+      epik: trackingCookies["epik"],
+      ScCid: trackingCookies["ScCid"],
+      sccid: trackingCookies["sccid"],
+      qclid: trackingCookies["qclid"],
+      irclickid: trackingCookies["irclickid"],
+      awc: trackingCookies["awc"],
       name: data.name,
       mobileNumber: data.mobileNumber,
       orderFor:data.orderFor,

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { siteMeta } from "@/data";
 import { dbProductwihtoutAll } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Badge } from "./badge";
 import { Truck } from "lucide-react";
 
@@ -21,7 +21,7 @@ interface ProductCardProps {
 
 type UnitEntry = { price: number; discountPrice: number };
 
-export function ProductCard({ product, index }: ProductCardProps) {
+function ProductCardComponent({ product, index }: ProductCardProps) {
   const {
     id,
     productUrl,
@@ -41,7 +41,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
   const { addItem, cartItems } = useCart();
 
   // Detect which unit type is active and its label suffix
-  const resolveUnits = (): { entries: [string, UnitEntry][]; label: string } | null => {
+  const unitData = useMemo(() => {
     const tryParse = (raw: unknown, label: string) => {
       if (raw && typeof raw === "object") {
         const entries = Object.entries(raw as Record<string, UnitEntry>);
@@ -50,9 +50,8 @@ export function ProductCard({ product, index }: ProductCardProps) {
       return null;
     };
     return tryParse(kgUnit, "kg") ?? tryParse(gramUnit, "g") ?? tryParse(piecesUnit, "pcs") ?? null;
-  };
+  }, [kgUnit, gramUnit, piecesUnit]);
 
-  const unitData = resolveUnits();
   const hasUnits = unitData !== null;
 
   const [selectedKey, setSelectedKey] = useState<string | null>(
@@ -223,3 +222,5 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
     </Card>
   );
 }
+
+export const ProductCard = React.memo(ProductCardComponent);

@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
-import { dbProduct } from "@/types/type";
 import { Card } from "@/components/ui/card";
 import {siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,18 +16,32 @@ import { getLogos, LogoResponse } from "@/actions/business-info";
 
 export function Header() {
   const [productName, setProductName] = useState("");
-  const [searchResults, setSearchResults] = useState<dbProduct[]>([]);
-  const { data: products } = useProducts();
+  const [debouncedProductName, setDebouncedProductName] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const { data: products } = useProducts({
+    productName: debouncedProductName,
+    enabled: debouncedProductName.length > 0,
+  });
+  const searchResults = products?.data ?? [];
   const [showHeader, setShowHeader] = useState(true);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
     ["get-logos"],
     () => getLogos()
-)
+  );
 
   const headerLogo =
     logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      () => setDebouncedProductName(productName.trim()),
+      250
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [productName]);
 
   useEffect(() => {
     const handleScroll = () => setShowHeader(window.scrollY === 0);
@@ -40,7 +53,7 @@ const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setSearchResults([]);
+        setShowSearchResults(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -87,16 +100,8 @@ const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
         className="w-full pl-4 pr-12 py-3 text-base"
         value={productName}
         onChange={(e) => {
-          const value = e.target.value;
-          setProductName(value);
-          if (value.trim() === "") {
-            setSearchResults([]);
-            return;
-          }
-          const filtered = products?.data?.filter((p) =>
-            p.name.toLowerCase().includes(value.trim().toLowerCase())
-          );
-          setSearchResults(filtered as dbProduct[]);
+          setProductName(e.target.value);
+          setShowSearchResults(true);
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -115,7 +120,10 @@ const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
       </button>
 
       {/* Search Results */}
-      {searchResults.length > 0 && (
+      {showSearchResults &&
+        productName.trim() === debouncedProductName &&
+        debouncedProductName.length > 0 &&
+        searchResults.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-2 max-h-[400px] overflow-auto z-50 space-y-2 py-2 bg-white shadow-md rounded-md px-2">
           {searchResults.map((product) => {
             const hasDiscount =
@@ -128,7 +136,7 @@ const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
                 className="cursor-pointer hover:shadow-md transition flex flex-row items-center gap-4 p-2"
                 onClick={() => {
                   setProductName(product.name);
-                  setSearchResults([]);
+                  setShowSearchResults(false);
                   router.replace(`/products/${product.productUrl}`);
                 }}
               >

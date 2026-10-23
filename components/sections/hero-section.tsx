@@ -38,8 +38,12 @@ export const HeroSection = () => {
 
   useEffect(() => {
     if (!api) return;
+    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
     setActiveIndex(api.selectedScrollSnap());
-    api.on("select", () => setActiveIndex(api.selectedScrollSnap()));
+    api.on("select", onSelect);
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
 
   return (
@@ -79,7 +83,7 @@ export const HeroSection = () => {
             fill
             sizes="100vw"
             className="object-contain object-center block lg:hidden"
-            priority
+            priority={index === 0}
           />
           {/* Large devices */}
           <Image
@@ -88,7 +92,7 @@ export const HeroSection = () => {
             fill
             sizes="100vw"
             className="object-contain object-center hidden lg:block"
-            priority
+            priority={index === 0}
           />
         </>
       ) : (
@@ -99,7 +103,7 @@ export const HeroSection = () => {
           fill
           sizes="100vw"
           className="object-contain object-center"
-          priority
+          priority={index === 0}
         />
       )}
     </Link>

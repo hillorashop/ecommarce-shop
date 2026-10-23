@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Menu, ShoppingCart, X } from "lucide-react";
 import {
   Sheet,
@@ -17,7 +17,6 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { dbProduct } from "@/types/type";
 import { useProducts } from "@/hooks/use-products";
 import { Card } from "../ui/card";
 import { useUser } from "@/contexts/UserContext";
@@ -32,10 +31,14 @@ export function MobileHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [productName, setProductName] = useState("");
-  const [searchResults, setSearchResults] = useState<dbProduct[]>([]);
+  const [debouncedProductName, setDebouncedProductName] = useState("");
   const router = useRouter();
  
-  const { data: products, isLoading } = useProducts(); 
+  const { data: products } = useProducts({
+    productName: debouncedProductName,
+    enabled: showSearch && debouncedProductName.length > 0,
+  });
+  const searchResults = products?.data ?? [];
   const {user} = useUser()
   const { setOpen } = useOpenStore();
   const { cartItems } = useCart();
@@ -44,6 +47,15 @@ export function MobileHeader() {
       ["get-logos"],
       () => getLogos()
   )
+
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      () => setDebouncedProductName(productName.trim()),
+      250
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [productName]);
   
     const headerLogo =
       logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
@@ -206,18 +218,7 @@ export function MobileHeader() {
     autoFocus
           value={productName}
                    onChange={(e) => {
-                     const value = e.target.value;
-                     setProductName(value);
-   
-                     if (value.trim() === "") {
-                       setSearchResults([]);
-                       return;
-                     }
-   
-                     const filtered = products?.data?.filter((p) =>
-                       p.name.toLowerCase().includes(value.trim().toLowerCase())
-                     );
-                     setSearchResults(filtered as dbProduct[]);
+                     setProductName(e.target.value);
                    }}
                        onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -241,7 +242,9 @@ export function MobileHeader() {
     <Search className="size-5" />
   </Button>
 
-     {searchResults.length > 0 && (
+     {productName.trim() === debouncedProductName &&
+       debouncedProductName.length > 0 &&
+       searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 max-h-[400px] overflow-auto z-50 space-y-2 py-2">
                {searchResults.map((product) => {
   const hasDiscount =
@@ -255,7 +258,6 @@ export function MobileHeader() {
       className="cursor-pointer hover:shadow-md transition flex flex-row items-center gap-4 p-2"
       onClick={() => {
         setProductName(product.name);
-        setSearchResults([]);
         router.replace(`/products/${product.productUrl}`);
       }}
     >

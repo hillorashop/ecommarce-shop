@@ -1,27 +1,27 @@
 import type { Metadata } from "next";
-import {  Open_Sans } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/headers/navbar";
 import { Footer } from "@/components/footer/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { UserProvider } from "@/contexts/UserContext";
-import { Cart } from "@/components/cart";
 import { siteMeta } from "@/data";
 import { ReactQueryClientProvider } from "@/provider/queryClient-provider";
 import TopLoadingBar from "@/components/top-loading-bar";
 import Script from "next/script";
-import { StyleMobileFooterNavbar } from "@/components/footer/style-mobile-footer-navbar";
 import { TrackingProvider } from "@/provider/tracking-provider";
-import { FloatingContactIcons } from "@/components/footer/floating-contact-button";
-
-
+import { Suspense } from "react";
+import {
+  CartWidget,
+  FooterWidgets,
+} from "@/components/layout/client-widgets";
 
 
 const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-open-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
 });
 
 type SiteLogos = {
@@ -63,7 +63,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: siteMeta.desc,
     keywords: siteMeta.keyWords,
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL! || process.env.NEXT_PUBLIC_BASE_WWW_URL!),
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_BASE_URL ||
+        process.env.NEXT_PUBLIC_BASE_WWW_URL ||
+        "https://hillorabd.com"
+    ),
     openGraph: {
       title: siteMeta.openGraph.title,
       description: siteMeta.openGraph.desc,
@@ -143,22 +147,22 @@ export default async function RootLayout({
        
         <TopLoadingBar />
         <ReactQueryClientProvider>
-        <TrackingProvider>
-          <UserProvider>
-            <main className="max-w-7xl mx-auto">
-              <Navbar />
-              <div className="mt-16 lg:mt-34">
-                {children}
-                <Cart />
-              </div>
-              <Footer />
-            </main>
-            <Toaster />
-            <FloatingContactIcons/>
-            <StyleMobileFooterNavbar/>
-            {/* <MobileFooterNavbar /> */}
-          </UserProvider>
-          </TrackingProvider>
+          <Suspense fallback={null}>
+            <TrackingProvider>
+              <UserProvider>
+                <main className="max-w-7xl mx-auto">
+                  <Navbar />
+                  <div className="mt-16 lg:mt-34">
+                    {children}
+                    <CartWidget />
+                  </div>
+                  <Footer />
+                </main>
+                <Toaster />
+                <FooterWidgets />
+              </UserProvider>
+            </TrackingProvider>
+          </Suspense>
         </ReactQueryClientProvider>
      
       </body>

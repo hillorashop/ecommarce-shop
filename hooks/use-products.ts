@@ -10,6 +10,7 @@ interface UseProductsOptions {
   minPrice?: number;
   maxPrice?: number;
   categoryIds?: string[];
+  enabled?: boolean;
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
@@ -42,6 +43,7 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     gcTime: 60 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    enabled: options.enabled ?? true,
   });
 };
 

@@ -93,7 +93,7 @@ export function Header({ initialLogos }: HeaderProps) {
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
 
-<div className="flex items-center">
+<div className="flex items-center py-1">
   {headerLogo ? (
     <Image
       onClick={() => router.push("/")}

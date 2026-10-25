@@ -175,7 +175,7 @@ export function MobileHeader({ initialLogos }: MobileHeaderProps) {
           </Sheet>
          </div>
        
-          <div className="flex items-center">
+          <div className="flex items-center py-1">
             {headerLogo ? (
               <Image
                 src={headerLogo}

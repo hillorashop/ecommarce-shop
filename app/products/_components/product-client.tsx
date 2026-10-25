@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
+import { ProductReviews } from "./product-reviews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -71,7 +72,10 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
 
   const hasUnits = unitData !== null;
 
-const [selectedKey, setSelectedKey] = useState<string | null>(null)
+const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [reviewCount, setReviewCount] = useState<number>(0);
+  const [averageRating, setAverageRating] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<string>("description");
 
 useEffect(() => {
   if (hasUnits && unitData?.entries[0][0]) {
@@ -357,6 +361,28 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
         <div className="space-y-2 lg:space-y-4">
           <h1 className="text-3xl font-bold">{product.data.name}</h1>
+          {reviewCount > 0 && (
+            <div
+              className="flex items-center gap-2 cursor-pointer hover:opacity-85 transition-opacity"
+              onClick={() => setActiveTab("reviews")}
+            >
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`size-4 ${
+                      s <= Math.round(averageRating)
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-muted-foreground/30"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm font-medium text-muted-foreground">
+                {averageRating > 0 ? averageRating.toFixed(1) : ""} ({reviewCount} {reviewCount === 1 ? "review" : "reviews"})
+              </span>
+            </div>
+          )}
 
           {hasUnits && (
             <div className="flex flex-wrap gap-1 mb-3">
@@ -462,10 +488,10 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
         </div>
       </div>
 
-      <Tabs defaultValue="description" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md gap-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md gap-4">
           <TabsTrigger value="description">Description</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews (0)</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews ({reviewCount})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="description" className="mt-6">
@@ -479,18 +505,15 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           </Card>
         </TabsContent>
 
-        <TabsContent value="reviews">
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center justify-center gap-4">
-              <div className="flex items-center justify-center bg-primary/20 size-14 rounded-full">
-                <Star className="size-8 fill-primary stroke-primary" />
-              </div>
-              <p className="text-muted-foreground">No reviews yet.</p>
-            </CardContent>
-          </Card>
+        <TabsContent value="reviews" className="mt-6">
+          <ProductReviews
+            productId={product.data.id}
+            onReviewsLoaded={(count, avg) => {
+              setReviewCount(count);
+              setAverageRating(avg);
+            }}
+          />
         </TabsContent>
-
-      
       </Tabs>
 
       <div className="mt-8">

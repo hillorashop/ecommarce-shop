@@ -110,8 +110,26 @@ export type dbProduct = {
 export type dbReview = {
   id: string;
   rating: number;
-  userId: string;
+  comment?: string | null;
+  images?: string[];
+  userName?: string | null;
+  userAvatar?: string | null;
+  userId?: string | null;
   productId: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  isCustom?: boolean;
+  user?: {
+    id: string;
+    name?: string | null;
+    image?: string | null;
+  } | null;
+  product?: {
+    id: string;
+    name: string;
+    productImage?: string;
+    productUrl?: string;
+  } | null;
 };
 
 export type dbComment = {

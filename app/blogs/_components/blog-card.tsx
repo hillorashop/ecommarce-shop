@@ -53,14 +53,14 @@ export const BlogCard = ({ blog, className }: BlogCardProps) => {
         href={`/blogs/${blog.url}`}
         className="block relative overflow-hidden"
       >
-        <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-gray-50">
+        <div className="relative w-full aspect-[1600/895] md:aspect-[1600/500] overflow-hidden bg-gray-50">
           {desktopCover === mobileCover ? (
             <Image
               src={desktopCover}
               alt={blog.title || "Blog cover"}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-contain transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
               priority={false}
             />
           ) : (
@@ -70,7 +70,7 @@ export const BlogCard = ({ blog, className }: BlogCardProps) => {
                 alt={blog.title || "Blog cover"}
                 fill
                 sizes="(max-width: 1024px) 50vw, 33vw"
-                className="object-contain hidden md:block transition-transform duration-500 group-hover:scale-105"
+                className="object-cover hidden md:block transition-transform duration-500 group-hover:scale-105"
                 priority={false}
               />
               <Image
@@ -78,7 +78,7 @@ export const BlogCard = ({ blog, className }: BlogCardProps) => {
                 alt={blog.title || "Blog cover"}
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-contain block md:hidden transition-transform duration-500 group-hover:scale-105"
+                className="object-cover block md:hidden transition-transform duration-500 group-hover:scale-105"
                 priority={false}
               />
             </>

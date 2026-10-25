@@ -47,7 +47,7 @@ export const BlogContent = ({ initialPage }: Props) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <Card key={i} className="flex flex-col overflow-hidden animate-pulse rounded-xl">
-              <Skeleton className="w-full h-48 sm:h-56 md:h-64" />
+              <Skeleton className="w-full aspect-[1600/895] md:aspect-[1600/500]" />
               <CardContent className="p-4 space-y-3">
                 <Skeleton className="h-6 w-3/4 rounded" />
                 <Skeleton className="h-4 w-full rounded" />

@@ -63,7 +63,7 @@ export const BlogsSection = () => {
                 className="keen-slider__slide p-1 min-w-[85%] sm:min-w-[calc(50%-10px)] lg:min-w-[calc(33.333%-16px)] max-w-[85%] sm:max-w-[calc(50%-10px)] lg:max-w-[calc(33.333%-16px)] flex-shrink-0"
               >
                 <Card className="flex flex-col overflow-hidden rounded-xl shadow-md border border-gray-100 bg-white">
-                  <Skeleton className="aspect-[16/10] sm:aspect-[16/9] w-full" />
+                  <Skeleton className="w-full aspect-[1600/895] md:aspect-[1600/500]" />
                   <CardContent className="space-y-3 p-4 sm:p-5">
                     <Skeleton className="h-5 sm:h-6 w-3/4 rounded" />
                     <Skeleton className="h-4 w-full rounded" />

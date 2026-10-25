@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Star, Upload, X, Loader2, CheckCircle2, Image as ImageIcon, MessageSquare } from "lucide-react";
+import { Star, Upload, X, Loader2, CheckCircle2, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { useUser } from "@/contexts/UserContext";
@@ -65,14 +64,14 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
     ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
   };
 
-  // Image selection handler
+  // Image selection handler with Bangla validations
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
     const remainingSlots = 2 - selectedFiles.length;
     if (remainingSlots <= 0) {
-      toast.error("Maximum 2 photos allowed per review");
+      toast.error("প্রতি রিভিউতে সর্বোচ্চ ২টি ছবি দেওয়া যাবে");
       return;
     }
 
@@ -81,13 +80,18 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
 
     for (const file of files.slice(0, remainingSlots)) {
       if (!file.type.startsWith("image/")) {
-        toast.error(`"${file.name}" is not an image file.`);
+        toast.error(`"${file.name}" কোনো ইমেজ ফাইল নয়।`);
         continue;
       }
 
       // Specification: Each image under 4MB
       if (file.size > 4 * 1024 * 1024) {
-        toast.error(`"${file.name}" exceeds the 4MB limit (${(file.size / (1024 * 1024)).toFixed(1)}MB).`);
+        toast.error(
+          `"${file.name}" ৪MB সাইজ সীমা অতিক্রম করেছে (${(
+            file.size /
+            (1024 * 1024)
+          ).toFixed(1)}MB)।`
+        );
         continue;
       }
 
@@ -125,12 +129,12 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
         comment: comment.trim(),
         images: uploadedUrls,
         userId: user?.id,
-        userName: user?.name || "Customer",
+        userName: user?.name || "ক্রেতা",
         userAvatar: (user as any)?.image || undefined,
       });
     },
     onSuccess: () => {
-      toast.success("Thank you! Your review has been submitted.");
+      toast.success("ধন্যবাদ! আপনার রিভিউ সফলভাবে জমা দেওয়া হয়েছে।");
       setComment("");
       setRating(5);
       filePreviews.forEach((url) => URL.revokeObjectURL(url));
@@ -140,7 +144,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
       queryClient.invalidateQueries({ queryKey: ["product-reviews", productId] });
     },
     onError: (err: any) => {
-      toast.error(err.message || "Failed to submit review");
+      toast.error(err.message || "রিভিউ জমা দিতে ব্যর্থ হয়েছে");
     },
   });
 
@@ -148,31 +152,32 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
     e.preventDefault();
 
     if (!user || !user.id) {
-      toast.error("Please sign in to write a review");
+      toast.error("রিভিউ লিখতে অনুগ্রহ করে লগইন করুন");
       return;
     }
 
     if (comment.trim().length < 3) {
-      toast.error("Review comment must be at least 3 characters");
+      toast.error("রিভিউ কমপক্ষে ৩ অক্ষরের হতে হবে");
       return;
     }
 
     if (comment.trim().length > 500) {
-      toast.error("Review comment cannot exceed 500 characters");
+      toast.error("রিভিউ সর্বোচ্চ ৫০০ অক্ষরের বেশি হতে পারবে না");
       return;
     }
 
     submitReviewMutation();
   };
 
+  // Format date in Bangla
   const formatDate = (dateString?: string | Date | null) => {
     if (!dateString) return "";
     try {
       const d = new Date(dateString);
       if (isNaN(d.getTime())) return "";
-      return d.toLocaleDateString("en-US", {
+      return d.toLocaleDateString("bn-BD", {
         year: "numeric",
-        month: "short",
+        month: "long",
         day: "numeric",
       });
     } catch {
@@ -181,13 +186,21 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
   };
 
   const getInitials = (name?: string | null) => {
-    if (!name) return "U";
+    if (!name) return "ক";
     return name
+      .trim()
       .split(" ")
       .map((part) => part[0])
       .join("")
-      .toUpperCase()
       .slice(0, 2);
+  };
+
+  const starBanglaNumbers: Record<number, string> = {
+    5: "৫",
+    4: "৪",
+    3: "৩",
+    2: "২",
+    1: "১",
   };
 
   return (
@@ -197,7 +210,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
         {/* Score & Stars */}
         <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r pb-6 md:pb-0 md:pr-6 text-center">
           <div className="text-5xl font-extrabold text-foreground tracking-tight">
-            {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "0.0"}
+            {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "০.০"}
           </div>
           <div className="flex items-center gap-1 my-2">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -212,7 +225,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             ))}
           </div>
           <p className="text-sm text-muted-foreground font-medium">
-            Based on {stats.totalReviews} {stats.totalReviews === 1 ? "review" : "reviews"}
+            মোট {stats.totalReviews} টি রিভিউ এর ভিত্তিতে
           </p>
 
           <Button
@@ -220,7 +233,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             variant={isWritingReview ? "secondary" : "default"}
             className="mt-4 w-full max-w-[200px]"
           >
-            {isWritingReview ? "Cancel Review" : "Write a Review"}
+            {isWritingReview ? "বাতিল করুন" : "রিভিউ লিখুন"}
           </Button>
         </div>
 
@@ -234,7 +247,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             return (
               <div key={star} className="flex items-center gap-3 text-sm">
                 <div className="flex items-center gap-1 w-12 text-muted-foreground font-medium">
-                  <span>{star}</span>
+                  <span>{starBanglaNumbers[star]}</span>
                   <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
                 </div>
                 <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
@@ -259,14 +272,14 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             {!user || !user.id ? (
               <div className="text-center py-6 space-y-3">
                 <MessageSquare className="size-10 mx-auto text-muted-foreground" />
-                <h4 className="font-semibold text-lg">Only registered users can write a review</h4>
+                <h4 className="font-semibold text-lg">শুধুমাত্র নিবন্ধিত ব্যবহারকারীরা রিভিউ দিতে পারবেন</h4>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Please log in to your account to share your feedback and photos for this product.
+                  এই পণ্যটি সম্পর্কে আপনার মতামত ও ছবি শেয়ার করতে অনুগ্রহ করে আপনার অ্যাকাউন্টে লগইন করুন।
                 </p>
                 <div className="pt-2">
                   <Button asChild>
                     <Link href={`/sign-in?callbackUrl=/products/${productId}`}>
-                      Sign In to Review
+                      রিভিউ দিতে লগইন করুন
                     </Link>
                   </Button>
                 </div>
@@ -274,15 +287,15 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="border-b pb-3">
-                  <h4 className="font-semibold text-base">Write Your Review</h4>
+                  <h4 className="font-semibold text-base">আপনার রিভিউ লিখুন</h4>
                   <p className="text-xs text-muted-foreground">
-                    Posting as <span className="font-medium text-foreground">{user.name || "Customer"}</span>
+                    পোস্ট করছেন: <span className="font-medium text-foreground">{user.name || "সম্মানিত ক্রেতা"}</span>
                   </p>
                 </div>
 
                 {/* Rating selection */}
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Your Rating *</label>
+                  <label className="text-sm font-medium">আপনার রেটিং *</label>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <button
@@ -304,14 +317,14 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                     ))}
                     <span className="ml-2 text-sm font-semibold text-muted-foreground">
                       {rating === 5
-                        ? "5 Stars (Excellent)"
+                        ? "৫ স্টার (অসাধারণ)"
                         : rating === 4
-                        ? "4 Stars (Good)"
+                        ? "৪ স্টার (ভালো)"
                         : rating === 3
-                        ? "3 Stars (Average)"
+                        ? "৩ স্টার (মোটামুটি)"
                         : rating === 2
-                        ? "2 Stars (Poor)"
-                        : "1 Star (Terrible)"}
+                        ? "২ স্টার (খারাপ)"
+                        : "১ স্টার (খুবই খারাপ)"}
                     </span>
                   </div>
                 </div>
@@ -320,7 +333,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <label htmlFor="review-comment" className="text-sm font-medium">
-                      Review Comment *
+                      আপনার মতামত / রিভিউ *
                     </label>
                     <span
                       className={`text-xs ${
@@ -329,12 +342,12 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                           : "text-muted-foreground"
                       }`}
                     >
-                      {comment.length} / 500 characters
+                      {comment.length} / ৫০০ অক্ষর
                     </span>
                   </div>
                   <Textarea
                     id="review-comment"
-                    placeholder="Share what you like or dislike about this product (min 3, max 500 characters)..."
+                    placeholder="পণ্যটি সম্পর্কে আপনার ভালো বা খারাপ অভিজ্ঞতা শেয়ার করুন (কমপক্ষে ৩ ও সর্বোচ্চ ৫০০ অক্ষর)..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     rows={4}
@@ -347,10 +360,10 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-sm font-medium">
-                      Attach Photos (Optional, max 2 images, under 4MB each)
+                      ছবি যুক্ত করুন (ঐচ্ছিক, সর্বোচ্চ ২টি ছবি, প্রতিটি ৪MB এর নিচে)
                     </label>
                     <span className="text-xs text-muted-foreground">
-                      {selectedFiles.length} / 2 photos
+                      {selectedFiles.length} / ২ টি ছবি
                     </span>
                   </div>
 
@@ -362,7 +375,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                       >
                         <Image
                           src={preview}
-                          alt={`Upload preview ${idx + 1}`}
+                          alt={`ছবি প্রিভিউ ${idx + 1}`}
                           fill
                           className="object-cover"
                         />
@@ -370,6 +383,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                           type="button"
                           onClick={() => removeSelectedImage(idx)}
                           className="absolute top-1 right-1 bg-black/70 text-white rounded-full p-1 hover:bg-black transition-colors"
+                          title="ছবি মুছুন"
                         >
                           <X className="size-3" />
                         </button>
@@ -383,7 +397,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                         className="size-20 border-2 border-dashed border-muted-foreground/30 rounded-md flex flex-col items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors cursor-pointer"
                       >
                         <Upload className="size-5 mb-1" />
-                        <span className="text-[10px] font-medium">Add Photo</span>
+                        <span className="text-[10px] font-medium">ছবি যোগ করুন</span>
                       </button>
                     )}
                   </div>
@@ -406,7 +420,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                     disabled={isSubmitting}
                     onClick={() => setIsWritingReview(false)}
                   >
-                    Cancel
+                    বাতিল
                   </Button>
                   <Button
                     type="submit"
@@ -414,10 +428,10 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="mr-2 size-4 animate-spin" /> Submitting...
+                        <Loader2 className="mr-2 size-4 animate-spin" /> জমা হচ্ছে...
                       </>
                     ) : (
-                      "Submit Review"
+                      "রিভিউ জমা দিন"
                     )}
                   </Button>
                 </div>
@@ -430,7 +444,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
       {/* Reviews List */}
       <div className="space-y-4">
         <h3 className="font-semibold text-lg text-foreground">
-          Customer Reviews ({stats.totalReviews})
+          ক্রেতাদের রিভিউ ({stats.totalReviews})
         </h3>
 
         {isLoading ? (
@@ -445,9 +459,9 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
               <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <Star className="size-6 fill-primary" />
               </div>
-              <h4 className="font-medium text-base">No reviews yet</h4>
+              <h4 className="font-medium text-base">এখনো কোনো রিভিউ নেই</h4>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Have you tried this product? Be the first to share your experience with other shoppers.
+                আপনি কি এই পণ্যটি ব্যবহার করেছেন? সবার আগে আপনার মূল্যবান মতামত শেয়ার করুন।
               </p>
               <Button
                 variant="outline"
@@ -455,7 +469,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 onClick={() => setIsWritingReview(true)}
                 className="mt-2"
               >
-                Write the First Review
+                প্রথম রিভিউটি লিখুন
               </Button>
             </CardContent>
           </Card>
@@ -477,11 +491,11 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-sm text-foreground">
-                            {review.userName || review.user?.name || "Customer"}
+                            {review.userName || review.user?.name || "সম্মানিত ক্রেতা"}
                           </span>
                           <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">
                             <CheckCircle2 className="size-3" />
-                            Verified Purchase
+                            যাচাইকৃত ক্রেতা
                           </span>
                         </div>
                         <div className="flex items-center gap-0.5 mt-0.5">
@@ -523,7 +537,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                         >
                           <Image
                             src={img}
-                            alt={`Customer photo ${idx + 1}`}
+                            alt={`কাস্টমার ছবি ${idx + 1}`}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-200"
                           />
@@ -548,7 +562,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             <div className="relative w-full h-[70vh] flex items-center justify-center">
               <Image
                 src={previewModalImage}
-                alt="Review photo full"
+                alt="রিভিউ ছবি"
                 fill
                 className="object-contain"
               />

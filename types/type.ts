@@ -208,3 +208,16 @@ export interface dbDeliveryCharge {
   postOffice:number 
   insideKhagrachari: number | null
 }
+
+export interface dbPromotionalBanner {
+  id: string;
+  title?: string | null;
+  leftLargeImage: string;
+  leftLargeLink: string;
+  topRightImage: string;
+  topRightLink: string;
+  bottomRightImage: string;
+  bottomRightLink: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

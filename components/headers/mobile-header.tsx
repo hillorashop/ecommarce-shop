@@ -17,36 +17,49 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useProducts } from "@/hooks/use-products";
+import { getProducts, ProductsResponse } from "@/actions/product";
 import { Card } from "../ui/card";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback,  AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useCart, useOpenStore } from "@/hooks/use-store";
-import { useCustomQuery } from "@/hooks/use-custom-query";
-import { getLogos, LogoResponse } from "@/actions/business-info";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getLogos, LogoData, LogoResponse } from "@/actions/business-info";
 
+interface MobileHeaderProps {
+  initialLogos?: LogoData | null;
+}
 
-export function MobileHeader() {
+export function MobileHeader({ initialLogos }: MobileHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [productName, setProductName] = useState("");
   const [debouncedProductName, setDebouncedProductName] = useState("");
   const router = useRouter();
  
-  const { data: products } = useProducts({
-    productName: debouncedProductName,
-    enabled: showSearch && debouncedProductName.length > 0,
-  });
+  const { data: products } = useCustomQuery<ProductsResponse>(
+    ["products", debouncedProductName],
+    () => getProducts(undefined, undefined, undefined, debouncedProductName),
+    { enabled: showSearch && debouncedProductName.length > 0 }
+  );
   const searchResults = products?.data ?? [];
   const {user} = useUser()
   const { setOpen } = useOpenStore();
   const { cartItems } = useCart();
 
-  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+  const { data: logos } = useCustomQuery<LogoResponse>(
       ["get-logos"],
-      () => getLogos()
-  )
+      () => getLogos(),
+      initialLogos
+        ? {
+            initialData: {
+              status: 200,
+              message: "OK",
+              data: initialLogos,
+            },
+          }
+        : undefined
+  );
 
   useEffect(() => {
     const timeout = window.setTimeout(
@@ -57,8 +70,12 @@ export function MobileHeader() {
     return () => window.clearTimeout(timeout);
   }, [productName]);
   
-    const headerLogo =
-      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+  const headerLogo =
+    logos?.data?.primaryLogo?.trim() ||
+    logos?.data?.secondaryLogo?.trim() ||
+    initialLogos?.primaryLogo?.trim() ||
+    initialLogos?.secondaryLogo?.trim() ||
+    "/logo.svg";
 
 
   return (
@@ -83,16 +100,16 @@ export function MobileHeader() {
             >
               <SheetHeader className="p-0 relative mb-14">
                 <SheetTitle className="sr-only"> Mobile Header</SheetTitle>
-                       {!logosLoading && (
-            <Image
-              src={headerLogo}
-              alt={`${siteMeta.siteName}` || ""}
-               width={140}
-              height={90}
-           
-              className="object-contain mt-2"
-            />
-            )}
+                {headerLogo ? (
+                  <Image
+                    src={headerLogo}
+                    alt={siteMeta.siteName || ""}
+                    width={140}
+                    height={90}
+                    className="object-contain mt-2"
+                    suppressHydrationWarning
+                  />
+                ) : null}
          
               </SheetHeader>
 
@@ -158,17 +175,19 @@ export function MobileHeader() {
           </Sheet>
          </div>
        
-          <div className="">
-       {!logosLoading && (
-            <Image
-              src={headerLogo}
-              alt={`${siteMeta.siteName}` || ""}
-              width={140}
-              height={90}
-              onClick={()=> router.push("/")}
-              className="object-contain"
-            />
-            )}
+          <div className="flex items-center">
+            {headerLogo ? (
+              <Image
+                src={headerLogo}
+                alt={siteMeta.siteName || ""}
+                width={140}
+                height={90}
+                onClick={() => router.push("/")}
+                className="object-contain cursor-pointer"
+                priority
+                suppressHydrationWarning
+              />
+            ) : null}
           </div>
 
           </div>
@@ -264,7 +283,7 @@ export function MobileHeader() {
       {/* Product Image */}
       <div className="w-16 h-16 flex-shrink-0 overflow-hidden relative">
         <Image
-          src={product.productImage || `${siteMeta.siteName}`}
+          src={product.productImage?.trim() || "/fevicon.png"}
           alt={product.name || ""}
           width={64}
           height={64}

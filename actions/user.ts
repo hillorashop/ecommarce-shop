@@ -1,3 +1,5 @@
+import { fetchWithAdminAuth } from "@/lib/admin-api";
+
 export type userInput = {
   name?: string;
   mobileNumber?: string;
@@ -27,7 +29,7 @@ export const getUser = async (token?:string): Promise<UserResponse> => {
 
     if (!token) return { success: false, error: "No token found" };
 
-    const res = await fetch(
+    const res = await fetchWithAdminAuth(
       `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/get-profile`,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +55,7 @@ export const updateUser = async (data: userInput): Promise<UserResponse> => {
     const token = localStorage.getItem("auth_token");
     if (!token) return { success: false, error: "No token found" };
 
-    const res = await fetch(
+    const res = await fetchWithAdminAuth(
       `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/update-profile`,
       {
         method: "PUT",

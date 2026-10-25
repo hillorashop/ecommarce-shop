@@ -11,23 +11,23 @@ interface Props {
 
 export const CategoryCard = ({ category }: Props) => {
   const { name, categoryImage, id, categoryUrl } = category;
-  const hasImage = Boolean(categoryImage);
+  const validImage = categoryImage?.trim();
+  const hasImage = Boolean(validImage);
 
   return (
-    <Link href={`/categories/${categoryUrl}`} className="w-full">
-      <Card className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow rounded-none">
+    <Link href={`/categories/${categoryUrl}`} className="w-full h-full block group">
+      <Card className="flex flex-col items-center p-4 cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 rounded-xl bg-white border border-gray-100 h-full justify-center">
         <CardContent className="flex flex-col items-center p-0">
-
           <div
             className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 
                        rounded-full overflow-hidden relative 
                        bg-gray-100
                        transition-transform duration-300 
-                       group-hover:scale-110 group-hover:shadow-lg"
+                       group-hover:scale-105 group-hover:shadow-md"
           >
-            {hasImage && (
+            {hasImage && validImage && (
               <Image
-                src={categoryImage}
+                src={validImage}
                 alt={name || ""}
                 fill
                 sizes="(max-width: 768px) 100vw, 200px"
@@ -39,8 +39,8 @@ export const CategoryCard = ({ category }: Props) => {
 
           <p
             className="mt-3 text-sm sm:text-base md:text-lg 
-                       font-medium text-gray-700 
-                       group-hover:text-primary group-hover:underline transition-colors text-center"
+                       font-semibold text-gray-900 
+                       group-hover:text-primary group-hover:underline transition-colors text-center line-clamp-1"
           >
             {name}
           </p>

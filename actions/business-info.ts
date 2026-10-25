@@ -1,12 +1,14 @@
 import { dbAbout, dbContactInfo, dbPrivacy, dbReturnPolicy } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type BusinessResponse = {
   data: dbContactInfo | null;
 };
 
 export const getBusinessInfo = async (): Promise<BusinessResponse> => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/business-info`
+  const res = await fetchWithAdminAuth(
+    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/business-info`,
+    { next: { revalidate: 3600 } }
   );
 
   if (!res.ok) throw new Error("Failed to load business info");
@@ -20,7 +22,7 @@ export type AboutResponse = {
 };
 
 export const getAboutInfo = async (): Promise<AboutResponse> => {
-  const res = await fetch(
+  const res = await fetchWithAdminAuth(
     `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/about`
   );
 
@@ -35,7 +37,7 @@ export type PrivacyPolicyResponse = {
 };
 
 export const getPrivacyPolicy = async (): Promise<PrivacyPolicyResponse> => {
-  const res = await fetch(
+  const res = await fetchWithAdminAuth(
     `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/privacy-policy`
   );
 
@@ -50,7 +52,7 @@ export type ReturnPolicyResponse = {
 };
 
 export const getReturnPolicy = async (): Promise<ReturnPolicyResponse> => {
-  const res = await fetch(
+  const res = await fetchWithAdminAuth(
     `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/return-policy`
   );
 
@@ -73,7 +75,7 @@ export type LogoResponse = {
 };
 
 export const getLogos = async (): Promise<LogoResponse> => {
-  const res = await fetch(
+  const res = await fetchWithAdminAuth(
     `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/logos`
   );
 

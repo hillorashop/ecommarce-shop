@@ -1,6 +1,7 @@
 "use client";
 
-import { useProducts } from "@/hooks/use-products";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getProducts, ProductsResponse } from "@/actions/product";
 import { ProductCard } from "@/components/ui/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,10 @@ import { trackEcommerceEvent } from "@/lib/custom-tm";
 import { getEffectivePrice } from "./best-selling-products";
 
 export function AllProducts() {
-  const { data: products, isLoading } = useProducts({ page: 1 });
+  const { data: products, isLoading } = useCustomQuery<ProductsResponse>(
+    ["products", 1],
+    () => getProducts(1)
+  );
   const [isClient, setIsClient] = useState(false);
     const skeletonCount = 8;
 
@@ -80,15 +84,23 @@ useEffect(() => {
                         
             "
           >
-            {isLoading
+            {!isClient || isLoading
               ? Array.from({ length: skeletonCount }).map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-60 w-full rounded-xl"
-                  />
+                  <div key={i} className="border border-gray-100 bg-white h-[380px] flex flex-col justify-between shadow-md rounded-none">
+                    <Skeleton className="w-full aspect-[4/4] rounded-none" />
+                    <div className="p-3 sm:p-4 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-5 w-1/3" />
+                      <Skeleton className="h-7 sm:h-8 w-full mt-2" />
+                      <Skeleton className="h-7 sm:h-8 w-full" />
+                    </div>
+                  </div>
                 ))
               : products?.data?.map((product, index) => (
-                  <ProductCard key={product.id || index} product={product} index={index}/>
+                  <div key={product.id || index} className="flex">
+                    <ProductCard product={product} index={index} className="w-full h-full shadow-md hover:shadow-xl" />
+                  </div>
                 ))}
           </div>
         </div>

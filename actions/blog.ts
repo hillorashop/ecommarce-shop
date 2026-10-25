@@ -1,6 +1,7 @@
 // actions/blog.ts
 
 import { dbBlog } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type BlogResponse = {
   data: dbBlog[];
@@ -21,7 +22,7 @@ export const getBlogs = async (page?: number): Promise<BlogResponse> => {
     url.searchParams.set("page", page.toString());
   }
 
-  const res = await fetch(url.toString());
+  const res = await fetchWithAdminAuth(url.toString());
 
   if (!res.ok) throw new Error("Failed to load blogs");
   return await res.json();
@@ -30,7 +31,7 @@ export const getBlogs = async (page?: number): Promise<BlogResponse> => {
 export const getBlogByUrl = async (blogUrl: string): Promise<SingleBlogResponse> => {
   const url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/blogs/${blogUrl}`;
 
-  const res = await fetch(url);
+  const res = await fetchWithAdminAuth(url);
 
   if (!res.ok) throw new Error("Failed to fetch blog");
   return res.json();
@@ -64,7 +65,7 @@ export const getBlogByUrl = async (blogUrl: string): Promise<SingleBlogResponse>
 //     url.search = params.toString();
 //   }
 
-//   const res = await fetch(url.toString());
+//   const res = await fetchWithAdminAuth(url.toString());
 
 //   if (!res.ok) throw new Error("Failed to load filtered blogs");
 //   return await res.json();
@@ -82,7 +83,7 @@ export const getBlogByUrl = async (blogUrl: string): Promise<SingleBlogResponse>
 //     url.searchParams.set("page", page.toString());
 //   }
 
-//   const res = await fetch(url.toString());
+//   const res = await fetchWithAdminAuth(url.toString());
 
 //   if (!res.ok) throw new Error("Failed to search blogs");
 //   return await res.json();

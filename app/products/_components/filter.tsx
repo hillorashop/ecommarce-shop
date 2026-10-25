@@ -17,7 +17,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tag} from "lucide-react";
-import { useCategories } from "@/hooks/use-categories";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getCategories, CategoriesResponse } from "@/actions/category";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
@@ -48,7 +49,10 @@ export const Filter = ({
 }:Props) => {
 
 
-      const { data: categories, isLoading } = useCategories();
+  const { data: categories, isLoading } = useCustomQuery<CategoriesResponse>(
+    ["categories"],
+    () => getCategories()
+  );
  // 👇 Local slider state
   const [price, setPrice] = useState<[number, number]>([minPrice, maxPrice]);
 

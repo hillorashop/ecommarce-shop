@@ -4,13 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { dbOrder, dbOrderItem } from "@/types/type";
 import { formatDate } from "@/lib/utils";
-import { useProducts } from "@/hooks/use-products";
 import { useRouter } from "next/navigation";
 import { siteMeta } from "@/data";
-import { dbProductwihtoutAll } from "@/actions/product";
-import { useBusinessInfo } from "@/hooks/use-business-info";
-import { useCustomQuery } from "@/hooks/use-custom-query";
-import { getLogos, LogoResponse } from "@/actions/business-info";
+import { dbProductwihtoutAll, getProducts, ProductsResponse } from "@/actions/product";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getLogos, getBusinessInfo, LogoResponse, BusinessResponse } from "@/actions/business-info";
 import NextImage from "next/image";
 
 interface Props {
@@ -32,8 +30,14 @@ const getShippingMethodLabel = (method?: string | null) => {
 
 export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
-  const { data: products } = useProducts();
-  const { data: businessInfo} = useBusinessInfo();
+  const { data: products } = useCustomQuery<ProductsResponse>(
+    ["products"],
+    () => getProducts()
+  );
+  const { data: businessInfo } = useCustomQuery<BusinessResponse>(
+    ["business-info"],
+    () => getBusinessInfo()
+  );
   const router = useRouter();
 
   const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
@@ -42,7 +46,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   )
   
     const headerLogo =
-      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "/logo.svg";
   
 
   const getStatusColor = (status: string) => {
@@ -135,13 +139,15 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
             gap: "6px",
           }}
         >
-          <img
-            src={headerLogo}
-            alt={siteMeta.siteName}
-            width={180}
-            height={80}
-            style={{ display: "block", margin: 0, objectFit: "contain" }}
-          />
+          {headerLogo ? (
+            <img
+              src={headerLogo}
+              alt={siteMeta.siteName}
+              width={180}
+              height={80}
+              style={{ display: "block", margin: 0, objectFit: "contain" }}
+            />
+          ) : null}
 
           <p style={{ margin: 0, fontSize: "12px" }}>
             {businessInfo?.data?.shopAddress || "KGC Building, 2nd Floor, Near Khagrachhari Gate, Khagrachhari Sadar"}

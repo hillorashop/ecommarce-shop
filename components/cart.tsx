@@ -144,7 +144,7 @@ export const Cart = () => {
                 >
 
                   <Image
-                    src={item.productImage}
+                    src={item.productImage?.trim() || "/fevicon.png"}
                     alt={item.name || ""}
                     width={64}
                     height={64}

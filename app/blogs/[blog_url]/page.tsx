@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: siteMeta.siteName,
       images: [
         {
-          url: blog.desktopCoverImage || `${siteMeta.siteName}.png`,
+          url: blog.desktopCoverImage || "/banners/hillora-meta.jpg",
           width: 1200,
           height: 630,
           alt: blog.title,
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: blog.metaTitle || blog.title,
       description: blog.metaDescription || blog.content.substring(0, 160),
-      images: [blog.desktopCoverImage || `${siteMeta.siteName}.png`],
+      images: [blog.desktopCoverImage || "/banners/hillora-meta.jpg"],
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/blogs/${blog.url}`,

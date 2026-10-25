@@ -1,6 +1,7 @@
 "use client";
 
-import { useBusinessInfo } from "@/hooks/use-business-info";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
 import React, { useState } from "react";
 import {
   WhatsAppSvg,
@@ -34,7 +35,10 @@ const ICONS = (whatsappNumber?: string, messengerUsername?: string, customerCare
 export const FloatingContactIcons: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const { data: businessInfo } = useBusinessInfo();
+  const { data: businessInfo } = useCustomQuery<BusinessResponse>(
+    ["business-info"],
+    () => getBusinessInfo()
+  );
 
   const icons = ICONS(
     businessInfo?.data?.whatsappNumber!,

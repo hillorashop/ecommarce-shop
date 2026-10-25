@@ -17,7 +17,8 @@ import {
 
 import {useState } from "react";
 import { dbProductwihtoutAll } from "@/actions/product";
-import { useCategoryProducts } from "@/hooks/use-categories";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getCategoryProducts, CategoryResponse } from "@/actions/category";
 import { getPaginationRange } from "@/lib/utils";
 
 interface Props {
@@ -36,15 +37,10 @@ export const CategoryProductsContent = ({
   categoryUrl,
 }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: category, isLoading } = useCategoryProducts({
-    categoryUrl,
-    page:currentPage,
-    sortBy,
-    sortOrder,
-    minPrice,
-    maxPrice,
-    
-});
+  const { data: category, isLoading } = useCustomQuery<CategoryResponse>(
+    ['category-products', categoryUrl, currentPage, sortBy, sortOrder, minPrice, maxPrice],
+    () => getCategoryProducts(categoryUrl, currentPage, sortBy, sortOrder, undefined, minPrice, maxPrice)
+  );
 
   const goToPage = (page: number) => {
     setCurrentPage(page);

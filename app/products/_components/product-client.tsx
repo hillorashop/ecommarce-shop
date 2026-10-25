@@ -8,17 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
-import { useProducts } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ONE_DAY, siteMeta } from "@/data";
-import { useCustomQuery } from "@/hooks/use-custom-query";
-import { dbProductwihtoutAll, getProduct, ProductResponse } from "@/actions/product";
+import { useCustomQuery } from "@/hooks/use-query";
+import { dbProductwihtoutAll, getProduct, getProducts, ProductResponse, ProductsResponse } from "@/actions/product";
+import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
 import { pushToDataLayer } from "@/lib/gtm";
 import { trackEcommerceEvent } from "@/lib/custom-tm";
 import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
-import { useBusinessInfo } from "@/hooks/use-business-info";
 
 interface Props {
   productUrl: string;
@@ -27,13 +26,19 @@ interface Props {
 
 export const ProductClient = ({ productUrl, fbclid }: Props) => {
   const { cartItems, addItem } = useCart();
-  const { data: products, isLoading: productLoading } = useProducts({ page: 1 });
+  const { data: products, isLoading: productLoading } = useCustomQuery<ProductsResponse>(
+    ["products", 1],
+    () => getProducts(1)
+  );
   const [quantity, setQuantity] = useState(1);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState<boolean>(true);
   const router = useRouter();
-  const { data: businessInfo } = useBusinessInfo();
+  const { data: businessInfo } = useCustomQuery<BusinessResponse>(
+    ["business-info"],
+    () => getBusinessInfo()
+  );
 
   const { data: product, isLoading } = useCustomQuery<ProductResponse>(
     ["product", productUrl],
@@ -97,10 +102,10 @@ useEffect(() => {
 
   const mergedMedia = useMemo(() => {
     if (!product) return [];
-    const gallery = product.data.gallery || [];
-    return product.data.productImage
-      ? [product.data.productImage, ...gallery.filter((g) => g !== product.data.productImage)]
-      : gallery;
+    const gallery = (product.data.gallery || []).filter((g): g is string => Boolean(g && g.trim() !== ""));
+    const pImg = product.data.productImage?.trim();
+    const list = pImg ? [pImg, ...gallery.filter((g) => g !== pImg)] : gallery;
+    return list.length > 0 ? list : ["/fevicon.png"];
   }, [product]);
 
 useEffect(() => {

@@ -1,11 +1,12 @@
 import { dbDeliveryCharge } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type DeliveryChargeResponse = {
   data: dbDeliveryCharge | null;
 };
 
 export const getDeliveryCharges = async (): Promise<DeliveryChargeResponse> => {
-  const res = await fetch(
+  const res = await fetchWithAdminAuth(
     `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/delivery-charges`
   );
 

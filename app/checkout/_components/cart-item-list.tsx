@@ -41,8 +41,8 @@ export const CartItemList: React.FC<CartItemListProps> = ({ isLoading, checkoutI
         return (
           <div key={item.cartKey} className="flex items-center gap-4 border-b pb-3">
             <Image
-              src={item.productImage}
-              alt={item.name}
+              src={item.productImage?.trim() || "/fevicon.png"}
+              alt={item.name || ""}
               width={64}
               height={64}
               className="rounded-md object-cover border"

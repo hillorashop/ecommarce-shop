@@ -1,4 +1,5 @@
 import { dbOrder } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type orderInput = {     
   paymentMethod: string;
@@ -69,7 +70,7 @@ export type GetOrdersResponse = {
 
 
 export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`, {
+  const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -102,7 +103,7 @@ export const getOrders = async (
       url.searchParams.set("userId", userId);
     }
 
-    const res = await fetch(url.toString(), {
+    const res = await fetchWithAdminAuth(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

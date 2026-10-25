@@ -1,7 +1,8 @@
 'use client';
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBlogs } from "@/hooks/use-blogs";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getBlogs, BlogResponse } from "@/actions/blog";
 import { dbBlog } from "@/types/type";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,7 +29,10 @@ export const BlogContent = ({ initialPage }: Props) => {
   const currentPage = Number(pageStr) || initialPage;
   const router = useRouter(); 
   const pathname = usePathname();  
-  const { data: blogs, isLoading } = useBlogs(currentPage);
+  const { data: blogs, isLoading } = useCustomQuery<BlogResponse>(
+    ["blogs", currentPage],
+    () => getBlogs(currentPage)
+  );
 
     const goToPage = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());

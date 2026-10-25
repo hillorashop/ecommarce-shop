@@ -10,7 +10,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Loader2, Tag, X, CheckCircle2 } from "lucide-react";
-import { useCouponCodes } from "@/hooks/use-coupon-codes";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getCouponCodes, CouponCodesResponse } from "@/actions/coupon";
 import { CartItem } from "@/hooks/use-store";
 
 export type CouponResult = {
@@ -37,7 +38,10 @@ export const CouponInput: React.FC<CouponInputProps> = ({
 }) => {
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState<string | null>(null);
-  const { data: couponRes, isLoading: isLoadingCoupons } = useCouponCodes();
+  const { data: couponRes, isLoading: isLoadingCoupons } = useCustomQuery<CouponCodesResponse>(
+    ["coupon-codes"],
+    () => getCouponCodes()
+  );
 
   const handleApplyCoupon = () => {
     const code = couponCode.trim();

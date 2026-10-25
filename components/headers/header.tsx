@@ -5,34 +5,50 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useProducts } from "@/hooks/use-products";
+import { getProducts, ProductsResponse } from "@/actions/product";
 import { Card } from "@/components/ui/card";
 import {siteMeta } from "@/data";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCustomQuery } from "@/hooks/use-custom-query";
-import { getLogos, LogoResponse } from "@/actions/business-info";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getLogos, LogoData, LogoResponse } from "@/actions/business-info";
 
+interface HeaderProps {
+  initialLogos?: LogoData | null;
+}
 
-
-export function Header() {
+export function Header({ initialLogos }: HeaderProps) {
   const [productName, setProductName] = useState("");
   const [debouncedProductName, setDebouncedProductName] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const { data: products } = useProducts({
-    productName: debouncedProductName,
-    enabled: debouncedProductName.length > 0,
-  });
+  const { data: products } = useCustomQuery<ProductsResponse>(
+    ["products", debouncedProductName],
+    () => getProducts(undefined, undefined, undefined, debouncedProductName),
+    { enabled: debouncedProductName.length > 0 }
+  );
   const searchResults = products?.data ?? [];
   const [showHeader, setShowHeader] = useState(true);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data: logos, isLoading: logosLoading } = useCustomQuery<LogoResponse>(
+  const { data: logos } = useCustomQuery<LogoResponse>(
     ["get-logos"],
-    () => getLogos()
+    () => getLogos(),
+    initialLogos
+      ? {
+          initialData: {
+            status: 200,
+            message: "OK",
+            data: initialLogos,
+          },
+        }
+      : undefined
   );
 
   const headerLogo =
-    logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+    logos?.data?.primaryLogo?.trim() ||
+    logos?.data?.secondaryLogo?.trim() ||
+    initialLogos?.primaryLogo?.trim() ||
+    initialLogos?.secondaryLogo?.trim() ||
+    "/logo.svg";
 
   useEffect(() => {
     const timeout = window.setTimeout(
@@ -77,18 +93,19 @@ export function Header() {
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
 
-<div className="">
-       {!logosLoading && (
-  <Image
-  onClick={()=> router.push("/")}
-    src={headerLogo}
-    width={190}
-    height={80}
-    alt={siteMeta.siteName || ""}
-    className="object-contain cursor-pointer"
-  />
-  )}
-
+<div className="flex items-center">
+  {headerLogo ? (
+    <Image
+      onClick={() => router.push("/")}
+      src={headerLogo}
+      width={190}
+      height={80}
+      alt={siteMeta.siteName || ""}
+      className="object-contain cursor-pointer"
+      priority
+      suppressHydrationWarning
+    />
+  ) : null}
 </div>
 
   {/* Search (center) */}
@@ -142,7 +159,7 @@ export function Header() {
               >
                 <div className="w-14 h-14 flex-shrink-0 relative">
                   <Image
-                    src={product.productImage || `${siteMeta.siteName}`}
+                    src={product.productImage?.trim() || "/fevicon.png"}
                     alt={product.name || ""}
                     width={56}
                     height={56}

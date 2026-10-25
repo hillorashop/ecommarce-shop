@@ -2,7 +2,8 @@
 
 import { CategoryCard } from "@/components/ui/category-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCategories } from "@/hooks/use-categories";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getCategories, CategoriesResponse } from "@/actions/category";
 import { dbCategory } from "@/types/type";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -29,7 +30,10 @@ export const CategoryContent = ({ initialPage }: Props) => {
   const currentPage = Number(pageStr) || initialPage;
   const router = useRouter();
   const pathname = usePathname();
-  const { data: categories, isLoading} = useCategories(currentPage);
+  const { data: categories, isLoading } = useCustomQuery<CategoriesResponse>(
+    ["categories", currentPage],
+    () => getCategories(currentPage)
+  );
 
     const goToPage = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());

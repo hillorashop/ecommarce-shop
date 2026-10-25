@@ -28,6 +28,7 @@ import { siteMeta } from "@/data";
 import { SiGnuprivacyguard } from "react-icons/si";
 import { getLogos, LogoResponse } from "@/actions/business-info";
 import { useCustomQuery } from "@/hooks/use-custom-query";
+import { getAdminApiHeaders } from "@/lib/admin-api";
 
 export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -45,7 +46,7 @@ export function AuthForm() {
       () => getLogos()
   )
     const headerLogo =
-      logos?.data?.primaryLogo || logos?.data?.secondaryLogo || "/logo.svg";
+      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "/logo.svg";
 
 
     const registerForm = useForm<z.infer <typeof registerSchema>>({
@@ -72,7 +73,11 @@ export function AuthForm() {
       setIsLoading(true);
       setLoginError("");
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/login`, values);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/login`,
+        values,
+        { headers: getAdminApiHeaders() }
+      );
 
       if (res.status === 200 && res.data.token) {
         localStorage.setItem("auth_token", res.data.token);
@@ -104,6 +109,7 @@ const registerSubmit = async (values: z.infer<typeof registerSchema>) => {
     }, {
       headers: {
         "Content-Type": "application/json",
+        ...getAdminApiHeaders(),
       },
     });
 
@@ -133,9 +139,12 @@ const registerSubmit = async (values: z.infer<typeof registerSchema>) => {
       setIsLoading(true);
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMIN_URL}/api/user/verify-otp`,
+        `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/user/verify-otp`,
         { email: userEmail, otp },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: getAdminApiHeaders(),
+        }
       );
 
       if (res.status === 200 && res.data.token) {
@@ -181,15 +190,16 @@ const providerSubmit = (provider: "google" | "facebook") => {
 
 
 <div className="text-center mb-6 lg:mb-8 relative mt-9">
-  {!logosLoading && (
+  {headerLogo ? (
     <Image
       src={headerLogo}
       width={150}
       height={80}
       alt={siteMeta.siteName || ""}
       className="object-contain mx-auto mb-4"
+      suppressHydrationWarning
     />
-  )}
+  ) : null}
 
   <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome Back</h2>
   <p className="text-gray-600 font-medium text-sm">Sign in to your account or create a new one</p>

@@ -1,5 +1,6 @@
 
 import { dbCategory, dbProduct } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type CategoriesResponse = {
   data: dbCategory[];
@@ -25,7 +26,7 @@ export const getCategories = async (page?: number): Promise<CategoriesResponse> 
     url.searchParams.set("page", page.toString());
   }
 
-  const res = await fetch(url.toString());
+  const res = await fetchWithAdminAuth(url.toString());
 
   if (!res.ok) throw new Error("Failed to load categories");
   return await res.json();
@@ -55,7 +56,7 @@ export const getCategoryProducts = async (
 
     if ([...params].length > 0) url += `?${params.toString()}`;
 
-  const res = await fetch(url);
+  const res = await fetchWithAdminAuth(url);
   if (!res.ok) throw new Error("Failed to fetch category");
   return res.json();
 };

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import "keen-slider/keen-slider.min.css";
 import { Navbar } from "@/components/headers/navbar";
 import { Footer } from "@/components/footer/footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,13 +16,15 @@ import {
   CartWidget,
   FooterWidgets,
 } from "@/components/layout/client-widgets";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
+import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
 
 
 const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-open-sans",
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 type SiteLogos = {
@@ -32,7 +35,7 @@ type SiteLogos = {
 
 const getSiteLogos = async (): Promise<SiteLogos | null> => {
   try {
-    const res = await fetch(
+    const res = await fetchWithAdminAuth(
       `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/logos`,
       { next: { revalidate: 3600 } }
     );
@@ -43,6 +46,15 @@ const getSiteLogos = async (): Promise<SiteLogos | null> => {
     return json?.data ?? null;
   } catch (error) {
     console.error("Failed to load site logos:", error);
+    return null;
+  }
+};
+
+const getInitialBusinessInfo = async (): Promise<BusinessResponse | null> => {
+  try {
+    return await getBusinessInfo();
+  } catch (error) {
+    console.error("Failed to load business info:", error);
     return null;
   }
 };
@@ -77,9 +89,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: `${siteMeta.openGraph.image}`,
+          url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/hillorabd.jpg`,
           width: 1200,
           height: 630,
+          alt: siteMeta.siteName,
         },
       ],
     },
@@ -101,7 +114,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const logos = await getSiteLogos();
+  const [logos, businessInfo] = await Promise.all([
+    getSiteLogos(),
+    getInitialBusinessInfo(),
+  ]);
 
   return (
     <html lang="bn" suppressHydrationWarning>
@@ -151,12 +167,12 @@ export default async function RootLayout({
             <TrackingProvider>
               <UserProvider>
                 <main className="max-w-7xl mx-auto">
-                  <Navbar />
+                  <Navbar initialLogos={logos} />
                   <div className="mt-16 lg:mt-34">
                     {children}
                     <CartWidget />
                   </div>
-                  <Footer />
+                  <Footer initialLogos={logos} initialBusinessInfo={businessInfo?.data} />
                 </main>
                 <Toaster />
                 <FooterWidgets />

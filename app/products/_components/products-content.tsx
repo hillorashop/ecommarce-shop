@@ -3,7 +3,8 @@
 
 import { ProductCard } from "@/components/ui/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProducts } from "@/hooks/use-products";
+import { useCustomQuery } from "@/hooks/use-query";
+import { getProducts, ProductsResponse } from "@/actions/product";
 import {
   Pagination,
   PaginationContent,
@@ -36,15 +37,10 @@ export const ProductsContent = ({
   productName
 }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: products, isLoading } = useProducts({
-    page:currentPage,
-    sortBy,
-    sortOrder,
-    productName,
-    minPrice,
-    maxPrice,
-    categoryIds
-});
+  const { data: products, isLoading } = useCustomQuery<ProductsResponse>(
+    ['products', currentPage, sortBy, sortOrder, productName, minPrice, maxPrice, categoryIds?.join(',')],
+    () => getProducts(currentPage, sortBy, sortOrder, productName, minPrice, maxPrice, categoryIds)
+  );
 
   const goToPage = (page: number) => {
     setCurrentPage(page);

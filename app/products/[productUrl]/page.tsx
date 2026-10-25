@@ -37,7 +37,7 @@ export async function generateMetadata({ params}: Props): Promise<Metadata> {
       siteName: siteMeta.siteName,
       images: [
         {
-          url: product.productImage || `${siteMeta.siteName}.png`,
+          url: product.productImage || "/fevicon.png",
           width: 800,
           height: 600,
           alt: product.name,
@@ -70,7 +70,7 @@ const ProductUrlPage = async ({ params}: Props) => {
             "@context": "https://schema.org",
             "@type": "Product",
             name: product.name,
-            image: [product.productImage || `/${siteMeta.siteName}.png`],
+            image: [product.productImage || "/fevicon.png"],
             description: product.description,
             sku: product.id,
             brand: { "@type": "Brand", name: siteMeta.siteName },

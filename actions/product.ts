@@ -1,4 +1,5 @@
 import { dbProduct, dbCategory, dbReview, UnitPricing } from "@/types/type";
+import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type dbProductwihtoutAll = {
 
@@ -53,7 +54,7 @@ export const getProducts = async (
 
   if ([...params].length > 0) url += `?${params.toString()}`;
 
-  const res = await fetch(url);
+  const res = await fetchWithAdminAuth(url);
 
   if (!res.ok) throw new Error("Failed to load Products");
 
@@ -68,7 +69,7 @@ export type ProductResponse = {
 };
 
 export const getProduct = async (productUrl: string): Promise<ProductResponse> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/${productUrl}`);
+  const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/${productUrl}`);
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
 };
@@ -80,7 +81,7 @@ export type BestSellingProductResponse = {
 };
 
 export const getBestSellingProducts = async ():Promise<BestSellingProductResponse> => {
-const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/best-selling-products`);
+const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/best-selling-products`);
   if (!res.ok) throw new Error("Failed to fetch best selling product");
   return res.json();
 }

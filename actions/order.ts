@@ -1,31 +1,33 @@
 import { dbOrder } from "@/types/type";
 import { fetchWithAdminAuth } from "@/lib/admin-api";
 
-export type orderInput = {     
-  paymentMethod: string;
+export type orderInput = {
+  existingOrderId?: string | null;
+  status?: "PENDING" | "FAILED" | string;
+  paymentMethod?: string;
   name: string;
   mobileNumber: string;
-  address: string;
-  total: number;
-  totalDiscount: number;
+  address?: string;
+  total?: number;
+  totalDiscount?: number;
   transactionId?: string | null;
   userId?: string | null;
 
-  shippingMethod?:string | null;
-  shippingCost?:number | null;
+  shippingMethod?: string | null;
+  shippingCost?: number | null;
 
-  couponCode?:string | null;
-  couponDiscount?:number | null;
+  couponCode?: string | null;
+  couponDiscount?: number | null;
 
-  email?:string | null;
-  orderFor?:string | null;
-  zilla?:string | null;
-  thana?:string | null;
-  specialNote?:string | null; 
+  email?: string | null;
+  orderFor?: string | null;
+  zilla?: string | null;
+  thana?: string | null;
+  specialNote?: string | null; 
 
-  fbc?:string | null;
-  fbp?:string | null;
-  ttpCookie?:   string | null;
+  fbc?: string | null;
+  fbp?: string | null;
+  ttpCookie?: string | null;
   ttclidValue?: string | null;
   gclid?: string | null;
   
@@ -45,13 +47,15 @@ export type orderInput = {
   irclickid?: string | null;
   awc?: string | null;
 
-  orderItems:orderInputItems[]
+  orderItems: orderInputItems[];
 };
 
 export type orderInputItems = {
-  productId:string
-  quantity:number
-}
+  productId: string;
+  quantity: number;
+  variant?: string | null;
+  price?: number | null;
+};
 export type OrderResponse = {
   data:dbOrder;
 };

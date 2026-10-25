@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { CartItem, useCart } from "@/hooks/use-store";
 import { getProducts, ProductsResponse } from "@/actions/product";
 import { InvoiceOrder } from "./invoice-order";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
 import { useCustomQuery } from "@/hooks/use-query";
 import { useCustomMutation } from "@/hooks/use-mutation";
-import { postOrder } from "@/actions/order";
+import { postOrder, orderInput } from "@/actions/order";
 import { pushToDataLayer } from "@/lib/gtm";
 import {  siteMeta } from "@/data";
 import { dbOrder } from "@/types/type";
@@ -42,6 +42,27 @@ export const CheckoutContent = () => {
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
   const { user } = useUser();
+
+  const [failedOrderId, setFailedOrderId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return sessionStorage.getItem("hillora_failed_order_id");
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+  const failedOrderIdRef = useRef<string | null>(failedOrderId);
+
+  useEffect(() => {
+    failedOrderIdRef.current = failedOrderId;
+    if (failedOrderId) {
+      try {
+        sessionStorage.setItem("hillora_failed_order_id", failedOrderId);
+      } catch {}
+    }
+  }, [failedOrderId]);
 
   const [appliedCoupon, setAppliedCoupon] = useState<CouponResult | null>(null);
   const { data: deliveryChargeRes } = useCustomQuery<DeliveryChargeResponse>(
@@ -198,6 +219,11 @@ const hasFreeDelivery = useMemo(() => {
     ["ordersByUser", user?.id],
     (newOrder) => {
       setOrderResponse(newOrder.data);
+      setFailedOrderId(null);
+      failedOrderIdRef.current = null;
+      try {
+        sessionStorage.removeItem("hillora_failed_order_id");
+      } catch {}
       clearCart();
       router.replace(pathname, { scroll: false });
     }
@@ -365,6 +391,138 @@ const hasFreeDelivery = useMemo(() => {
     }
   }, [user]);
 
+  const watchedName = form.watch("name");
+  const watchedMobile = form.watch("mobileNumber");
+  const watchedAddress = form.watch("address");
+  const watchedZilla = form.watch("zilla");
+  const watchedThana = form.watch("thana");
+  const watchedOrderFor = form.watch("orderFor");
+  const watchedSpecialNote = form.watch("specialNote");
+
+  const isNameValid = Boolean(watchedName && watchedName.trim().length >= 2);
+  const isMobileValid = Boolean(
+    watchedMobile && /^(?:\+88)?01[3-9]\d{8}$/.test(watchedMobile.trim())
+  );
+  const hasItems = checkoutItems.length > 0;
+
+  useEffect(() => {
+    if (!isNameValid || !isMobileValid || !hasItems || orderResponse) {
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const draftData: orderInput = {
+          existingOrderId: failedOrderIdRef.current || undefined,
+          status: "FAILED",
+          userId: user?.id,
+          name: watchedName.trim(),
+          mobileNumber: watchedMobile.trim(),
+          address: watchedAddress?.trim() || "Incomplete Checkout",
+          orderFor: watchedOrderFor || "self",
+          zilla: watchedZilla || null,
+          thana: watchedThana || null,
+          specialNote: watchedSpecialNote || null,
+          paymentMethod: selectedPayment || "cod",
+          shippingMethod: selectedShipping.id || null,
+          shippingCost,
+          couponCode: appliedCoupon?.code ?? null,
+          couponDiscount,
+          totalDiscount,
+          total,
+          fbc,
+          fbp,
+          ttpCookie,
+          ttclidValue,
+          gclid,
+          li_fat_id,
+          gbraid,
+          wbraid,
+          dclid,
+          uuid,
+          msclkid,
+          fbclid,
+          twclid,
+          rdt_cid,
+          epik,
+          ScCid,
+          sccid,
+          qclid,
+          irclickid,
+          awc,
+          orderItems: checkoutItems.map((item) => {
+            const hasDiscount =
+              item.discountPrice &&
+              item.discountPrice > 0 &&
+              item.discountPrice < item.price;
+            const variant =
+              item.selectedUnit && item.unitLabel
+                ? `${item.selectedUnit}${item.unitLabel}`
+                : "default";
+
+            return {
+              productId: item.id,
+              quantity: item.cartQuantity,
+              price: hasDiscount ? item.discountPrice! : item.price,
+              variant,
+            };
+          }),
+        };
+
+        const res = await postOrder(draftData);
+        if (res?.data?.id) {
+          failedOrderIdRef.current = res.data.id;
+          setFailedOrderId(res.data.id);
+        }
+      } catch (err) {
+        console.warn("Auto-save failed order notice:", err);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [
+    isNameValid,
+    isMobileValid,
+    hasItems,
+    orderResponse,
+    watchedName,
+    watchedMobile,
+    watchedAddress,
+    watchedZilla,
+    watchedThana,
+    watchedOrderFor,
+    watchedSpecialNote,
+    selectedPayment,
+    selectedShipping.id,
+    shippingCost,
+    appliedCoupon?.code,
+    couponDiscount,
+    totalDiscount,
+    total,
+    checkoutItems,
+    user?.id,
+    fbc,
+    fbp,
+    ttpCookie,
+    ttclidValue,
+    gclid,
+    li_fat_id,
+    gbraid,
+    wbraid,
+    dclid,
+    uuid,
+    msclkid,
+    fbclid,
+    twclid,
+    rdt_cid,
+    epik,
+    ScCid,
+    sccid,
+    qclid,
+    irclickid,
+    awc,
+  ]);
+
   const handlePlaceOrder = async (data: ShippingForm) => {
     if (!selectedPayment) return;
 
@@ -397,7 +555,9 @@ const hasFreeDelivery = useMemo(() => {
     pushToDataLayer("add_shipping_info", ecommerce);
     trackEcommerceEvent("add_shipping_info", ecommerce);
 
-    const orderData = {
+    const orderData: orderInput = {
+      existingOrderId: failedOrderIdRef.current || failedOrderId || undefined,
+      status: "PENDING",
       userId: user?.id,
       fbc,
       fbp,

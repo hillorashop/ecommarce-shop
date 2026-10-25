@@ -22,7 +22,7 @@ import { ReturnMessage } from "./return-message"
 
 interface TimelineStep {
   label: string
-  status: "PENDING" | "PROCESSING" | "SHIPPED" | "NEARBY" | "COMPLETED" | "CANCELLED" | "RETURNED" | "CONFIRM"
+  status: dbOrder["status"]
   timestamp: string
   description: string
   icon: React.ReactNode
@@ -120,7 +120,7 @@ const getStepsWithDisplayStatus = (steps: TimelineStep[], currentStatus: Timelin
   const currentIndex = steps.findIndex(step => step.status === currentStatus)
 
   return steps.map((step, index) => {
-    if (currentStatus === "CANCELLED") 
+    if (currentStatus === "CANCELLED" || currentStatus === "FAILED") 
       return { ...step, displayStatus: step.status === "CANCELLED" ? "cancelled" : "upcoming" }
     if (index < currentIndex) return { ...step, displayStatus: "completed" }
     if (index === currentIndex) return { ...step, displayStatus: "active" }

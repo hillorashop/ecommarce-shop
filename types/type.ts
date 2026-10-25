@@ -131,7 +131,7 @@ export type dbOrder = {
   mobileNumber: string;
   address: string;
   accountType: string;
-  status: "PENDING" | "PROCESSING" | "SHIPPED" | "NEARBY" | "COMPLETED" | "CANCELLED" | "RETURNED" | "CONFIRM";
+  status: "PENDING" | "PROCESSING" | "SHIPPED" | "NEARBY" | "COMPLETED" | "CANCELLED" | "RETURNED" | "CONFIRM" | "FAILED";
   total: number;
   orderFor?:string | null;
   email?:string | null;

@@ -41,7 +41,7 @@ export async function GET() {
     .map(
       (p) => `
       <url>
-        <loc>${baseUrl}/products/${p.id}</loc>
+        <loc>${baseUrl}/products/${p.productUrl}</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>`

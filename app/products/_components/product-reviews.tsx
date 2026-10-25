@@ -278,7 +278,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 </p>
                 <div className="pt-2">
                   <Button asChild>
-                    <Link href={`/sign-in?callbackUrl=/products/${productId}`}>
+                    <Link href={`/sign-up`}>
                       রিভিউ দিতে লগইন করুন
                     </Link>
                   </Button>

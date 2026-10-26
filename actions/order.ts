@@ -83,8 +83,15 @@ export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
   });
 
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to submit order: ${errorText}`);
+    let errorMsg = "Failed to submit order";
+    try {
+      const errJson = await res.json();
+      errorMsg = errJson.message || errJson.error || errorMsg;
+    } catch {
+      const errorText = await res.text();
+      errorMsg = errorText || errorMsg;
+    }
+    throw new Error(errorMsg);
   }
 
   return await res.json();

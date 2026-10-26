@@ -77,7 +77,7 @@ export const ProductReviewSnippet: React.FC<ProductReviewSnippetProps> = ({
       <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-amber-200/50 dark:border-border">
         <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
           <MessageSquareQuote className="size-3.5 text-primary" />
-          <span>Recent Buyer Reviews</span>
+          <span>Recent Customers Reviews</span>
         </div>
 
         <div className="flex items-center gap-2">

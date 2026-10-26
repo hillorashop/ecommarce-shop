@@ -41,11 +41,13 @@ export const HeroSection = () => {
         setActiveIndex(slider.track.details.rel);
       },
     },
-    canLoop ? [AutoplayPlugin(4000, true)] : []
+    [AutoplayPlugin(4000, true)]
   );
 
   useEffect(() => {
-    instanceRef.current?.update();
+    instanceRef.current?.update({
+      loop: items.length > 1,
+    });
   }, [items, instanceRef]);
 
   return (

@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { ProductReviews } from "./product-reviews";
+import { ProductReviewSnippet } from "./product-review-snippet";
 import { useQuery } from "@tanstack/react-query";
 import { getProductReviews, ProductReviewsResponse } from "@/actions/review";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -92,6 +93,14 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("description");
+
+  const handleOpenReviewsTab = () => {
+    setActiveTab("reviews");
+    const el = document.getElementById("product-tabs-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
 useEffect(() => {
   if (hasUnits && unitData?.entries[0][0]) {
@@ -380,7 +389,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           {reviewCount > 0 && (
             <div
               className="flex items-center gap-2 cursor-pointer hover:opacity-85 transition-opacity"
-              onClick={() => setActiveTab("reviews")}
+              onClick={handleOpenReviewsTab}
             >
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
@@ -398,6 +407,15 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
                 {averageRating > 0 ? averageRating.toFixed(1) : ""} ({reviewCount} reviews)
               </span>
             </div>
+          )}
+
+          {/* Under rating: Fiverr-style review snippet carousel */}
+          {reviewCount > 0 && reviewsResponse?.data && reviewsResponse.data.length > 0 && (
+            <ProductReviewSnippet
+              reviews={reviewsResponse.data.slice(0, 4)}
+              totalReviews={reviewCount}
+              onSeeAll={handleOpenReviewsTab}
+            />
           )}
 
           {hasUnits && (
@@ -504,7 +522,12 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs
+        id="product-tabs-section"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full scroll-mt-24"
+      >
         <TabsList className="grid w-full grid-cols-2 max-w-md gap-4">
           <TabsTrigger value="description">Description</TabsTrigger>
           <TabsTrigger value="reviews">All Reviews ({reviewCount})</TabsTrigger>

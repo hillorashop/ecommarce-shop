@@ -7,10 +7,9 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
+
   Quote,
-  ShieldCheck,
-  PackageCheck,
+
 } from "lucide-react";
 import { useCustomQuery } from "@/hooks/use-query";
 import { getLatestReviews, ProductReviewsResponse } from "@/actions/review";

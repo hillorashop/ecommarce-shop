@@ -37,7 +37,12 @@ function getCookie(name: string) {
 }
 
 export const CheckoutContent = () => {
+  const [mounted, setMounted] = useState(false);
   const { cartItems, clearCart } = useCart();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const { data: products, isLoading } = useCustomQuery<ProductsResponse>(
     ["products"],
     () => getProducts()
@@ -628,6 +633,22 @@ const hasFreeDelivery = useMemo(() => {
 
   if (orderResponse) return <InvoiceOrder order={orderResponse} />;
 
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">Cart & Shipping & Payment</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <CartItemList isLoading={true} checkoutItems={[]} />
+            </div>
+            <div className="p-8 border rounded-xl animate-pulse bg-muted/20 min-h-[300px]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -678,7 +699,11 @@ const hasFreeDelivery = useMemo(() => {
     
       </div>
 
-      {error && <p className="text-red-500 font-semibold">{error}</p>}
+      {error && (
+        <p className="text-red-500 font-semibold">
+          {error instanceof Error ? error.message : typeof error === "string" ? error : "An error occurred"}
+        </p>
+      )}
     </div>
   );
 };

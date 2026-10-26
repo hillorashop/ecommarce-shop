@@ -59,6 +59,26 @@ export const getProductReviews = async (
   return res.json();
 };
 
+export const getLatestReviews = async (
+  page = 1,
+  limit = 12
+): Promise<ProductReviewsResponse> => {
+  const adminUrl = getAdminBaseUrl();
+  const url = `${adminUrl}/api/reviews?page=${page}&limit=${limit}`;
+
+  const res = await fetchWithAdminAuth(url, {
+    next: { revalidate: 60 },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || "Failed to load reviews");
+  }
+
+  return res.json();
+};
+
 export const uploadReviewImages = async (files: File[]): Promise<string[]> => {
   if (files.length === 0) return [];
 

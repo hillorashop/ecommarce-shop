@@ -3,6 +3,7 @@ import { PromotionalBanners } from "@/components/sections/promotional-banners";
 import { TopCategories } from "@/components/sections/top-categories";
 import { AllProducts } from "@/components/sections/all-products";
 import { BestSellingProducts } from "@/components/sections/best-selling-products";
+import { ClientReviewsSection } from "@/components/sections/client-reviews-section";
 import { BlogsSection } from "@/components/sections/blogs-section";
 import { getPromotionalBanner } from "@/actions/promotional-banner";
 
@@ -16,6 +17,7 @@ export default async function HomePage() {
       <TopCategories />
       <PromotionalBanners initialBanner={initialBanner?.data} />
       <AllProducts />
+      <ClientReviewsSection />
       <BlogsSection />
     </div>
   );

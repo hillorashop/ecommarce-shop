@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCustomQuery } from "@/hooks/use-query";
 import { getBlogs, BlogResponse } from "@/actions/blog";
@@ -55,7 +56,10 @@ export const BlogsSection = () => {
     return (
       <section className="py-6 lg:py-10 w-full">
         <HeadingTitle title="Latest Blogs" />
-        <div className="relative mt-8 px-6 sm:px-10 lg:px-12">
+        <div className="px-6 sm:px-10 lg:px-12 mt-2 sm:mt-4 flex items-center justify-start">
+          <Skeleton className="h-5 w-24 rounded" />
+        </div>
+        <div className="relative mt-2 px-6 sm:px-10 lg:px-12">
           <div className="keen-slider py-4 px-1 gap-3 sm:gap-4 lg:gap-5">
             {Array.from({ length: 3 }).map((_, i) => (
               <div
@@ -84,7 +88,16 @@ export const BlogsSection = () => {
   return (
     <section className="py-6 lg:py-10 w-full">
       <HeadingTitle title="Latest Blogs" />
-      <div className="relative mt-8 px-6 sm:px-10 lg:px-12">
+      <div className="px-6 sm:px-10 lg:px-12 mt-2 sm:mt-4 flex items-center justify-start">
+        <Link
+          href="/blogs"
+          className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-primary hover:text-primary/80 transition-colors group"
+        >
+          <span>All Blogs</span>
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Link>
+      </div>
+      <div className="relative mt-2 px-6 sm:px-10 lg:px-12">
         <div ref={sliderRef} className="keen-slider py-4 px-1">
           {items.map((blog: dbBlog) => (
             <div key={blog.id} className="keen-slider__slide p-1 flex flex-col">

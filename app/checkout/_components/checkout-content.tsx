@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
 import { useCustomQuery } from "@/hooks/use-query";
 import { useCustomMutation } from "@/hooks/use-mutation";
-import { postOrder, orderInput } from "@/actions/order";
+import { postOrder, getOrderById, orderInput } from "@/actions/order";
 import { pushToDataLayer } from "@/lib/gtm";
 import {  siteMeta } from "@/data";
 import { dbOrder } from "@/types/type";
@@ -39,6 +39,14 @@ function getCookie(name: string) {
 export const CheckoutContent = () => {
   const [mounted, setMounted] = useState(false);
   const { cartItems, clearCart } = useCart();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const unitParam = searchParams.get("unit");
+  const productId = searchParams.get("productId");
+  const qty = searchParams.get("qty");
+  const successOrderId = searchParams.get("orderNumber") || searchParams.get("orderId");
+
 
   useEffect(() => {
     setMounted(true);
@@ -59,6 +67,24 @@ export const CheckoutContent = () => {
     ["business-info"],
     () => getBusinessInfo()
   );
+
+  // Fetch existing order if URL has orderNumber (persists across reload)
+  const { data: existingOrderRes } = useCustomQuery<any>(
+    ["checkout-success-order", successOrderId],
+    () => (successOrderId ? getOrderById(successOrderId) : Promise.resolve(null)),
+    {
+      enabled: Boolean(successOrderId && !orderResponse),
+      staleTime: 10 * 60 * 1000,
+    }
+  );
+
+  useEffect(() => {
+    if (existingOrderRes?.data && !orderResponse) {
+      setOrderResponse(existingOrderRes.data);
+    }
+  }, [existingOrderRes, orderResponse]);
+
+
   const { user } = useUser();
 
   const [failedOrderId, setFailedOrderId] = useState<string | null>(() => {
@@ -117,12 +143,7 @@ export const CheckoutContent = () => {
   const [irclickid, setIrclickid] = useState<string | null>(null);
   const [awc, setAwc] = useState<string | null>(null);
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const unitParam = searchParams.get("unit");
-  const productId = searchParams.get("productId");
-  const qty = searchParams.get("qty");
+
 
   useEffect(() => {
     setFbp(getCookie("_fbp"));

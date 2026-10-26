@@ -120,6 +120,25 @@ export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
 };
 
 
+export const getOrderById = async (orderId: string): Promise<OrderResponse> => {
+  const url = new URL(
+    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/get-order`
+  );
+  url.searchParams.set("orderId", orderId);
+
+  const res = await fetchWithAdminAuth(url.toString(), {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch order");
+  }
+
+  return await res.json();
+};
+
 export const getOrders = async (
   page = 1,
   pageSize:number,

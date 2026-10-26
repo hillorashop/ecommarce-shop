@@ -9,7 +9,6 @@ import {
   ChevronRight,
   CheckCircle2,
   Quote,
-  Sparkles,
   ShieldCheck,
   PackageCheck,
 } from "lucide-react";
@@ -17,7 +16,7 @@ import { useCustomQuery } from "@/hooks/use-query";
 import { getLatestReviews, ProductReviewsResponse } from "@/actions/review";
 import { dbReview } from "@/types/type";
 import { HeadingTitle } from "../heading-title";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -65,13 +64,14 @@ export const ClientReviewsSection = () => {
   }, [reviews, instanceRef]);
 
   const getInitials = (name?: string | null) => {
-    if (!name) return "ক";
+    if (!name) return "C";
     return name
       .trim()
       .split(" ")
       .map((part) => part[0])
       .join("")
-      .slice(0, 2);
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   const formatDate = (dateString?: string | Date | null) => {
@@ -79,7 +79,7 @@ export const ClientReviewsSection = () => {
     try {
       const d = new Date(dateString);
       if (isNaN(d.getTime())) return "";
-      return d.toLocaleDateString("bn-BD", {
+      return d.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -91,11 +91,8 @@ export const ClientReviewsSection = () => {
 
   if (!isClient || isLoading) {
     return (
-      <section className="py-8 lg:py-14 w-full bg-gradient-to-b from-white via-muted/20 to-white">
-        <HeadingTitle
-          title="সম্মানিত ক্রেতাদের রিভিউ"
-          subtitle="আমাদের সন্তুষ্ট গ্রাহকদের বাস্তব অভিজ্ঞতা এবং মতামত"
-        />
+      <section className="py-6 lg:py-10 w-full">
+        <HeadingTitle title="Customer Reviews" />
         <div className="relative mt-8 px-6 sm:px-10 lg:px-12">
           <div className="keen-slider py-4 px-1 gap-4 sm:gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -128,45 +125,29 @@ export const ClientReviewsSection = () => {
   // If no reviews yet, don't show empty broken block
   if (reviews.length === 0) return null;
 
-  const averageRating = stats?.averageRating && stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "৫.০";
+  const averageRating =
+    stats?.averageRating && stats.averageRating > 0
+      ? stats.averageRating.toFixed(1)
+      : "5.0";
   const totalReviewsCount = stats?.totalReviews ?? reviews.length;
 
   return (
-    <section className="py-8 lg:py-14 w-full bg-gradient-to-b from-white via-amber-50/20 to-white relative overflow-hidden">
+    <section className="py-6 lg:py-10 w-full relative overflow-hidden">
       {/* Decorative background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-primary/5 rounded-full blur-3xl -z-10 pointer-events-none" />
 
-      {/* Header section with Trust Badges */}
-      <div className="text-center px-4 max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 shadow-xs">
-          <Sparkles className="size-3.5 text-primary" />
-          <span>প্রকৃত ক্রেতাদের মূল্যায়ন</span>
-        </div>
-
-        <HeadingTitle
-          title="সম্মানিত ক্রেতাদের রিভিউ"
-          subtitle="হাজারো সন্তুষ্ট গ্রাহকের আসল রিভিউ ও প্রতিক্রিয়া"
-        />
+      {/* Header section matching other landing page sections */}
+      <div className="text-center px-4 max-w-3xl mx-auto space-y-2">
+        <HeadingTitle title="Customer Reviews" />
 
         {/* Trust metrics bar */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2 text-xs sm:text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-gray-100 shadow-2xs">
-            <div className="flex items-center text-yellow-400">
-              <Star className="size-4 fill-yellow-400" />
-            </div>
+        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-5 pt-1 text-xs sm:text-sm text-muted-foreground">
+          <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-xs px-3 py-1 rounded-full border border-gray-100 shadow-2xs">
+            <Star className="size-4 fill-yellow-400 text-yellow-400" />
             <span className="font-bold text-foreground">{averageRating}</span>
-            <span>গড় রেটিং ({totalReviewsCount}+ রিভিউ)</span>
+            <span>Average Rating ({totalReviewsCount}+ Reviews)</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-gray-100 shadow-2xs">
-            <ShieldCheck className="size-4 text-emerald-600" />
-            <span className="font-medium text-foreground">১০০% যাচাইকৃত ক্রেতা</span>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-1.5 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-gray-100 shadow-2xs">
-            <PackageCheck className="size-4 text-primary" />
-            <span className="font-medium text-foreground">নিরাপদ ও দ্রুত ডেলিভারি</span>
-          </div>
         </div>
       </div>
 
@@ -174,7 +155,8 @@ export const ClientReviewsSection = () => {
       <div className="relative mt-8 px-6 sm:px-10 lg:px-12">
         <div ref={sliderRef} className="keen-slider py-4 px-1">
           {reviews.map((review: dbReview) => {
-            const reviewerName = review.userName || review.user?.name || "সম্মানিত ক্রেতা";
+            const reviewerName =
+              review.userName || review.user?.name || "Verified Customer";
             const avatarSrc = review.userAvatar || review.user?.image;
             const product = review.product;
 
@@ -215,7 +197,7 @@ export const ClientReviewsSection = () => {
                       </p>
                     ) : (
                       <p className="text-sm text-muted-foreground italic">
-                        পণ্যটি চমৎকার ছিল এবং দ্রুত ডেলিভারি পেয়েছি।
+                        Great quality product, fast delivery and highly recommended!
                       </p>
                     )}
 
@@ -228,18 +210,18 @@ export const ClientReviewsSection = () => {
                             type="button"
                             onClick={() => setPreviewImage(img)}
                             className="relative size-14 rounded-lg overflow-hidden border border-border group/img cursor-zoom-in hover:border-primary transition"
-                            title="ছবিটি বড় করে দেখুন"
+                            title="Click to view full image"
                           >
                             <Image
                               src={img}
-                              alt="রিভিউ ছবি"
+                              alt="Customer review photo"
                               fill
                               className="object-cover group-hover/img:scale-110 transition-transform duration-200"
                             />
                           </button>
                         ))}
                         <span className="text-[11px] text-muted-foreground font-medium">
-                          কাস্টমার ছবি
+                          Customer Photos
                         </span>
                       </div>
                     )}
@@ -263,7 +245,7 @@ export const ClientReviewsSection = () => {
                           </h4>
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-100">
                             <CheckCircle2 className="size-3 text-emerald-600" />
-                            যাচাইকৃত ক্রেতা
+                            Verified Buyer
                           </span>
                         </div>
                       </div>
@@ -287,7 +269,7 @@ export const ClientReviewsSection = () => {
                         ) : null}
                         <div className="min-w-0 flex-1">
                           <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                            ক্রয়কৃত পণ্য
+                            Purchased Product
                           </p>
                           <p className="text-xs font-semibold text-foreground truncate group-hover/prod:text-primary transition-colors">
                             {product.name}
@@ -334,7 +316,7 @@ export const ClientReviewsSection = () => {
             <div className="relative w-full h-[70vh] flex items-center justify-center">
               <Image
                 src={previewImage}
-                alt="রিভিউ ছবি"
+                alt="Review Photo"
                 fill
                 className="object-contain"
               />
@@ -345,4 +327,3 @@ export const ClientReviewsSection = () => {
     </section>
   );
 };
-

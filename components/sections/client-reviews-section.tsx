@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useKeenSlider } from "keen-slider/react";
 import { AutoplayPlugin } from "@/lib/keen-autoplay";
+import { BsFillPatchCheckFill } from "react-icons/bs";
 
 export const ClientReviewsSection = () => {
   const { data: reviewsResponse, isLoading } = useCustomQuery<ProductReviewsResponse>(
@@ -245,10 +246,9 @@ export const ClientReviewsSection = () => {
                           <h4 className="font-semibold text-sm text-foreground truncate">
                             {reviewerName}
                           </h4>
-                          <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-100">
-                            <CheckCircle2 className="size-3 text-emerald-600" />
-                            Verified Buyer
-                          </span>
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full">
+                                          <BsFillPatchCheckFill className="size-4 fill-blue-500" />
+                                        </span>
                         </div>
                       </div>
                     </div>

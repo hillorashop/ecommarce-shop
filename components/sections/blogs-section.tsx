@@ -45,13 +45,11 @@ export const BlogsSection = () => {
         },
       },
     },
-    [AutoplayPlugin(5000, true)]
+    items.length > 1 ? [AutoplayPlugin(6000, true)] : []
   );
 
   useEffect(() => {
-    instanceRef.current?.update({
-      loop: items.length > 3,
-    });
+    instanceRef.current?.update();
   }, [items, instanceRef]);
 
   if (!isClient || isLoading) {

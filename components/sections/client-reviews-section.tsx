@@ -57,13 +57,11 @@ export const ClientReviewsSection = () => {
         },
       },
     },
-    [AutoplayPlugin(5000, true)]
+    reviews.length > 1 ? [AutoplayPlugin(5000, true)] : []
   );
 
   useEffect(() => {
-    instanceRef.current?.update({
-      loop: reviews.length > 3,
-    });
+    instanceRef.current?.update();
   }, [reviews, instanceRef]);
 
   const getInitials = (name?: string | null) => {

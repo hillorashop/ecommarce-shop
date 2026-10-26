@@ -43,13 +43,11 @@ export const TopCategories = () => {
         },
       },
     },
-    [AutoplayPlugin(3500, true)]
+    items.length > 1 ? [AutoplayPlugin(3500, true)] : []
   );
 
   useEffect(() => {
-    instanceRef.current?.update({
-      loop: items.length > 6,
-    });
+    instanceRef.current?.update();
   }, [items, instanceRef]);
 
   return (

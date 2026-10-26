@@ -111,13 +111,18 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               />
 
               {discountPercentage && (
-                <div className="absolute top-2 left-2 text-[10px] font-semibold px-2 py-1 bg-green-500 text-white rounded-xs z-10">
-                  {discountPercentage}% off
+                <div className="absolute top-2 left-2 text-[10px] sm:text-xs font-bold px-2 py-0.5 bg-red-500 text-white rounded-md shadow-xs z-10 tracking-tight">
+                  -{discountPercentage}%
                 </div>
               )}
               {freeDelivery && (
-                <div className="absolute top-2 right-2 text-[10px] font-semibold px-2 py-1 bg-green-500 text-white uppercase rounded-xs z-10">
-                  Free Delivery
+                <div
+                  title="Free Delivery"
+                  className="absolute top-2 right-2 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 bg-emerald-600 text-white rounded shadow-2xs z-10"
+                >
+                  <Truck className="size-2.5" />
+                  <span className="hidden sm:inline">Free Delivery</span>
+                  <span className="sm:hidden">Free</span>
                 </div>
               )}
             </div>

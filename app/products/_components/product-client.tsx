@@ -7,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX, CheckCircle2, Truck, ChevronRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+import { SiMessenger } from "react-icons/si";
 import Link from "next/link";
 import RelatedProducts from "../_components/relatedProducts";
 import { ProductReviews } from "./product-reviews";
@@ -292,32 +294,6 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
   return (
     <>
-      {/* Breadcrumb & Meta Bar */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5">
-          <Link href="/" className="hover:text-primary transition-colors">
-            Home
-          </Link>
-          <ChevronRight className="size-3 text-muted-foreground/50" />
-          {product.data.category ? (
-            <>
-              <Link
-                href={`/categories/${product.data.category.categoryUrl || product.data.category.id}`}
-                className="hover:text-primary transition-colors capitalize font-medium text-foreground"
-              >
-                {product.data.category.name}
-              </Link>
-              <ChevronRight className="size-3 text-muted-foreground/50" />
-            </>
-          ) : null}
-          <span className="truncate max-w-[200px] sm:max-w-xs">{product.data.name}</span>
-        </div>
-
-        <Badge variant="outline" className="text-[11px] font-mono tracking-tight text-muted-foreground bg-muted/40">
-          SKU: {product.data.productId}
-        </Badge>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-10 mb-4 lg:mb-12">
 <div className="w-full flex items-start gap-2 md:gap-3">
 
@@ -504,10 +480,10 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             )}
           </div>
 
-          {/* Variant / Unit Selector */}
+
           {hasUnits && (
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide ">
                 Select Option: <span className="text-foreground capitalize">{selectedKey} {unitData!.label}</span>
               </label>
               <div className="flex flex-wrap gap-2">
@@ -518,7 +494,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
                       key={key}
                       type="button"
                       onClick={() => setSelectedKey(key)}
-                      className={`text-sm px-3.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
+                      className={`mt-1 text-sm px-3.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
                         isSelected
                           ? "bg-primary text-white border-primary shadow-xs ring-2 ring-primary/20"
                           : "bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50"
@@ -532,9 +508,9 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             </div>
           )}
 
-          {/* Quantity Selector */}
+   
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mr-4">
               Quantity
             </label>
             <div className="inline-flex items-center border border-border rounded-lg bg-background shadow-2xs overflow-hidden">
@@ -564,7 +540,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           </div>
 
           {/* Action Buttons: Add to Cart & Buy Now */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div className="grid grid-cols-2 gap-3 pt-1">
             <Button
               type="button"
               variant="outline"
@@ -587,22 +563,22 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           </div>
 
           {/* Direct Support Chat Buttons: WhatsApp & Messenger */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               type="button"
               onClick={() => window.open(`https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=${encodeURIComponent("হ্যালো, আমি এই পণ্যটি অর্ডার করতে চাই: " + product.data.name)}`, "_blank")}
               className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#25D366] hover:bg-[#20ba5a] text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
-              <Image src="/icons/whatsapp.svg" alt="Whatsapp" height={18} width={18} className="object-contain" />
-              Chat on WhatsApp
+              <FaWhatsapp className="size-5 shrink-0" />
+              <span>Chat on WhatsApp</span>
             </button>
             <button
               type="button"
               onClick={() => window.open(`https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`, "_blank")}
               className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#0084FF] hover:bg-[#0074e0] text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
-              <Image src="/icons/messenger.svg.webp" alt="Messenger" height={18} width={18} className="object-contain" />
-              Chat on Messenger
+              <SiMessenger className="size-4 shrink-0" />
+              <span>Chat on Messenger</span>
             </button>
           </div>
 

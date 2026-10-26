@@ -21,6 +21,9 @@ import { CouponInput, CouponResult } from "./coupon-input";
 import { ShippingMethod, ShippingMethodSelector } from "./shipping-method-selector";
 import { OrderSummary } from "./order-summary";
 import { getDeliveryCharges, DeliveryChargeResponse } from "@/actions/delivery";
+import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
+import { CheckoutSecurityAlert } from "./checkout-security-alert";
+import { OrderSubmissionError } from "@/actions/order";
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -41,6 +44,16 @@ export const CheckoutContent = () => {
   );
   const [selectedPayment, setSelectedPayment] = useState<string>("cod");
   const [orderResponse, setOrderResponse] = useState<dbOrder | null>(null);
+  const [securityBlock, setSecurityBlock] = useState<{
+    message: string;
+    blockedType?: "IP" | "PHONE";
+    expiresAt?: string | null;
+  } | null>(null);
+
+  const { data: businessInfo } = useCustomQuery<BusinessResponse>(
+    ["business-info"],
+    () => getBusinessInfo()
+  );
   const { user } = useUser();
 
   const [failedOrderId, setFailedOrderId] = useState<string | null>(() => {

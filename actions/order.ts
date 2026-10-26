@@ -73,6 +73,20 @@ export type GetOrdersResponse = {
 
 
 
+export class OrderSubmissionError extends Error {
+  errorCode?: string;
+  blockedType?: "IP" | "PHONE";
+  expiresAt?: string | null;
+
+  constructor(message: string, errorCode?: string, blockedType?: "IP" | "PHONE", expiresAt?: string | null) {
+    super(message);
+    this.name = "OrderSubmissionError";
+    this.errorCode = errorCode;
+    this.blockedType = blockedType;
+    this.expiresAt = expiresAt;
+  }
+}
+
 export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
   const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`, {
     method: "POST",
@@ -84,14 +98,22 @@ export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
 
   if (!res.ok) {
     let errorMsg = "Failed to submit order";
+    let errorCode: string | undefined;
+    let blockedType: "IP" | "PHONE" | undefined;
+    let expiresAt: string | null | undefined;
+
     try {
       const errJson = await res.json();
       errorMsg = errJson.message || errJson.error || errorMsg;
+      errorCode = errJson.error;
+      blockedType = errJson.blockedType;
+      expiresAt = errJson.expiresAt;
     } catch {
       const errorText = await res.text();
       errorMsg = errorText || errorMsg;
     }
-    throw new Error(errorMsg);
+
+    throw new OrderSubmissionError(errorMsg, errorCode, blockedType, expiresAt);
   }
 
   return await res.json();

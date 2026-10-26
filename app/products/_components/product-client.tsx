@@ -490,8 +490,8 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-md gap-4">
-          <TabsTrigger value="description">বিবরণ</TabsTrigger>
-          <TabsTrigger value="reviews">রিভিউ ({reviewCount})</TabsTrigger>
+          <TabsTrigger value="description">Description</TabsTrigger>
+          <TabsTrigger value="reviews">All Reviews ({reviewCount})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="description" className="mt-6">

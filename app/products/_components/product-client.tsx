@@ -379,7 +379,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
                 ))}
               </div>
               <span className="text-sm font-medium text-muted-foreground">
-                {averageRating > 0 ? averageRating.toFixed(1) : ""} ({reviewCount} টি রিভিউ)
+                {averageRating > 0 ? averageRating.toFixed(1) : ""} ({reviewCount} reviews)
               </span>
             </div>
           )}

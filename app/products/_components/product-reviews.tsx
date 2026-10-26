@@ -25,11 +25,15 @@ import { dbReview } from "@/types/type";
 interface ProductReviewsProps {
   productId: string;
   onReviewsLoaded?: (count: number, averageRating: number) => void;
+  reviewsResponse?: ProductReviewsResponse;
+  isLoading?: boolean;
 }
 
 export const ProductReviews: React.FC<ProductReviewsProps> = ({
   productId,
   onReviewsLoaded,
+  reviewsResponse: externalReviewsResponse,
+  isLoading: externalIsLoading,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
@@ -44,18 +48,25 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch reviews
-  const { data: reviewsResponse, isLoading } = useQuery<ProductReviewsResponse>({
+  // Fetch reviews (fallback if not provided from parent)
+  const { data: internalReviewsResponse, isLoading: internalIsLoading } = useQuery<ProductReviewsResponse>({
     queryKey: ["product-reviews", productId],
     queryFn: async () => {
       const data = await getProductReviews(productId);
-      if (onReviewsLoaded && data?.stats) {
-        onReviewsLoaded(data.stats.totalReviews, data.stats.averageRating);
-      }
       return data;
     },
+    enabled: !externalReviewsResponse,
     staleTime: 60 * 1000,
   });
+
+  const reviewsResponse = externalReviewsResponse ?? internalReviewsResponse;
+  const isLoading = externalIsLoading !== undefined ? externalIsLoading : internalIsLoading;
+
+  React.useEffect(() => {
+    if (onReviewsLoaded && reviewsResponse?.stats) {
+      onReviewsLoaded(reviewsResponse.stats.totalReviews, reviewsResponse.stats.averageRating);
+    }
+  }, [reviewsResponse, onReviewsLoaded]);
 
   const reviews = reviewsResponse?.data || [];
   const stats = reviewsResponse?.stats || {

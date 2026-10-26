@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX } from "lucide-react";
 import RelatedProducts from "../_components/relatedProducts";
 import { ProductReviews } from "./product-reviews";
+import { useQuery } from "@tanstack/react-query";
+import { getProductReviews, ProductReviewsResponse } from "@/actions/review";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -52,6 +54,22 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     }
   );
 
+  const productId = product?.data?.id;
+
+  // Fetch reviews immediately when component renders and productId is available
+  const { data: reviewsResponse, isLoading: reviewsLoading } = useQuery<ProductReviewsResponse>({
+    queryKey: ["product-reviews", productId],
+    queryFn: async () => {
+      if (!productId) return undefined as any;
+      return await getProductReviews(productId);
+    },
+    enabled: !!productId,
+    staleTime: 60 * 1000,
+  });
+
+  const reviewCount = reviewsResponse?.stats?.totalReviews ?? 0;
+  const averageRating = reviewsResponse?.stats?.averageRating ?? 0;
+
   const kgEntries = product?.data?.kgUnit && typeof product.data.kgUnit === "object"
     ? Object.entries(product.data.kgUnit as Record<string, { price: number; discountPrice: number }>)
     : [];
@@ -72,9 +90,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
 
   const hasUnits = unitData !== null;
 
-const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [reviewCount, setReviewCount] = useState<number>(0);
-  const [averageRating, setAverageRating] = useState<number>(0);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("description");
 
 useEffect(() => {
@@ -508,10 +524,8 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
         <TabsContent value="reviews" className="mt-6">
           <ProductReviews
             productId={product.data.id}
-            onReviewsLoaded={(count, avg) => {
-              setReviewCount(count);
-              setAverageRating(avg);
-            }}
+            reviewsResponse={reviewsResponse}
+            isLoading={reviewsLoading}
           />
         </TabsContent>
       </Tabs>

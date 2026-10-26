@@ -2,11 +2,11 @@
 
 import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Star, Upload, X, Loader2, CheckCircle2, MessageSquare } from "lucide-react";
+import { Star, Upload, X, Loader2, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
-
+import { BsFillPatchCheckFill } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -493,9 +493,9 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                           <span className="font-semibold text-sm text-foreground">
                             {review.userName || review.user?.name || "সম্মানিত ক্রেতা"}
                           </span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">
-                            <CheckCircle2 className="size-3" />
-                            যাচাইকৃত ক্রেতা
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full">
+                            <BsFillPatchCheckFill className="size-4 fill-blue-500" />
+                       
                           </span>
                         </div>
                         <div className="flex items-center gap-0.5 mt-0.5">

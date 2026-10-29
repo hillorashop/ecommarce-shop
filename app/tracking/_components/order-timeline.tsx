@@ -138,7 +138,7 @@ const StepIndicator = ({ status, size = "default" }: { status: "completed" | "ac
   switch (status) {
     case "completed":
       return (
-        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full bg-green-600 text-white shadow-md`}>
+        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full bg-[#003B3A] text-white shadow-md`}>
           <Check className={checkSize} strokeWidth={3} />
         </div>
       )
@@ -150,7 +150,7 @@ const StepIndicator = ({ status, size = "default" }: { status: "completed" | "ac
       )
     case "active":
       return (
-        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full bg-green-600 text-white shadow-md`}>
+        <div className={`relative z-10 flex ${sizeClasses} items-center justify-center rounded-full bg-[#003B3A] text-white shadow-md`}>
            <Check className={checkSize} strokeWidth={3} />
         </div>
       )
@@ -188,7 +188,7 @@ const progressPercent =
           <div className="hidden md:block">
             <div className="relative flex items-center justify-between">
               <div className="absolute left-0 right-0 top-5 h-[2px] bg-border" />
-              <div className="absolute left-0 top-5 h-[2px] bg-green-600 transition-all duration-700" style={{ width: `calc(${progressPercent}% + 80px )` }} />
+              <div className="absolute left-0 top-5 h-[2px] bg-[#003B3A] transition-all duration-700" style={{ width: `calc(${progressPercent}% + 80px )` }} />
               {stepsWithStatus.map(step => (
                 <div key={step.label} className="relative flex flex-col items-center" style={{ width: `${100 / stepsWithStatus.length}%` }}>
                   <StepIndicator status={step.displayStatus!} />
@@ -204,7 +204,7 @@ const progressPercent =
             <div className="mt-10 grid gap-3" style={{ gridTemplateColumns: `repeat(${stepsWithStatus.length}, 1fr)` }}>
               {stepsWithStatus.map(step => (
                 <div key={step.label} className={`rounded-xl p-3 transition-all ${
-                 step.displayStatus === "active" ? "border-2 border-green-600 bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
+                 step.displayStatus === "active" ? "border-2 border-[#003B3A] bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
                 }`}>
                   <div className="flex items-center gap-x-1 w-full mb-2">
                     <div className={` inline-flex rounded-lg p-1.5 ${
@@ -231,13 +231,13 @@ const progressPercent =
           <div className="md:hidden">
             <div className="relative">
               <div className="absolute bottom-0 left-[15px] top-4 w-[2px] bg-border" />
-              <div className="absolute left-[15px] top-0 w-[2px] bg-green-600 transition-all duration-700" style={{ height: `${progressPercent}%` }} />
+              <div className="absolute left-[15px] top-0 w-[2px] bg-[#003B3A] transition-all duration-700" style={{ height: `${progressPercent}%` }} />
               <div className="flex flex-col gap-6">
                 {stepsWithStatus.map(step => (
                   <div key={step.label} className="relative flex gap-3.5">
                     <StepIndicator status={step.displayStatus!} size="small" />
                     <div className={`min-w-0 flex-1 rounded-xl p-3 transition-all ${
-                      step.displayStatus === "active" ? "border-2 border-green-600 bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
+                      step.displayStatus === "active" ? "border-2 border-[#003B3A] bg-secondary shadow-sm" : step.displayStatus === "completed" ? "bg-secondary/50" : step.displayStatus === "upcoming" ? "opacity-50" : "bg-red-100"
                     }`}>
                       <div className="flex items-center gap-2">
                         <div className={`inline-flex shrink-0 rounded-lg p-1.5 ${

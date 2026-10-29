@@ -77,7 +77,7 @@ export function ShippingMethodSelector({
                     <span className="line-through text-muted-foreground font-normal">
                       BDT {method.cost.toLocaleString()}
                     </span>
-                    <span className="text-green-600">Free</span>
+                    <span className="text-[#003B3A]">Free</span>
                   </>
                 ) : (
                   <>BDT {method.cost.toLocaleString()}</>

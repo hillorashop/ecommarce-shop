@@ -168,7 +168,7 @@ const handleSendResetLink = async (values: EmailInput) => {
                     />
                   )}
                 />
-                {success && <p className="text-green-600 flex gap-x-2 items-center text-sm font-semibold"><CheckCircle2 className="size-4"/> {success}</p>}
+                {success && <p className="text-[#003B3A] flex gap-x-2 items-center text-sm font-semibold"><CheckCircle2 className="size-4"/> {success}</p>}
                 {error && <p className="text-destructive flex gap-x-2 items-center text-sm font-semibold"><TriangleAlert className="size-4"/> {error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (

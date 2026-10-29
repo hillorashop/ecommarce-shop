@@ -221,7 +221,7 @@ const handleOtpSubmit = async (e: React.FormEvent) => {
     {currentStep === totalSteps && (
       <form onSubmit={bussnessForm.handleSubmit(handleSellerSubmit)} className="space-y-4">
         <Step3ReviewSubmit data={bussnessForm.getValues()} />
-      {successMessage && <p className="text-sm lg:text-base font-medium text-green-600 pt-1">{successMessage}</p>}
+      {successMessage && <p className="text-sm lg:text-base font-medium text-[#003B3A] pt-1">{successMessage}</p>}
      {registerError && <p className="text-sm lg:text-base font-medium text-red-600 pt-1">{registerError}</p>}
 
         <div className="flex justify-between pt-6 border-t">
@@ -274,11 +274,11 @@ const handleOtpSubmit = async (e: React.FormEvent) => {
   </Form>
     ) : formStep === "successMessage" ? (
        <div className="flex flex-col items-center justify-center p-4 space-y-6 text-center">
-        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100">
-          <CheckCircle className="w-12 h-12 text-green-600" />
+        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#003B3A]/10">
+          <CheckCircle className="w-12 h-12 text-[#003B3A]" />
         </div>
 
-        <h2 className="text-2xl font-bold text-green-700">
+        <h2 className="text-2xl font-bold text-[#003B3A]">
           Verification Successful!
         </h2>
 
@@ -315,7 +315,7 @@ const handleOtpSubmit = async (e: React.FormEvent) => {
       </InputOTPGroup>
     </InputOTP>
 
-     {successMessage && <p className="text-sm  text-green-600 pt-1">{successMessage}</p>}
+     {successMessage && <p className="text-sm  text-[#003B3A] pt-1">{successMessage}</p>}
      {registerError && <p className="text-sm   text-red-600 pt-1">{registerError}</p>}
 
   </div>

@@ -25,12 +25,12 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
         <span>Sub Total:</span>
         <span>BDT {subTotal.toLocaleString()}</span>
       </div>
-      <div className="flex justify-between  text-green-600">
+      <div className="flex justify-between  text-[#003B3A]">
         <span>Total Discount:</span>
         <span>- BDT {totalDiscount.toLocaleString()}</span>
       </div>
       {couponDiscount > 0 && (
-        <div className="flex justify-between  text-green-600">
+        <div className="flex justify-between  text-[#003B3A]">
           <span>Coupon ({couponCode}):</span>
           <span>- BDT {couponDiscount.toLocaleString()}</span>
         </div>

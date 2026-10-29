@@ -118,7 +118,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               {freeDelivery && (
                 <div
                   title="Free Delivery"
-                  className="absolute top-2 right-2 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 bg-emerald-600 text-white rounded shadow-2xs z-10"
+                  className="absolute top-2 right-2 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 bg-[#003B3A] text-white rounded shadow-2xs z-10"
                 >
                   <Truck className="size-2.5" />
                   <span className="hidden sm:inline">Free Delivery</span>

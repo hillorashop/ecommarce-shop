@@ -29,10 +29,17 @@ import { hasFiredEvent, markEventFired } from "@/lib/event-dedupe";
 interface Props {
   productUrl: string;
   fbclid?: string | null;
+  initialData?: ProductResponse;
 }
 
-export const ProductClient = ({ productUrl, fbclid }: Props) => {
+export const ProductClient = ({ productUrl, fbclid, initialData }: Props) => {
   const { cartItems, addItem } = useCart();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const { data: products, isLoading: productLoading } = useCustomQuery<ProductsResponse>(
     ["products", 1],
     () => getProducts(1)
@@ -51,6 +58,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     ["product", productUrl],
     () => getProduct(productUrl),
     {
+      initialData,
       staleTime:  60 * 60 * 1000,
       gcTime: 60 * 60 * 1000,
       refetchOnWindowFocus: false,
@@ -65,7 +73,7 @@ export const ProductClient = ({ productUrl, fbclid }: Props) => {
     queryKey: ["product-reviews", productId],
     queryFn: async () => {
       if (!productId) return undefined as any;
-      return await getProductReviews(productId);
+      return await getProductReviews(productId, 1, 6);
     },
     enabled: !!productId,
     staleTime: 60 * 1000,
@@ -227,7 +235,7 @@ const handleBuyNow = (product: dbProductwihtoutAll) => {
     }
   };
 
-  if (isLoading || productLoading) {
+  if (!product?.data) {
     return (
       <div className="p-6 px-8 max-w-7xl w-full mx-auto space-y-8">
         <Skeleton className="h-6 w-40 rounded" />
@@ -279,7 +287,7 @@ const cartKey = selectedKey
   ? `${product.data.id}-${variantLabel}`
   : product.data.id;
 
-const isInCart = cartItems.some((item) => item.cartKey === cartKey);
+const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey);
 
   const isAddDisabled = product.data.inStocks <= 0 || isInCart || (hasUnits && !selectedKey);
   const isBuyDisabled = product.data.inStocks <= 0 || (hasUnits && !selectedKey);
@@ -394,15 +402,15 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             )}
 
             {product.data.freeDelivery && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-md">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 bg-[#003B3A]/10 text-[#003B3A] dark:bg-[#003B3A]/20 dark:text-[#003B3A] border border-[#003B3A]/30 rounded-md">
                 <Truck className="size-3.5" />
                 Free Delivery
               </span>
             )}
 
             {product.data.inStocks > 0 ? (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-[#003B3A]">
+                <span className="size-1.5 rounded-full bg-[#003B3A] animate-pulse" />
                 In Stock ({product.data.inStocks})
               </span>
             ) : (
@@ -473,7 +481,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
             {hasDiscount && (
               <div className="flex items-center gap-2 pt-0.5">
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                <span className="text-xs font-semibold text-[#003B3A]">
                   You save BDT {savingsAmount.toLocaleString()} ({discountPercentage}%)
                 </span>
               </div>
@@ -567,7 +575,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             <button
               type="button"
               onClick={() => window.open(`https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=${encodeURIComponent("হ্যালো, আমি এই পণ্যটি অর্ডার করতে চাই: " + product.data.name)}`, "_blank")}
-              className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#25D366] hover:bg-[#20ba5a] text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#003B3A] hover:bg-[#003B3A]/90 text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
               <FaWhatsapp className="size-5 shrink-0" />
               <span>Chat on WhatsApp</span>
@@ -582,7 +590,9 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             </button>
           </div>
 
-          <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>
+          {product.data.subDescription && (
+            <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>
+          )}
         </div>
       </div>
 
@@ -613,6 +623,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
             productId={product.data.id}
             reviewsResponse={reviewsResponse}
             isLoading={reviewsLoading}
+            limit={6}
           />
         </TabsContent>
       </Tabs>

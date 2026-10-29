@@ -175,15 +175,15 @@ export function MobileHeader({ initialLogos }: MobileHeaderProps) {
           </Sheet>
          </div>
        
-          <div className="flex items-center py-1">
+          <div className="flex items-center py-2">
             {headerLogo ? (
               <Image
                 src={headerLogo}
                 alt={siteMeta.siteName || ""}
                 width={140}
-                height={90}
+                height={50}
                 onClick={() => router.push("/")}
-                className="object-contain cursor-pointer"
+                className="object-contain cursor-pointer max-h-9 w-auto"
                 priority
                 suppressHydrationWarning
               />

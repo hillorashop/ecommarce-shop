@@ -67,7 +67,7 @@ export const CheckoutSecurityAlert: React.FC<CheckoutSecurityAlertProps> = ({
                 href={`https://wa.me/+88${whatsappNumber}?text=${encodeURIComponent("হ্যালো, চেকআউটে আমার অর্ডার ব্লক দেখাচ্ছে। দয়া করে চেক করবেন?")}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#25D366] hover:bg-[#20ba5a] text-white px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#003B3A] hover:bg-[#003B3A]/90 text-white px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 <FaWhatsapp className="size-3.5" />
                 WhatsApp সাপোর্ট

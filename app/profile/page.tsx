@@ -259,7 +259,7 @@ const handleProfile = (data: userInput) => {
                       <Button
                         size={"sm"}
                         onClick={() => setIsEdit(true)}
-                        className="flex items-center gap-x-2 bg-green-600 text-white hover:bg-green-700 active:bg-green-600"
+                        className="flex items-center gap-x-2 bg-[#003B3A] text-white hover:bg-[#003B3A]/90 active:bg-[#003B3A]"
                       >
                          Edit
                         <Edit className="size-4" />

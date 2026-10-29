@@ -112,19 +112,19 @@ export const CouponInput: React.FC<CouponInputProps> = ({
           <div className="flex items-center gap-2">
       <span className="text-sm font-medium">Have Any Coupon or Gift voucher?</span>
             {appliedCoupon?.success && (
-              <CheckCircle2 className="size-4 text-green-600" />
+              <CheckCircle2 className="size-4 text-[#003B3A]" />
             )}
           </div>
         </AccordionTrigger>
 
         <AccordionContent className="px-4 py-4">
           {appliedCoupon?.success ? (
-            <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+            <div className="flex items-center justify-between rounded-lg border border-[#003B3A]/20 bg-[#003B3A]/10 px-3 py-2">
               <div>
-                <p className="text-sm font-medium text-green-700">
+                <p className="text-sm font-medium text-[#003B3A]">
                   {appliedCoupon.code} applied
                 </p>
-                <p className="text-xs text-green-600">
+                <p className="text-xs text-[#003B3A]">
                   You saved BDT {couponDiscount.toLocaleString()}
                 </p>
               </div>

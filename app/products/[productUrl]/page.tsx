@@ -28,10 +28,10 @@ export async function generateMetadata({ params}: Props): Promise<Metadata> {
 
   return {
     title: product.name,
-    description: plainDescription.slice(0, 400) || product.subDescription,
+    description: plainDescription.slice(0, 400) || product.subDescription || undefined,
     openGraph: {
       title: product.name,
-      description: plainDescription.slice(0, 400) || product.subDescription,
+      description: plainDescription.slice(0, 400) || product.subDescription || undefined,
       url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products/${productUrl}`,
       type: "website",
       siteName: siteMeta.siteName,
@@ -52,7 +52,8 @@ const ProductUrlPage = async ({ params}: Props) => {
   const resolvedParams = await params;
   const productUrl = (resolvedParams.productUrl);
 
-  const { data: product } = await getProduct(productUrl);
+  const productRes = await getProduct(productUrl);
+  const product = productRes?.data;
  
 
   if (!product) {
@@ -86,7 +87,7 @@ const ProductUrlPage = async ({ params}: Props) => {
         }}
       />
 
-      <ProductClient productUrl={productUrl}/>
+      <ProductClient productUrl={productUrl} initialData={productRes}/>
     </div>
   );
 };

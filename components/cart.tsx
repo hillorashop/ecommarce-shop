@@ -166,7 +166,7 @@ export const Cart = () => {
                           <span className="line-through text-gray-400 mr-2">
                             BDT {item.price.toLocaleString()}
                           </span>
-                          <span className="font-semibold text-green-600">
+                          <span className="font-semibold text-[#003B3A]">
                             BDT {item.discountPrice.toLocaleString()}
                           </span>
                         </>

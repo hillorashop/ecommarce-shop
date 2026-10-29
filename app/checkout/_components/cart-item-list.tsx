@@ -62,7 +62,7 @@ export const CartItemList: React.FC<CartItemListProps> = ({ isLoading, checkoutI
                     <span className="text-xs line-through text-gray-400">
                       BDT {item.price.toLocaleString()}
                     </span>
-                           <span className="text-sm font-semibold text-green-600">
+                           <span className="text-sm font-semibold text-[#003B3A]">
                       BDT {item.discountPrice?.toLocaleString()}
                     </span>
                   </>

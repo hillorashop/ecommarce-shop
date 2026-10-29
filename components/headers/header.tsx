@@ -93,20 +93,20 @@ export function Header({ initialLogos }: HeaderProps) {
             <div className="backdrop-blur-lg px-8">
           <div className="flex items-center justify-between h-16 gap-8 relative">
 
-<div className="flex items-center py-1">
-  {headerLogo ? (
-    <Image
-      onClick={() => router.push("/")}
-      src={headerLogo}
-      width={190}
-      height={80}
-      alt={siteMeta.siteName || ""}
-      className="object-contain cursor-pointer"
-      priority
-      suppressHydrationWarning
-    />
-  ) : null}
-</div>
+            <div className="flex items-center py-2.5">
+              {headerLogo ? (
+                <Image
+                  onClick={() => router.push("/")}
+                  src={headerLogo}
+                  width={180}
+                  height={50}
+                  alt={siteMeta.siteName || ""}
+                  className="object-contain cursor-pointer max-h-11 w-auto"
+                  priority
+                  suppressHydrationWarning
+                />
+              ) : null}
+            </div>
 
   {/* Search (center) */}
   <div className="flex-1 flex justify-center relative" ref={containerRef}>

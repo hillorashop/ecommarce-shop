@@ -89,7 +89,7 @@ export type dbProduct = {
   productUrl:string;
   name: string;
   description: string
-  subDescription: string;
+  subDescription?: string | null;
   productImage: string;
   gallery: string[];
   productType?:"BEST_SELLING" | "ALL_PRODUCT" | null;

@@ -88,7 +88,7 @@ export const CategoryFilter = ({
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-red-500 font-semibold bg-gray-100 hover:bg-green-600 hover:text-white"
+          className="text-xs text-red-500 font-semibold bg-gray-100 hover:bg-[#003B3A] hover:text-white"
           onClick={resetFilters}
         >
           Reset

@@ -168,7 +168,7 @@ export const PasswordMangement = ({ tabValue, disable, userId }: Props) => {
               />
 
               {error && <p className="text-destructive flex items-center gap-x-2"><TriangleAlert className="size-4"/> {error}</p>}
-              {success && <p className="text-green-600 flex items-center gap-x-2"><CheckCircle2 className="size-4"/> {success}</p>}
+              {success && <p className="text-[#003B3A] flex items-center gap-x-2"><CheckCircle2 className="size-4"/> {success}</p>}
 
               <Button type="submit" disabled={isLoading || disable}>
                    {isLoading ? (

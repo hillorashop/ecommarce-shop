@@ -2,7 +2,17 @@
 
 import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Star, Upload, X, Loader2, MessageSquare } from "lucide-react";
+import {
+  Star,
+  Upload,
+  X,
+  Loader2,
+  MessageSquare,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -11,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { useUser } from "@/contexts/UserContext";
 import {
@@ -27,6 +37,7 @@ interface ProductReviewsProps {
   onReviewsLoaded?: (count: number, averageRating: number) => void;
   reviewsResponse?: ProductReviewsResponse;
   isLoading?: boolean;
+  limit?: number;
 }
 
 export const ProductReviews: React.FC<ProductReviewsProps> = ({
@@ -34,9 +45,14 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
   onReviewsLoaded,
   reviewsResponse: externalReviewsResponse,
   isLoading: externalIsLoading,
+  limit: externalLimit,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const reviewsListRef = useRef<HTMLDivElement>(null);
+  const limit = externalLimit || 6;
 
   const [isWritingReview, setIsWritingReview] = useState(false);
   const [rating, setRating] = useState<number>(5);
@@ -44,27 +60,91 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
   const [comment, setComment] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
-  const [previewModalImage, setPreviewModalImage] = useState<string | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+
+  const openLightbox = (clickedImg: string, reviewImgs?: string[]) => {
+    const allImages = reviews
+      .flatMap((r) => r.images || [])
+      .filter((img): img is string => Boolean(img && img.trim() !== ""));
+
+    const targetImages =
+      allImages.length > 0
+        ? allImages
+        : reviewImgs && reviewImgs.length > 0
+        ? reviewImgs
+        : [clickedImg];
+
+    const foundIdx = targetImages.indexOf(clickedImg);
+    setLightboxImages(targetImages);
+    setLightboxIndex(foundIdx !== -1 ? foundIdx : 0);
+    setLightboxOpen(true);
+  };
+
+  const handlePrevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (lightboxImages.length <= 1) return;
+    setLightboxIndex((prev) => (prev > 0 ? prev - 1 : lightboxImages.length - 1));
+  };
+
+  const handleNextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (lightboxImages.length <= 1) return;
+    setLightboxIndex((prev) => (prev < lightboxImages.length - 1 ? prev + 1 : 0));
+  };
+
+  React.useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev > 0 ? prev - 1 : lightboxImages.length - 1));
+      } else if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev < lightboxImages.length - 1 ? prev + 1 : 0));
+      } else if (e.key === "Escape") {
+        setLightboxOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxOpen, lightboxImages.length]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch reviews (fallback if not provided from parent)
-  const { data: internalReviewsResponse, isLoading: internalIsLoading } = useQuery<ProductReviewsResponse>({
-    queryKey: ["product-reviews", productId],
+  // Fetch paginated reviews for the current page
+  const {
+    data: pageReviewsResponse,
+    isLoading: isPageLoading,
+    isFetching,
+  } = useQuery<ProductReviewsResponse>({
+    queryKey: ["product-reviews", productId, currentPage, limit],
     queryFn: async () => {
-      const data = await getProductReviews(productId);
-      return data;
+      if (!productId) return undefined as any;
+      return await getProductReviews(productId, currentPage, limit);
     },
-    enabled: !externalReviewsResponse,
+    enabled: !!productId,
+    initialData:
+      currentPage === 1 && externalReviewsResponse
+        ? externalReviewsResponse
+        : undefined,
+    placeholderData: (previousData) => previousData,
     staleTime: 60 * 1000,
   });
 
-  const reviewsResponse = externalReviewsResponse ?? internalReviewsResponse;
-  const isLoading = externalIsLoading !== undefined ? externalIsLoading : internalIsLoading;
+  const reviewsResponse = pageReviewsResponse ?? externalReviewsResponse;
+  const isLoading =
+    currentPage === 1 && externalReviewsResponse
+      ? false
+      : isPageLoading && !reviewsResponse;
 
   React.useEffect(() => {
     if (onReviewsLoaded && reviewsResponse?.stats) {
-      onReviewsLoaded(reviewsResponse.stats.totalReviews, reviewsResponse.stats.averageRating);
+      onReviewsLoaded(
+        reviewsResponse.stats.totalReviews,
+        reviewsResponse.stats.averageRating
+      );
     }
   }, [reviewsResponse, onReviewsLoaded]);
 
@@ -73,6 +153,58 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
     averageRating: 0,
     totalReviews: 0,
     ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  };
+
+  const pagination = reviewsResponse?.pagination;
+  const totalReviews =
+    pagination?.total ?? stats.totalReviews ?? reviews.length;
+  const totalPages =
+    pagination?.totalPages ?? Math.max(1, Math.ceil(totalReviews / limit));
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages || newPage === currentPage) return;
+    setCurrentPage(newPage);
+    if (reviewsListRef.current) {
+      reviewsListRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+    return pages;
   };
 
   // Image selection handler with Bangla validations
@@ -152,6 +284,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
       setSelectedFiles([]);
       setFilePreviews([]);
       setIsWritingReview(false);
+      setCurrentPage(1);
       queryClient.invalidateQueries({ queryKey: ["product-reviews", productId] });
     },
     onError: (err: any) => {
@@ -180,15 +313,15 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
     submitReviewMutation();
   };
 
-  // Format date in Bangla
+  // Format date in English
   const formatDate = (dateString?: string | Date | null) => {
     if (!dateString) return "";
     try {
       const d = new Date(dateString);
       if (isNaN(d.getTime())) return "";
-      return d.toLocaleDateString("bn-BD", {
+      return d.toLocaleDateString("en-US", {
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
       });
     } catch {
@@ -197,13 +330,14 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
   };
 
   const getInitials = (name?: string | null) => {
-    if (!name) return "ক";
+    if (!name) return "C";
     return name
       .trim()
       .split(" ")
       .map((part) => part[0])
       .join("")
-      .slice(0, 2);
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   const starBanglaNumbers: Record<number, string> = {
@@ -236,7 +370,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             ))}
           </div>
           <p className="text-sm text-muted-foreground font-medium">
-            মোট {stats.totalReviews} টি রিভিউ এর ভিত্তিতে
+            Based on {stats.totalReviews} {stats.totalReviews === 1 ? "review" : "reviews"}
           </p>
 
           <Button
@@ -244,7 +378,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             variant={isWritingReview ? "secondary" : "default"}
             className="mt-4 w-full max-w-[200px]"
           >
-            {isWritingReview ? "বাতিল করুন" : "রিভিউ লিখুন"}
+            {isWritingReview ? "Cancel" : "Write a Review"}
           </Button>
         </div>
 
@@ -258,7 +392,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
             return (
               <div key={star} className="flex items-center gap-3 text-sm">
                 <div className="flex items-center gap-1 w-12 text-muted-foreground font-medium">
-                  <span>{starBanglaNumbers[star]}</span>
+                  <span>{star}</span>
                   <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
                 </div>
                 <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
@@ -453,10 +587,18 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
       )}
 
       {/* Reviews List */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-lg text-foreground">
-          ক্রেতাদের রিভিউ ({stats.totalReviews})
-        </h3>
+      <div ref={reviewsListRef} className="space-y-4 scroll-mt-28">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-semibold text-lg text-foreground">
+            Customer Reviews ({stats.totalReviews})
+          </h3>
+          {isFetching && (
+            <span className="inline-flex items-center gap-1.5 text-xs text-primary font-medium animate-pulse">
+              <Loader2 className="size-3.5 animate-spin" />
+              <span>Updating...</span>
+            </span>
+          )}
+        </div>
 
         {isLoading ? (
           <div className="space-y-4">
@@ -470,9 +612,9 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
               <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <Star className="size-6 fill-primary" />
               </div>
-              <h4 className="font-medium text-base">এখনো কোনো রিভিউ নেই</h4>
+              <h4 className="font-medium text-base">No reviews yet</h4>
               <p className="text-sm text-muted-foreground max-w-sm">
-                আপনি কি এই পণ্যটি ব্যবহার করেছেন? সবার আগে আপনার মূল্যবান মতামত শেয়ার করুন।
+                Have you used this product? Be the first to share your experience.
               </p>
               <Button
                 variant="outline"
@@ -480,102 +622,288 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 onClick={() => setIsWritingReview(true)}
                 className="mt-2"
               >
-                প্রথম রিভিউটি লিখুন
+                Write the first review
               </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-4">
-            {reviews.map((review: dbReview) => (
-              <Card key={review.id} className="border shadow-none hover:border-primary/20 transition-colors">
-                <CardContent className="p-5 space-y-3">
-                  {/* Review Header: User info, stars, date */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-9 border">
-                        <AvatarImage src={review.userAvatar || review.user?.image || undefined} />
-                        <AvatarFallback className="text-xs bg-muted text-foreground font-semibold">
-                          {getInitials(review.userName || review.user?.name)}
-                        </AvatarFallback>
-                      </Avatar>
+            <div
+              className={`space-y-4 transition-opacity duration-200 ${
+                isFetching ? "opacity-70 pointer-events-none" : "opacity-100"
+              }`}
+            >
+              {reviews.map((review: dbReview) => (
+                <Card key={review.id} className="border shadow-none hover:border-primary/20 transition-colors">
+                  <CardContent className="p-5 space-y-3">
+                    {/* Review Header: User info, stars, date */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="size-9 border">
+                          <AvatarImage src={review.userAvatar || review.user?.image || undefined} />
+                          <AvatarFallback className="text-xs bg-muted text-foreground font-semibold">
+                            {getInitials(review.userName || review.user?.name)}
+                          </AvatarFallback>
+                        </Avatar>
 
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm text-foreground">
-                            {review.userName || review.user?.name || "সম্মানিত ক্রেতা"}
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full">
-                            <BsFillPatchCheckFill className="size-4 fill-blue-500" />
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-0.5 mt-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`size-3.5 ${
-                                star <= review.rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-muted-foreground/30"
-                              }`}
-                            />
-                          ))}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-sm text-foreground">
+                              {review.userName || review.user?.name || "Customer"}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full">
+                              <BsFillPatchCheckFill className="size-4 fill-blue-500" />
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-0.5 mt-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`size-3.5 ${
+                                  star <= review.rating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-muted-foreground/30"
+                                }`}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
+
+                      <span className="text-xs text-muted-foreground sm:text-right">
+                        {formatDate(review.createdAt)}
+                      </span>
                     </div>
 
-                    <span className="text-xs text-muted-foreground sm:text-right">
-                      {formatDate(review.createdAt)}
-                    </span>
+                    {/* Review Text */}
+                    {review.comment && (
+                      <p className="text-sm text-foreground/90 whitespace-pre-line leading-relaxed">
+                        {review.comment}
+                      </p>
+                    )}
+
+                    {/* Attached Customer Photos (Max 2) */}
+                    {review.images && review.images.length > 0 && (
+                      <div className="flex items-center gap-2.5 pt-1">
+                        {review.images.map((img, idx) => (
+                          <button
+                            type="button"
+                            key={idx}
+                            onClick={() => openLightbox(img, review.images)}
+                            className="relative size-16 sm:size-20 rounded-md overflow-hidden border border-border group cursor-zoom-in"
+                          >
+                            <Image
+                              src={img}
+                              alt={`Customer photo ${idx + 1}`}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-200"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Pagination Controls with Next & Previous Icons */}
+            {totalReviews > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-border">
+                {/* Page Status Indicator */}
+                <div className="text-xs sm:text-sm text-muted-foreground order-2 sm:order-1 flex items-center gap-2">
+                  <span>
+                    Page <strong className="text-foreground font-semibold">{currentPage}</strong> of <strong className="text-foreground font-semibold">{totalPages}</strong>
+                  </span>
+                  <span>•</span>
+                  <span>
+                    {totalReviews} {totalReviews === 1 ? "review" : "reviews"}
+                  </span>
+                </div>
+
+                {/* Navigation Buttons with Icons Only */}
+                <div className="flex items-center gap-1.5 order-1 sm:order-2 flex-wrap justify-center">
+                  {totalPages > 3 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={() => handlePageChange(1)}
+                      disabled={currentPage <= 1 || isFetching}
+                      className="size-8 cursor-pointer shadow-2xs"
+                      title="First Page"
+                      aria-label="First Page"
+                    >
+                      <ChevronsLeft className="size-4" />
+                    </Button>
+                  )}
+
+                  {/* Previous Page Button - Only Icon */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage <= 1 || isFetching}
+                    className="size-8 cursor-pointer shadow-2xs hover:bg-muted"
+                    title="Previous"
+                    aria-label="Previous Page"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </Button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {getPageNumbers().map((p, idx) => {
+                      if (p === "...") {
+                        return (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="px-1 text-xs text-muted-foreground select-none"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      const pageNum = p as number;
+                      const isActive = pageNum === currentPage;
+                      return (
+                        <Button
+                          key={pageNum}
+                          type="button"
+                          variant={isActive ? "default" : "outline"}
+                          size="icon-sm"
+                          onClick={() => handlePageChange(pageNum)}
+                          disabled={isFetching}
+                          className={`size-8 text-xs font-semibold cursor-pointer shadow-2xs transition-all ${
+                            isActive
+                              ? "bg-primary text-white hover:bg-primary/90"
+                              : "hover:bg-muted"
+                          }`}
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
                   </div>
 
-                  {/* Review Text */}
-                  {review.comment && (
-                    <p className="text-sm text-foreground/90 whitespace-pre-line leading-relaxed">
-                      {review.comment}
-                    </p>
-                  )}
+                  {/* Next Page Button - Only Icon */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= totalPages || isFetching}
+                    className="size-8 cursor-pointer shadow-2xs hover:bg-muted"
+                    title="Next"
+                    aria-label="Next Page"
+                  >
+                    <ChevronRight className="size-4" />
+                  </Button>
 
-                  {/* Attached Customer Photos (Max 2) */}
-                  {review.images && review.images.length > 0 && (
-                    <div className="flex items-center gap-2.5 pt-1">
-                      {review.images.map((img, idx) => (
-                        <button
-                          type="button"
-                          key={idx}
-                          onClick={() => setPreviewModalImage(img)}
-                          className="relative size-16 sm:size-20 rounded-md overflow-hidden border border-border group cursor-zoom-in"
-                        >
-                          <Image
-                            src={img}
-                            alt={`কাস্টমার ছবি ${idx + 1}`}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
-                        </button>
-                      ))}
-                    </div>
+                  {totalPages > 3 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={() => handlePageChange(totalPages)}
+                      disabled={currentPage >= totalPages || isFetching}
+                      className="size-8 cursor-pointer shadow-2xs"
+                      title="Last Page"
+                      aria-label="Last Page"
+                    >
+                      <ChevronsRight className="size-4" />
+                    </Button>
                   )}
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Lightbox Modal for Full Image View */}
       <Dialog
-        open={Boolean(previewModalImage)}
-        onOpenChange={(open) => !open && setPreviewModalImage(null)}
+        open={lightboxOpen}
+        onOpenChange={(open) => !open && setLightboxOpen(false)}
       >
-        <DialogContent className="max-w-2xl p-2 bg-black/90 border-none">
-          {previewModalImage && (
-            <div className="relative w-full h-[70vh] flex items-center justify-center">
-              <Image
-                src={previewModalImage}
-                alt="রিভিউ ছবি"
-                fill
-                className="object-contain"
+        <DialogContent
+          showCloseButton={false}
+          className="w-auto max-w-fit max-h-[90vh] p-0 gap-0 bg-transparent border-none shadow-none rounded-none overflow-visible focus:outline-none focus-visible:outline-none flex flex-col items-center justify-center"
+        >
+          <DialogTitle className="sr-only">Customer review photo preview</DialogTitle>
+
+          {lightboxImages.length > 0 && (
+            <div className="relative inline-block max-w-[90vw] md:max-w-[80vw] max-h-[85vh] select-none rounded-lg overflow-visible">
+              {/* Image with natural aspect ratio constrained by viewport */}
+              <img
+                src={lightboxImages[lightboxIndex]}
+                alt={`Customer photo ${lightboxIndex + 1}`}
+                className="max-h-[82vh] max-w-[90vw] md:max-w-[80vw] w-auto h-auto object-contain rounded-lg shadow-2xl block select-none"
               />
+
+              {/* Close Button - Placed directly at the top-right corner of the image */}
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(false)}
+                className="absolute top-2 right-2 sm:top-3 sm:right-3 z-50 size-9 sm:size-10 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                aria-label="Close image preview"
+                title="Close"
+              >
+                <X className="size-5 text-white stroke-[2.5]" />
+              </button>
+
+              {/* Previous Image Slide Button - Placed at the left of the image */}
+              {lightboxImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={handlePrevImage}
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  aria-label="Previous image"
+                  title="Previous image"
+                >
+                  <ChevronLeft className="size-6 text-white stroke-[2.5]" />
+                </button>
+              )}
+
+              {/* Next Image Slide Button - Placed at the right of the image */}
+              {lightboxImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={handleNextImage}
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  aria-label="Next image"
+                  title="Next image"
+                >
+                  <ChevronRight className="size-6 text-white stroke-[2.5]" />
+                </button>
+              )}
+
+              {/* Image Counter & Indicators - Centered at the bottom of the image */}
+              {lightboxImages.length > 1 && (
+                <div className="absolute bottom-2.5 sm:bottom-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-1 rounded-full bg-black/80 border border-white/20 backdrop-blur-md shadow-lg">
+                  <span className="text-white text-xs sm:text-sm font-medium">
+                    {lightboxIndex + 1} / {lightboxImages.length}
+                  </span>
+                  {lightboxImages.length <= 8 && (
+                    <div className="flex items-center gap-1.5 ml-1">
+                      {lightboxImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setLightboxIndex(idx)}
+                          className={`size-2 rounded-full transition-all cursor-pointer ${
+                            idx === lightboxIndex
+                              ? "bg-white w-4"
+                              : "bg-white/40 hover:bg-white/75"
+                          }`}
+                          aria-label={`Go to image ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

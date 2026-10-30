@@ -91,9 +91,9 @@ export function Header({ initialLogos }: HeaderProps) {
        
           <div className="max-w-7xl mx-auto border-b">
             <div className="backdrop-blur-lg px-8">
-          <div className="flex items-center justify-between h-16 gap-8 relative">
+          <div className="flex items-center justify-between h-[72px] gap-8 relative py-2">
 
-            <div className="flex items-center py-2.5">
+            <div className="flex items-center py-1.5 shrink-0">
               {headerLogo ? (
                 <Image
                   onClick={() => router.push("/")}
@@ -101,7 +101,7 @@ export function Header({ initialLogos }: HeaderProps) {
                   width={180}
                   height={50}
                   alt={siteMeta.siteName || ""}
-                  className="object-contain cursor-pointer max-h-11 w-auto"
+                  className="object-contain cursor-pointer max-h-10 w-auto my-auto transition-transform hover:opacity-95"
                   priority
                   suppressHydrationWarning
                 />

@@ -829,24 +829,24 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
       >
         <DialogContent
           showCloseButton={false}
-          className="w-auto max-w-fit max-h-[90vh] p-0 gap-0 bg-transparent border-none shadow-none rounded-none overflow-visible focus:outline-none focus-visible:outline-none flex flex-col items-center justify-center"
+          className="!w-auto !max-w-none sm:!max-w-none !max-h-[92vh] !p-0 !gap-0 !bg-transparent !border-none !shadow-none !rounded-none overflow-visible focus:outline-none focus-visible:outline-none flex flex-col items-center justify-center"
         >
           <DialogTitle className="sr-only">Customer review photo preview</DialogTitle>
 
           {lightboxImages.length > 0 && (
-            <div className="relative inline-block max-w-[90vw] md:max-w-[80vw] max-h-[85vh] select-none rounded-lg overflow-visible">
+            <div className="relative inline-flex items-center justify-center max-w-[90vw] md:max-w-[80vw] max-h-[85vh] select-none rounded-lg overflow-hidden shadow-2xl bg-transparent">
               {/* Image with natural aspect ratio constrained by viewport */}
               <img
                 src={lightboxImages[lightboxIndex]}
                 alt={`Customer photo ${lightboxIndex + 1}`}
-                className="max-h-[82vh] max-w-[90vw] md:max-w-[80vw] w-auto h-auto object-contain rounded-lg shadow-2xl block select-none"
+                className="max-h-[82vh] max-w-[90vw] md:max-w-[80vw] w-auto h-auto object-contain rounded-lg block select-none"
               />
 
               {/* Close Button - Placed directly at the top-right corner of the image */}
               <button
                 type="button"
                 onClick={() => setLightboxOpen(false)}
-                className="absolute top-2 right-2 sm:top-3 sm:right-3 z-50 size-9 sm:size-10 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-50 size-9 sm:size-10 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
                 aria-label="Close image preview"
                 title="Close"
               >
@@ -858,7 +858,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 <button
                   type="button"
                   onClick={handlePrevImage}
-                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  className="absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
                   aria-label="Previous image"
                   title="Previous image"
                 >
@@ -871,7 +871,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 <button
                   type="button"
                   onClick={handleNextImage}
-                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 z-50 size-10 sm:size-11 flex items-center justify-center rounded-full bg-black/80 hover:bg-black text-white border border-white/20 shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
                   aria-label="Next image"
                   title="Next image"
                 >
@@ -881,7 +881,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
 
               {/* Image Counter & Indicators - Centered at the bottom of the image */}
               {lightboxImages.length > 1 && (
-                <div className="absolute bottom-2.5 sm:bottom-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-1 rounded-full bg-black/80 border border-white/20 backdrop-blur-md shadow-lg">
+                <div className="absolute bottom-2.5 sm:bottom-3.5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-1 rounded-full bg-black/80 border border-white/20 backdrop-blur-md shadow-lg">
                   <span className="text-white text-xs sm:text-sm font-medium">
                     {lightboxIndex + 1} / {lightboxImages.length}
                   </span>

@@ -55,6 +55,7 @@ interface ShippingPaymentFormProps {
   onSubmit: (data: ShippingForm) => void;
   isPending: boolean;
   disabled: boolean;
+  isSecurityBlocked?: boolean;
 }
 
 export function ShippingPaymentForm({
@@ -64,6 +65,7 @@ export function ShippingPaymentForm({
   onSubmit,
   isPending,
   disabled,
+  isSecurityBlocked,
 }: ShippingPaymentFormProps) {
 
     const { zillaOptions, thanaOptions, onZillaSelect } = useAddressSuggestion();
@@ -252,22 +254,30 @@ const orderForOptions = [
           )}
         />
 
-<div className="w-full mx-auto max-w-5xl flex items-center">
+<div className="w-full mx-auto max-w-5xl flex flex-col gap-2">
+        {isSecurityBlocked && (
+          <p className="text-xs text-muted-foreground font-medium text-center bg-muted/60 p-2.5 rounded-lg border border-border">
+            নিরাপত্তা যাচাইয়ের কারণে অর্ডার সাময়িক স্থগিত (Order On Hold). অনুগ্রহ করে বিস্তারিত তথ্যের জন্য কাস্টমার কেয়ারে যোগাযোগ করুন।
+          </p>
+        )}
         <Button
           type="submit"
-          className=" mt-4 w-full"
-          disabled={!selectedPayment || disabled || isPending}
+          className=" mt-2 w-full"
+          disabled={!selectedPayment || disabled || isPending || isSecurityBlocked}
         >
           {isPending ? (
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 animate-spin" /> Placing Order...
+            </div>
+          ) : isSecurityBlocked ? (
+            <div className="flex items-center gap-2">
+              অর্ডার সাময়িক স্থগিত (Order On Hold)
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <FaBagShopping className="w-4 h-4"/>
              Place Order
             </div>
-           
           )}
         </Button>
 </div>

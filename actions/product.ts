@@ -2,24 +2,22 @@ import { dbProduct, dbCategory, dbReview, UnitPricing } from "@/types/type";
 import { fetchWithAdminAuth } from "@/lib/admin-api";
 
 export type dbProductwihtoutAll = {
-
     id: string;
-    productId:string;
-    productUrl:string;
+    productId: string;
+    productUrl: string;
     name: string;
     productImage: string;
     price: number;
     categoryId: string;
     discountPrice?: number;
-  kgUnit?:     Record<number, UnitPricing>;
-  piecesUnit?: Record<number, UnitPricing>;
-  gramUnit?:   Record<number, UnitPricing>;
-    productType?:"BEST_SELLING" | "ALL_PRODUCT" | null;
+    kgUnit?:     Record<number, UnitPricing>;
+    piecesUnit?: Record<number, UnitPricing>;
+    gramUnit?:   Record<number, UnitPricing>;
+    productType?: "BEST_SELLING" | "ALL_PRODUCT" | null;
     inStocks: number;
     freeDelivery?: boolean | null;
     reviews: dbReview[];    
-  
-}
+};
 
 export type ProductsResponse = {
   data: dbProductwihtoutAll[];
@@ -28,7 +26,6 @@ export type ProductsResponse = {
   total: number;
   totalPages: number;
 };
-
 
 export const getProducts = async (
   page?: number,
@@ -46,7 +43,7 @@ export const getProducts = async (
   if (page) params.append("page", page.toString());
   if (sortBy) params.append("sortBy", sortBy);
   if (sortOrder) params.append("sortOrder", sortOrder);
-  if (productName) params.append("productName", productName);
+  if (productName) params.append("productName", encodeURIComponent(productName));
   if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
   if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
   if (categoryIds && categoryIds.length > 0)
@@ -54,12 +51,27 @@ export const getProducts = async (
 
   if ([...params].length > 0) url += `?${params.toString()}`;
 
-  const res = await fetchWithAdminAuth(url);
-
-  if (!res.ok) throw new Error("Failed to load Products");
-
-
-  return await res.json();
+  try {
+    const res = await fetchWithAdminAuth(url);
+    if (!res.ok) {
+      return {
+        data: [],
+        page: page || 1,
+        perPage: 20,
+        total: 0,
+        totalPages: 0,
+      };
+    }
+    return await res.json();
+  } catch {
+    return {
+      data: [],
+      page: page || 1,
+      perPage: 20,
+      total: 0,
+      totalPages: 0,
+    };
+  }
 };
 
 export type ProductResponse = {
@@ -69,19 +81,26 @@ export type ProductResponse = {
 };
 
 export const getProduct = async (productUrl: string): Promise<ProductResponse> => {
-  const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/${productUrl}`);
-  if (!res.ok) throw new Error("Failed to fetch product");
-  return res.json();
+  try {
+    const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/${productUrl}`);
+    if (!res.ok) return { data: null as any };
+    return res.json();
+  } catch {
+    return { data: null as any };
+  }
 };
-
 
 export type BestSellingProductResponse = {
   data: dbProductwihtoutAll[];
   total: number;
 };
 
-export const getBestSellingProducts = async ():Promise<BestSellingProductResponse> => {
-const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/best-selling-products`);
-  if (!res.ok) throw new Error("Failed to fetch best selling product");
-  return res.json();
-}
+export const getBestSellingProducts = async (): Promise<BestSellingProductResponse> => {
+  try {
+    const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/products/best-selling-products`);
+    if (!res.ok) return { data: [], total: 0 };
+    return res.json();
+  } catch {
+    return { data: [], total: 0 };
+  }
+};

@@ -26,7 +26,27 @@ export const useCustomMutation = <
     mutationKey,
     mutationFn,
 
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
+      const isFailed =
+        data?.success === false ||
+        (typeof data?.status === "number" && data.status >= 400) ||
+        (data?.error && data.error !== "");
+
+      if (isFailed) {
+        const isSecurityBlock =
+          data?.error === "ORDER_BLOCKED" ||
+          data?.errorCode === "ORDER_BLOCKED" ||
+          data?.error === "ORDER_FRAUD_DETECTED" ||
+          Boolean(data?.blockedType);
+
+        if (!isSecurityBlock) {
+          toast.error(data?.message || data?.error || "Operation failed");
+        }
+
+        onSuccess?.(data);
+        return;
+      }
+
       const keys = Array.isArray(queryKeys[0])
         ? (queryKeys as QueryKey[])
         : [queryKeys as QueryKey];

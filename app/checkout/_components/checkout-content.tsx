@@ -23,7 +23,6 @@ import { OrderSummary } from "./order-summary";
 import { getDeliveryCharges, DeliveryChargeResponse } from "@/actions/delivery";
 import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
 import { CheckoutSecurityAlert } from "./checkout-security-alert";
-import { OrderSubmissionError } from "@/actions/order";
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -98,6 +97,7 @@ export const CheckoutContent = () => {
     return null;
   });
   const failedOrderIdRef = useRef<string | null>(failedOrderId);
+  const isDraftSavingRef = useRef<boolean>(false);
 
   useEffect(() => {
     failedOrderIdRef.current = failedOrderId;
@@ -256,8 +256,28 @@ const hasFreeDelivery = useMemo(() => {
     ["post-order"],
     postOrder,
     ["ordersByUser", user?.id],
-    (newOrder) => {
-      setOrderResponse(newOrder.data);
+    (response) => {
+      // Handle error or security block responses returned from the server without throwing
+      if (!response?.data || response?.success === false || response?.error) {
+        const isBlockError =
+          response?.errorCode === "ORDER_BLOCKED" ||
+          response?.error === "ORDER_BLOCKED" ||
+          response?.errorCode === "ORDER_FRAUD_DETECTED" ||
+          Boolean(response?.blockedType) ||
+          response?.message?.includes("স্থগিত");
+
+        if (isBlockError) {
+          setSecurityBlock({
+            message: response.message || "নিরাপত্তা জনিত কারণে অর্ডার সাময়িক স্থগিত রাখা হয়েছে।",
+            blockedType: response.blockedType || "PHONE",
+            expiresAt: response.expiresAt || null,
+          });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        return;
+      }
+
+      setOrderResponse(response.data);
       setFailedOrderId(null);
       failedOrderIdRef.current = null;
       try {
@@ -438,6 +458,13 @@ const hasFreeDelivery = useMemo(() => {
   const watchedOrderFor = form.watch("orderFor");
   const watchedSpecialNote = form.watch("specialNote");
 
+  // Automatically reset phone-specific security block if customer changes their phone number
+  useEffect(() => {
+    if (securityBlock && securityBlock.blockedType === "PHONE") {
+      setSecurityBlock(null);
+    }
+  }, [watchedMobile]);
+
   const isNameValid = Boolean(watchedName && watchedName.trim().length >= 2);
   const isMobileValid = Boolean(
     watchedMobile && /^(?:\+88)?01[3-9]\d{8}$/.test(watchedMobile.trim())
@@ -450,6 +477,8 @@ const hasFreeDelivery = useMemo(() => {
     }
 
     const timer = setTimeout(async () => {
+      if (isDraftSavingRef.current) return;
+      isDraftSavingRef.current = true;
       try {
         const draftData: orderInput = {
           existingOrderId: failedOrderIdRef.current || undefined,
@@ -464,11 +493,7 @@ const hasFreeDelivery = useMemo(() => {
           specialNote: watchedSpecialNote || null,
           paymentMethod: selectedPayment || "cod",
           shippingMethod: selectedShipping.id || null,
-          shippingCost,
           couponCode: appliedCoupon?.code ?? null,
-          couponDiscount,
-          totalDiscount,
-          total,
           fbc,
           fbp,
           ttpCookie,
@@ -490,10 +515,6 @@ const hasFreeDelivery = useMemo(() => {
           irclickid,
           awc,
           orderItems: checkoutItems.map((item) => {
-            const hasDiscount =
-              item.discountPrice &&
-              item.discountPrice > 0 &&
-              item.discountPrice < item.price;
             const variant =
               item.selectedUnit && item.unitLabel
                 ? `${item.selectedUnit}${item.unitLabel}`
@@ -502,7 +523,6 @@ const hasFreeDelivery = useMemo(() => {
             return {
               productId: item.id,
               quantity: item.cartQuantity,
-              price: hasDiscount ? item.discountPrice! : item.price,
               variant,
             };
           }),
@@ -512,11 +532,16 @@ const hasFreeDelivery = useMemo(() => {
         if (res?.data?.id) {
           failedOrderIdRef.current = res.data.id;
           setFailedOrderId(res.data.id);
+          try {
+            sessionStorage.setItem("hillora_failed_order_id", res.data.id);
+          } catch {}
         }
       } catch (err) {
         console.warn("Auto-save failed order notice:", err);
+      } finally {
+        isDraftSavingRef.current = false;
       }
-    }, 800);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [
@@ -627,29 +652,19 @@ const hasFreeDelivery = useMemo(() => {
       specialNote:data.specialNote,
       paymentMethod: selectedPayment,
       shippingMethod: selectedShipping.id,
-      shippingCost,
       couponCode: appliedCoupon?.code ?? null,
-      couponDiscount,
-      totalDiscount,
-      total,
       orderItems: checkoutItems.map((item) => {
-        const hasDiscount = item.discountPrice && item.discountPrice > 0 && item.discountPrice < item.price;
         const variant = item.selectedUnit && item.unitLabel ? `${item.selectedUnit}${item.unitLabel}` : "default";
 
         return {
           productId: item.id,
           quantity: item.cartQuantity,
-          price: hasDiscount ? item.discountPrice! : item.price,
           variant,
         };
       }),
     };
 
-    try {
-      submitOrder(orderData);
-    } catch (err) {
-      console.error("Order failed:", err);
-    }
+    submitOrder(orderData);
   };
 
   if (orderResponse) return <InvoiceOrder order={orderResponse} />;
@@ -672,6 +687,17 @@ const hasFreeDelivery = useMemo(() => {
 
   return (
     <div className="space-y-6">
+      {securityBlock && (
+        <CheckoutSecurityAlert
+          message={securityBlock.message}
+          blockedType={securityBlock.blockedType}
+          expiresAt={securityBlock.expiresAt}
+          whatsappNumber={businessInfo?.data?.whatsappNumber}
+          customerCareNumber={businessInfo?.data?.customerCareNumber}
+          onDismiss={() => setSecurityBlock(null)}
+        />
+      )}
+
       <div className="space-y-4">
           <h3 className="text-xl font-semibold">Cart & Shipping & Payment</h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -714,14 +740,15 @@ const hasFreeDelivery = useMemo(() => {
             onSubmit={handlePlaceOrder}
             isPending={isPending}
             disabled={checkoutItems.length === 0}
+            isSecurityBlocked={Boolean(securityBlock)}
           />
 </div>
           </div>
     
       </div>
 
-      {error && (
-        <p className="text-red-500 font-semibold">
+      {error && !securityBlock && (
+        <p className="text-destructive text-sm font-medium">
           {error instanceof Error ? error.message : typeof error === "string" ? error : "An error occurred"}
         </p>
       )}

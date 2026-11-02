@@ -1,4 +1,3 @@
-
 import { dbCategory, dbProduct } from "@/types/type";
 import { fetchWithAdminAuth } from "@/lib/admin-api";
 
@@ -20,44 +19,79 @@ export type CategoryResponse = {
 };
 
 export const getCategories = async (page?: number): Promise<CategoriesResponse> => {
-  const url = new URL(`${process.env.NEXT_PUBLIC_ADMIN_URL! || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/category`);
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_ADMIN_URL! || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/category`);
 
-  if (page) {
-    url.searchParams.set("page", page.toString());
+    if (page) {
+      url.searchParams.set("page", page.toString());
+    }
+
+    const res = await fetchWithAdminAuth(url.toString());
+
+    if (!res.ok) {
+      return {
+        data: [],
+        page: page || 1,
+        perPage: 20,
+        total: 0,
+        totalPages: 0,
+      };
+    }
+    return await res.json();
+  } catch {
+    return {
+      data: [],
+      page: page || 1,
+      perPage: 20,
+      total: 0,
+      totalPages: 0,
+    };
   }
-
-  const res = await fetchWithAdminAuth(url.toString());
-
-  if (!res.ok) throw new Error("Failed to load categories");
-  return await res.json();
 };
-
 
 export const getCategoryProducts = async (
   categoryUrl: string,
   page?: number,
-  sortBy?: "price" |  "createdAt",
+  sortBy?: "price" | "createdAt",
   sortOrder?: "asc" | "desc",
   productName?: string,
   minPrice?: number,
   maxPrice?: number,
 ): Promise<CategoryResponse> => {
-
-  let url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/category/${categoryUrl}`
+  try {
+    let url = `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/category/${categoryUrl}`;
 
     const params = new URLSearchParams();
 
-  if (page) params.append("page", page.toString());
-  if (sortBy) params.append("sortBy", sortBy);
-  if (sortOrder) params.append("sortOrder", sortOrder);
-  if (productName) params.append("productName", encodeURIComponent(productName));
-  if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
-  if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
+    if (page) params.append("page", page.toString());
+    if (sortBy) params.append("sortBy", sortBy);
+    if (sortOrder) params.append("sortOrder", sortOrder);
+    if (productName) params.append("productName", encodeURIComponent(productName));
+    if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
 
     if ([...params].length > 0) url += `?${params.toString()}`;
 
-  const res = await fetchWithAdminAuth(url);
-  if (!res.ok) throw new Error("Failed to fetch category");
-  return res.json();
+    const res = await fetchWithAdminAuth(url);
+    if (!res.ok) {
+      return {
+        category: null as any,
+        data: [],
+        page: page || 1,
+        perPage: 20,
+        total: 0,
+        totalPages: 0,
+      };
+    }
+    return await res.json();
+  } catch {
+    return {
+      category: null as any,
+      data: [],
+      page: page || 1,
+      perPage: 20,
+      total: 0,
+      totalPages: 0,
+    };
+  }
 };
-

@@ -4,14 +4,17 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-export const formatDate = (date: Date): string => {
-  return date.toLocaleString("en-US", {
+export const formatDate = (date: Date | string): string => {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleString("en-US", {
+    timeZone: "Asia/Dhaka",
     year: "numeric",
-    month: "long", // e.g., September
+    month: "short",
     day: "numeric",
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
-    hour12: true, // ✅ 12-hour format with AM/PM
+    hour12: true,
   });
 };
 

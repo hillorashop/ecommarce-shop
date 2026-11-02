@@ -5,6 +5,7 @@ import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { DEFAULT_STALE_TIME, DEFAULT_GC_TIME, CLIENT_CACHE_TIME } from "@/hooks/use-query";
 
 // Lazy-load the toast — it only shows once per user lifetime
 const FirstTimeDataToast = dynamic(() => import("./first-time-data-toast"), {
@@ -19,8 +20,8 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 60 * 1000,
-        gcTime: 60 * 60 * 1000,
+        staleTime: DEFAULT_STALE_TIME,
+        gcTime: DEFAULT_GC_TIME,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
       },
@@ -43,7 +44,7 @@ export const ReactQueryClientProvider = ({ children }: Props) => {
     persistQueryClient({
       queryClient,
       persister,
-      maxAge: 60 * 60 * 1000,
+      maxAge: CLIENT_CACHE_TIME.SIX_HOURS,
     });
   }, [queryClient]);
 

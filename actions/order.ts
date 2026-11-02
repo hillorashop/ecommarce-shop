@@ -8,29 +8,24 @@ export type orderInput = {
   name: string;
   mobileNumber: string;
   address?: string;
-  total?: number;
-  totalDiscount?: number;
   transactionId?: string | null;
   userId?: string | null;
 
   shippingMethod?: string | null;
-  shippingCost?: number | null;
-
   couponCode?: string | null;
-  couponDiscount?: number | null;
 
   email?: string | null;
   orderFor?: string | null;
   zilla?: string | null;
   thana?: string | null;
-  specialNote?: string | null; 
+  specialNote?: string | null;
 
   fbc?: string | null;
   fbp?: string | null;
   ttpCookie?: string | null;
   ttclidValue?: string | null;
   gclid?: string | null;
-  
+
   li_fat_id?: string | null;
   gbraid?: string | null;
   wbraid?: string | null;
@@ -54,10 +49,16 @@ export type orderInputItems = {
   productId: string;
   quantity: number;
   variant?: string | null;
-  price?: number | null;
 };
 export type OrderResponse = {
-  data:dbOrder;
+  data: dbOrder | null;
+  success?: boolean;
+  status?: number;
+  message?: string;
+  error?: string;
+  errorCode?: string;
+  blockedType?: "IP" | "PHONE";
+  expiresAt?: string | null;
 };
 
 export type GetOrdersResponse = {
@@ -70,78 +71,100 @@ export type GetOrdersResponse = {
   };
 };
 
-
-
-
-export class OrderSubmissionError extends Error {
-  errorCode?: string;
-  blockedType?: "IP" | "PHONE";
-  expiresAt?: string | null;
-
-  constructor(message: string, errorCode?: string, blockedType?: "IP" | "PHONE", expiresAt?: string | null) {
-    super(message);
-    this.name = "OrderSubmissionError";
-    this.errorCode = errorCode;
-    this.blockedType = blockedType;
-    this.expiresAt = expiresAt;
-  }
-}
-
 export const postOrder = async (order: orderInput): Promise<OrderResponse> => {
-  const res = await fetchWithAdminAuth(`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(order),
-  });
+  try {
+    const res = await fetchWithAdminAuth(
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/create-order`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      }
+    );
 
-  if (!res.ok) {
-    let errorMsg = "Failed to submit order";
-    let errorCode: string | undefined;
-    let blockedType: "IP" | "PHONE" | undefined;
-    let expiresAt: string | null | undefined;
+    const json = await res.json().catch(() => null);
 
-    try {
-      const errJson = await res.json();
-      errorMsg = errJson.message || errJson.error || errorMsg;
-      errorCode = errJson.error;
-      blockedType = errJson.blockedType;
-      expiresAt = errJson.expiresAt;
-    } catch {
-      const errorText = await res.text();
-      errorMsg = errorText || errorMsg;
+    if (!res.ok) {
+      const errorMsg =
+        json?.message || json?.error || "Failed to submit order";
+      const errorCode = json?.error || (res.status === 403 ? "ORDER_BLOCKED" : "ORDER_FAILED");
+      const blockedType = json?.blockedType;
+      const expiresAt = json?.expiresAt;
+
+      return {
+        success: false,
+        status: res.status,
+        data: null,
+        message: errorMsg,
+        error: errorCode,
+        errorCode,
+        blockedType,
+        expiresAt,
+      };
     }
 
-    throw new OrderSubmissionError(errorMsg, errorCode, blockedType, expiresAt);
+    return {
+      success: true,
+      status: 200,
+      data: json?.data || json,
+      message: json?.message || "Order placed successfully",
+    };
+  } catch (err: any) {
+    console.error("postOrder error:", err);
+    return {
+      success: false,
+      status: 500,
+      data: null,
+      message: err?.message || "Network error. Please try again.",
+      error: "NETWORK_ERROR",
+    };
   }
-
-  return await res.json();
 };
 
-
 export const getOrderById = async (orderId: string): Promise<OrderResponse> => {
-  const url = new URL(
-    `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/get-order`
-  );
-  url.searchParams.set("orderId", orderId);
+  try {
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_WWW_URL}/api/order/get-order`
+    );
+    url.searchParams.set("orderId", orderId);
 
-  const res = await fetchWithAdminAuth(url.toString(), {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    cache: "no-store",
-  });
+    const res = await fetchWithAdminAuth(url.toString(), {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch order");
+    if (!res.ok) {
+      return {
+        success: false,
+        status: res.status,
+        data: null,
+        message: "Failed to fetch order",
+      };
+    }
+
+    const json = await res.json().catch(() => null);
+    return {
+      success: true,
+      status: 200,
+      data: json?.data || json,
+    };
+  } catch (error: any) {
+    console.error("getOrderById error:", error);
+    return {
+      success: false,
+      status: 500,
+      data: null,
+      message: error?.message || "Failed to fetch order",
+    };
   }
-
-  return await res.json();
 };
 
 export const getOrders = async (
   page = 1,
-  pageSize:number,
+  pageSize: number,
   userId?: string
 ): Promise<GetOrdersResponse> => {
   try {
@@ -160,17 +183,23 @@ export const getOrders = async (
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store", // ensures fresh data every time
+      cache: "no-store",
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch orders");
+      return {
+        data: [],
+        pagination: { totalOrders: 0, totalPages: 0, currentPage: page, pageSize },
+      };
     }
 
     const data: GetOrdersResponse = await res.json();
     return data;
   } catch (error) {
     console.error("getOrders API error:", error);
-    throw error;
+    return {
+      data: [],
+      pagination: { totalOrders: 0, totalPages: 0, currentPage: page, pageSize },
+    };
   }
 };

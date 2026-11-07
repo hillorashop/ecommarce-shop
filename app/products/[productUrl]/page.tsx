@@ -1,4 +1,5 @@
-import { getProduct} from "@/actions/product";
+import { getProduct } from "@/actions/product";
+import { getProductReviews } from "@/actions/review";
 import { ProductClient } from "../_components/product-client";
 import { Metadata } from "next";
 import Script from "next/script";
@@ -35,14 +36,16 @@ export async function generateMetadata({ params}: Props): Promise<Metadata> {
       url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/products/${productUrl}`,
       type: "website",
       siteName: siteMeta.siteName,
-      images: [
-        {
-          url: product.productImage || "/fevicon.png",
-          width: 800,
-          height: 600,
-          alt: product.name,
-        },
-      ],
+      images: product.productImage
+        ? [
+            {
+              url: product.productImage,
+              width: 800,
+              height: 600,
+              alt: product.name,
+            },
+          ]
+        : [],
       locale: "bn_BD",
     },
   };
@@ -54,11 +57,15 @@ const ProductUrlPage = async ({ params}: Props) => {
 
   const productRes = await getProduct(productUrl);
   const product = productRes?.data;
- 
 
   if (!product) {
     return <p className="text-center py-10 sr-only">Product not found.</p>;
   }
+
+  // Pre-fetch reviews on server for SEO & hydration match
+  const reviewsRes = product?.id
+    ? await getProductReviews(product.id, 1, 6).catch(() => null)
+    : null;
 
   return (
     <div className="p-6 px-4 max-w-7xl w-full mx-auto">
@@ -71,7 +78,7 @@ const ProductUrlPage = async ({ params}: Props) => {
             "@context": "https://schema.org",
             "@type": "Product",
             name: product.name,
-            image: [product.productImage || "/fevicon.png"],
+            image: product.productImage ? [product.productImage] : [],
             description: product.description,
             sku: product.id,
             brand: { "@type": "Brand", name: siteMeta.siteName },
@@ -87,7 +94,11 @@ const ProductUrlPage = async ({ params}: Props) => {
         }}
       />
 
-      <ProductClient productUrl={productUrl} initialData={productRes}/>
+      <ProductClient
+        productUrl={productUrl}
+        initialData={productRes}
+        initialReviews={reviewsRes || undefined}
+      />
     </div>
   );
 };

@@ -46,7 +46,7 @@ export function AuthForm() {
       () => getLogos()
   )
     const headerLogo =
-      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "/logo.svg";
+      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "";
 
 
     const registerForm = useForm<z.infer <typeof registerSchema>>({

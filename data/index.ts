@@ -101,9 +101,11 @@ export const FAQITEMS = [
 
 
 export const siteMeta = {
-  siteName:"Hillora",
-  desc:"Hillora – A Bangladesh based Ecommerce Website (বাংলাদেশের খাগড়াছড়ি ভিত্তিক ই-কমার্স ওয়েবসাইট)।",
-  keyWords:[
+  siteName: "Hillora",
+  desc: "Hillora – A Bangladesh based Ecommerce Website (বাংলাদেশের খাগড়াছড়ি ভিত্তিক ই-কমার্স ওয়েবসাইট)।",
+  primaryLogo: "",
+  secondaryLogo: "",
+  keyWords: [
     "Hillora",
     "Bangladesh Ecommerce",
     "Khagrachari Shop",
@@ -111,19 +113,22 @@ export const siteMeta = {
     "ই-কমার্স বাংলাদেশ",
     "খাগড়াছড়ি শপ",
   ],
-   openGraph:{
-    title:"Hillora – পাহাড়ি ঐতিহ্যের ই-কমার্স",
-    desc:"Hillora – A Bangladesh based Ecommerce Website (বাংলাদেশের খাগড়াছড়ি ভিত্তিক ই-কমার্স ওয়েবসাইট)।",
-    image:"/banners/hillora-meta.jpg"
-   },
-   twitter:{
+  openGraph: {
+    title: "Hillora – পাহাড়ি ঐতিহ্যের ই-কমার্স",
+    desc: "Hillora – A Bangladesh based Ecommerce Website (বাংলাদেশের খাগড়াছড়ি ভিত্তিক ই-কমার্স ওয়েবসাইট)।",
+    primaryLogo: "",
+    secondaryLogo: "",
+    image: "",
+  },
+  twitter: {
     title: "Hillora – Bangladesh Ecommerce",
     description: "বাংলাদেশ ভিত্তিক ই-কমার্স ওয়েবসাইট",
-    creator:"@your_twitter",
-    image:"/banners/hillora-meta.jpg"
-   }
-
-}
+    creator: "@your_twitter",
+    primaryLogo: "",
+    secondaryLogo: "",
+    image: "",
+  },
+};
 
 
 

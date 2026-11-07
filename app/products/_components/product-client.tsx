@@ -30,9 +30,15 @@ interface Props {
   productUrl: string;
   fbclid?: string | null;
   initialData?: ProductResponse;
+  initialReviews?: ProductReviewsResponse;
 }
 
-export const ProductClient = ({ productUrl, fbclid, initialData }: Props) => {
+export const ProductClient = ({
+  productUrl,
+  fbclid,
+  initialData,
+  initialReviews,
+}: Props) => {
   const { cartItems, addItem } = useCart();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -75,12 +81,17 @@ export const ProductClient = ({ productUrl, fbclid, initialData }: Props) => {
       if (!productId) return undefined as any;
       return await getProductReviews(productId, 1, 6);
     },
+    initialData: initialReviews,
     enabled: !!productId,
     staleTime: 60 * 1000,
   });
 
-  const reviewCount = reviewsResponse?.stats?.totalReviews ?? 0;
-  const averageRating = reviewsResponse?.stats?.averageRating ?? 0;
+  // Safe SSR/Hydration matching: uses initialReviews on SSR and first render, then live query after mount
+  const effectiveReviews = isMounted
+    ? reviewsResponse
+    : (initialReviews ?? reviewsResponse);
+  const reviewCount = effectiveReviews?.stats?.totalReviews ?? 0;
+  const averageRating = effectiveReviews?.stats?.averageRating ?? 0;
 
   const kgEntries = product?.data?.kgUnit && typeof product.data.kgUnit === "object"
     ? Object.entries(product.data.kgUnit as Record<string, { price: number; discountPrice: number }>)
@@ -145,7 +156,7 @@ useEffect(() => {
     const gallery = (product.data.gallery || []).filter((g): g is string => Boolean(g && g.trim() !== ""));
     const pImg = product.data.productImage?.trim();
     const list = pImg ? [pImg, ...gallery.filter((g) => g !== pImg)] : gallery;
-    return list.length > 0 ? list : ["/fevicon.png"];
+    return list;
   }, [product]);
 
 useEffect(() => {
@@ -421,7 +432,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
           </div>
 
           {/* Product Title */}
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-snug">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground leading-snug">
             {product.data.name}
           </h1>
 
@@ -443,37 +454,37 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
                   />
                 ))}
               </div>
-              <span className="text-sm font-semibold text-foreground">
+              <span className="text-xs sm:text-sm font-semibold text-foreground">
                 {averageRating > 0 ? averageRating.toFixed(1) : ""}
               </span>
-              <span className="text-sm text-muted-foreground hover:underline">
+              <span className="text-xs sm:text-sm text-muted-foreground hover:underline">
                 ({reviewCount} customer {reviewCount === 1 ? "review" : "reviews"})
               </span>
             </div>
           )}
 
           {/* Fiverr-Style Review Snippet Slider */}
-          {reviewCount > 0 && reviewsResponse?.data && reviewsResponse.data.length > 0 && (
+          {reviewCount > 0 && effectiveReviews?.data && effectiveReviews.data.length > 0 && (
             <ProductReviewSnippet
-              reviews={reviewsResponse.data.slice(0, 4)}
+              reviews={effectiveReviews.data.slice(0, 4)}
               totalReviews={reviewCount}
               onSeeAll={handleOpenReviewsTab}
             />
           )}
 
           {/* Price Box */}
-          <div className="p-3.5 bg-muted/40 rounded-xl border border-border/60 space-y-1">
+          <div className="p-3.5 sm:p-4 bg-muted/40 rounded-xl border border-border/60 space-y-1.5">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
                 BDT {displayPrice?.toLocaleString()}
               </span>
               {hasDiscount && (
-                <span className="line-through text-muted-foreground text-base sm:text-lg">
+                <span className="line-through text-muted-foreground text-sm sm:text-base md:text-lg">
                   BDT {activePrice.toLocaleString()}
                 </span>
               )}
               {discountPercentage && (
-                <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-0.5 font-bold shadow-xs">
+                <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-0.5 font-bold shadow-xs">
                   -{discountPercentage}% OFF
                 </Badge>
               )}
@@ -481,7 +492,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
 
             {hasDiscount && (
               <div className="flex items-center gap-2 pt-0.5">
-                <span className="text-xs font-semibold text-[#003B3A]">
+                <span className="text-xs sm:text-sm font-semibold text-[#003B3A]">
                   You save BDT {savingsAmount.toLocaleString()} ({discountPercentage}%)
                 </span>
               </div>
@@ -491,7 +502,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
 
           {hasUnits && (
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide ">
+              <label className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 Select Option: <span className="text-foreground capitalize">{selectedKey} {unitData!.label}</span>
               </label>
               <div className="flex flex-wrap gap-2">
@@ -502,7 +513,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
                       key={key}
                       type="button"
                       onClick={() => setSelectedKey(key)}
-                      className={`mt-1 text-sm px-3.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
+                      className={`mt-1 text-xs sm:text-sm md:text-base px-3 sm:px-4 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
                         isSelected
                           ? "bg-primary text-white border-primary shadow-xs ring-2 ring-primary/20"
                           : "bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50"
@@ -518,7 +529,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
 
    
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mr-4">
+            <label className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide mr-4">
               Quantity
             </label>
             <div className="inline-flex items-center border border-border rounded-lg bg-background shadow-2xs overflow-hidden">
@@ -532,7 +543,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
               >
                 <MinusIcon className="size-3.5" />
               </Button>
-              <span className="w-12 text-center text-sm font-bold text-foreground">
+              <span className="w-12 text-center text-sm sm:text-base font-bold text-foreground">
                 {quantity}
               </span>
               <Button
@@ -554,7 +565,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
               variant="outline"
               onClick={() => handleAddToCart(product.data)}
               disabled={isAddDisabled}
-              className="h-11 font-semibold text-sm border-primary/50 text-foreground hover:bg-primary/10 hover:text-primary transition-all cursor-pointer"
+              className="h-11 sm:h-12 font-semibold text-xs sm:text-sm md:text-base border-primary/50 text-foreground hover:bg-primary/10 hover:text-primary transition-all cursor-pointer"
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
               {addToCartLabel}
@@ -563,7 +574,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
               type="button"
               disabled={isBuyDisabled}
               onClick={() => handleBuyNow(product.data)}
-              className="h-11 font-semibold text-sm bg-primary text-white hover:bg-primary/90 shadow-sm transition-all cursor-pointer"
+              className="h-11 sm:h-12 font-semibold text-xs sm:text-sm md:text-base bg-primary text-white hover:bg-primary/90 shadow-sm transition-all cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
               Order Now
@@ -575,23 +586,23 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
             <button
               type="button"
               onClick={() => window.open(`https://wa.me/+88${businessInfo?.data?.whatsappNumber}?text=${encodeURIComponent("হ্যালো, আমি এই পণ্যটি অর্ডার করতে চাই: " + product.data.name)}`, "_blank")}
-              className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#003B3A] hover:bg-[#003B3A]/90 text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold bg-[#003B3A] hover:bg-[#003B3A]/90 text-white h-10 sm:h-11 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
-              <FaWhatsapp className="size-5 shrink-0" />
+              <FaWhatsapp className="size-4 sm:size-5 shrink-0" />
               <span>Chat on WhatsApp</span>
             </button>
             <button
               type="button"
               onClick={() => window.open(`https://m.me/${businessInfo?.data?.messengerUsername}?ref=order_now`, "_blank")}
-              className="flex items-center justify-center gap-2 text-xs font-semibold bg-[#0084FF] hover:bg-[#0074e0] text-white h-10 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold bg-[#0084FF] hover:bg-[#0074e0] text-white h-10 sm:h-11 px-4 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
-              <SiMessenger className="size-4 shrink-0" />
+              <SiMessenger className="size-3.5 sm:size-4 shrink-0" />
               <span>Chat on Messenger</span>
             </button>
           </div>
 
           {product.data.subDescription && (
-            <p className="text-gray-600 leading-relaxed">{product.data.subDescription}</p>
+            <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{product.data.subDescription}</p>
           )}
         </div>
       </div>
@@ -621,7 +632,7 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
         <TabsContent value="reviews" className="mt-6">
           <ProductReviews
             productId={product.data.id}
-            reviewsResponse={reviewsResponse}
+            reviewsResponse={effectiveReviews}
             isLoading={reviewsLoading}
             limit={6}
           />

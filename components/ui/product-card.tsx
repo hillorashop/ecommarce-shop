@@ -11,9 +11,9 @@ import { siteMeta } from "@/data";
 import { dbProductwihtoutAll } from "@/actions/product";
 import { pushToDataLayer } from "@/lib/gtm";
 import React, { useState, useMemo } from "react";
-import { Badge } from "./badge";
-import { Truck } from "lucide-react";
+import { Truck, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 
 interface ProductCardProps {
   product: dbProductwihtoutAll;
@@ -68,8 +68,12 @@ function ProductCardComponent({ product, index, className }: ProductCardProps) {
   const activePrice = selectedUnitEntry?.price ?? price;
   const activeDiscountPrice = selectedUnitEntry?.discountPrice ?? discountPrice;
 
-
   const reviewCount = reviews?.length || 0;
+  const averageRating = useMemo(() => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+    return Number((sum / reviews.length).toFixed(1));
+  }, [reviews]);
 
   const hasDiscount =
     activeDiscountPrice !== undefined &&
@@ -102,7 +106,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
           <Link href={`/products/${productUrl}`}>
             <div className="w-full aspect-[4/4] mb-2 relative rounded-none overflow-hidden bg-gray-50/50">
               <Image
-                src={productImage?.trim() || "/fevicon.png"}
+                src={productImage?.trim() || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f3f4f6'/%3E%3C/svg%3E"}
                 alt={name || ""}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -111,16 +115,16 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
               />
 
               {discountPercentage && (
-                <div className="absolute top-2 left-2 text-[10px] sm:text-xs font-bold px-2 py-0.5 bg-red-500 text-white rounded-md shadow-xs z-10 tracking-tight">
+                <div className="absolute top-2 left-2 text-xs font-bold px-2 py-0.5 bg-red-500 text-white rounded-md shadow-xs z-10 tracking-tight">
                   -{discountPercentage}%
                 </div>
               )}
               {freeDelivery && (
                 <div
                   title="Free Delivery"
-                  className="absolute top-2 right-2 inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 bg-[#003B3A] text-white rounded shadow-2xs z-10"
+                  className="absolute top-2 right-2 inline-flex items-center gap-1 text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 bg-[#003B3A] text-white rounded shadow-2xs z-10"
                 >
-                  <Truck className="size-2.5" />
+                  <Truck className="size-2.5 sm:size-3" />
                   <span className="hidden sm:inline">Free Delivery</span>
                   <span className="sm:hidden">Free</span>
                 </div>
@@ -130,11 +134,49 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
           <div className="px-3 sm:px-4">
             <h4
-              className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 h-9 sm:h-10 leading-tight sm:leading-snug"
+              className="text-sm sm:text-sm md:text-base font-semibold text-gray-900 mb-1 line-clamp-2 h-10 sm:h-11 leading-tight sm:leading-snug"
               title={name}
             >
               {name}
             </h4>
+
+            {/* Average Review & Total Reviews */}
+            <div className="flex items-center gap-1.5 mb-1.5 min-h-[18px]">
+              {reviewCount > 0 ? (
+                <>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`size-3 ${
+                          s <= Math.round(averageRating)
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-gray-300 fill-gray-100 dark:text-muted-foreground/30 dark:fill-muted/10"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold text-gray-900">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  <span className="text-[11px] sm:text-xs text-muted-foreground">
+                    ({reviewCount})
+                  </span>
+                </>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className="size-3 text-gray-200 fill-gray-100 dark:text-muted-foreground/20 dark:fill-muted/10"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[11px] text-muted-foreground/60">(0)</span>
+                </div>
+              )}
+            </div>
 
             {/* Units section with consistent min-height */}
             <div className="min-h-[28px] sm:min-h-[32px] flex items-center mb-1 sm:mb-2">
@@ -144,7 +186,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
                     <button
                       key={key}
                       onClick={() => setSelectedKey(key)}
-                      className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded border font-medium transition-colors cursor-pointer ${
+                      className={`text-xs sm:text-xs md:text-sm px-2 sm:px-2.5 py-0.5 rounded border font-medium transition-colors cursor-pointer ${
                         selectedKey === key
                           ? "bg-primary text-white border-primary shadow-xs"
                           : "bg-white text-gray-700 border-gray-300 hover:border-primary hover:text-primary"
@@ -159,7 +201,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
             {/* Price section with consistent min-height */}
             <div className="min-h-[26px] sm:min-h-[28px] flex flex-wrap items-baseline gap-1.5 sm:gap-2 mb-2">
-              <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">
+              <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900">
                 BDT {displayPrice.toLocaleString()}
               </span>
               {hasDiscount && (
@@ -174,7 +216,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
         {/* Action Buttons pinned to the bottom */}
         <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-1 mt-auto flex flex-col gap-1.5 sm:gap-2 w-full">
           <Button
-            className="text-[11px] sm:text-xs px-2 sm:px-4 py-1 h-7 sm:h-8 rounded-md w-full"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 h-8 sm:h-9 rounded-md w-full font-semibold"
             disabled={inStocks <= 0 || isInCart}
             onClick={() => {
               addItem(
@@ -207,7 +249,7 @@ const isInCart = cartItems.some((item) => item.cartKey === cartKey);
 
           <Button
             variant="secondary"
-            className="text-[11px] sm:text-xs px-2 sm:px-4 py-1 h-7 sm:h-8 rounded-md w-full"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 h-8 sm:h-9 rounded-md w-full font-semibold"
             disabled={inStocks <= 0}
             onClick={() => {
               pushToDataLayer("begin_checkout", {

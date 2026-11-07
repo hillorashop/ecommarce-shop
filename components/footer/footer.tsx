@@ -39,7 +39,7 @@ export const Footer = ({ initialLogos, initialBusinessInfo }: FooterProps) => {
      logos?.data?.primaryLogo?.trim() ||
      initialLogos?.secondaryLogo?.trim() ||
      initialLogos?.primaryLogo?.trim() ||
-     "/logo.svg";
+     "";
 
   const year = new Date().getFullYear();
   const quickLinks = [

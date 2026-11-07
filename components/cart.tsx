@@ -144,7 +144,7 @@ export const Cart = () => {
                 >
 
                   <Image
-                    src={item.productImage?.trim() || "/fevicon.png"}
+                    src={item.productImage?.trim() || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f3f4f6'/%3E%3C/svg%3E"}
                     alt={item.name || ""}
                     width={64}
                     height={64}

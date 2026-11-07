@@ -75,7 +75,7 @@ export function MobileHeader({ initialLogos }: MobileHeaderProps) {
     logos?.data?.secondaryLogo?.trim() ||
     initialLogos?.primaryLogo?.trim() ||
     initialLogos?.secondaryLogo?.trim() ||
-    "/logo.svg";
+    "";
 
 
   return (
@@ -283,7 +283,7 @@ export function MobileHeader({ initialLogos }: MobileHeaderProps) {
       {/* Product Image */}
       <div className="w-16 h-16 flex-shrink-0 overflow-hidden relative">
         <Image
-          src={product.productImage?.trim() || "/fevicon.png"}
+          src={product.productImage?.trim() || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f3f4f6'/%3E%3C/svg%3E"}
           alt={product.name || ""}
           width={64}
           height={64}

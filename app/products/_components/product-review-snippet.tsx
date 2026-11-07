@@ -72,11 +72,11 @@ export const ProductReviewSnippet: React.FC<ProductReviewSnippetProps> = ({
   };
 
   return (
-    <div className="w-full bg-amber-50/40 border border-amber-200/70 dark:bg-card dark:border-border rounded-xl p-3 sm:p-4 my-2.5 transition-all">
+    <div className="w-full  border  rounded-xl p-3 sm:p-4 my-2.5 transition-all">
       {/* Top Header Row: Label on Left, "See all reviews" + Prev/Next Arrows on Right (Like Fiverr) */}
-      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-amber-200/50 dark:border-border">
+      <div className="flex items-center justify-between gap-2 pb-2.5 border-b ">
         <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-          <MessageSquareQuote className="size-3.5 text-primary" />
+          <MessageSquareQuote className="size-3.5 " />
           <span>Recent Customers Reviews</span>
         </div>
 
@@ -85,7 +85,7 @@ export const ProductReviewSnippet: React.FC<ProductReviewSnippetProps> = ({
           <button
             type="button"
             onClick={onSeeAll}
-            className="text-xs font-semibold text-primary hover:text-primary/80 hover:underline inline-flex items-center gap-0.5 cursor-pointer transition-colors"
+            className="text-xs font-semibold  hover:text-primary/80 hover:underline inline-flex items-center gap-0.5 cursor-pointer transition-colors"
           >
             <span>See all {totalReviews} reviews</span>
             <ChevronRight className="size-3.5" />
@@ -159,7 +159,10 @@ export const ProductReviewSnippet: React.FC<ProductReviewSnippetProps> = ({
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] text-muted-foreground font-mono">
+                    <span
+                      className="text-[10px] text-muted-foreground font-mono"
+                      suppressHydrationWarning
+                    >
                       {formatDate(review.createdAt)}
                     </span>
                   </div>

@@ -61,18 +61,22 @@ const getInitialBusinessInfo = async (): Promise<BusinessResponse | null> => {
 
 export async function generateMetadata(): Promise<Metadata> {
   const logos = await getSiteLogos();
-  const favicon = logos?.favicon || "/fevicon.png";
+  const favicon = logos?.favicon?.trim();
 
   return {
     title: {
       default: `${siteMeta.siteName} | পাহাড়ি ঐতিহ্যের ই-কমার্স`,
       template: `%s | ${siteMeta.siteName} - পাহাড়ি ঐতিহ্যের ই-কমার্স`,
     },
-    icons: {
-      icon: [{ url: favicon }],
-      shortcut: [{ url: favicon }],
-      apple: [{ url: favicon }],
-    },
+    ...(favicon
+      ? {
+          icons: {
+            icon: [{ url: favicon }],
+            shortcut: [{ url: favicon }],
+            apple: [{ url: favicon }],
+          },
+        }
+      : {}),
     description: siteMeta.desc,
     keywords: siteMeta.keyWords,
     metadataBase: new URL(
@@ -88,12 +92,20 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "bn_BD",
       type: "website",
       images: [
-        {
-          url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/hillorabd.jpg`,
-          width: 1200,
-          height: 630,
-          alt: siteMeta.siteName,
-        },
+        ...(logos?.primaryLogo || logos?.secondaryLogo || siteMeta.primaryLogo || siteMeta.secondaryLogo
+          ? [
+              {
+                url:
+                  logos?.primaryLogo ||
+                  logos?.secondaryLogo ||
+                  siteMeta.primaryLogo ||
+                  siteMeta.secondaryLogo,
+                width: 1200,
+                height: 630,
+                alt: siteMeta.siteName,
+              },
+            ]
+          : []),
       ],
     },
     twitter: {
@@ -101,7 +113,21 @@ export async function generateMetadata(): Promise<Metadata> {
       title: siteMeta.twitter.title,
       description: siteMeta.twitter.description,
       creator: siteMeta.twitter.creator,
-      images: siteMeta.twitter.image,
+      images: [
+        ...(logos?.primaryLogo ||
+        logos?.secondaryLogo ||
+        siteMeta.twitter.primaryLogo ||
+        siteMeta.twitter.secondaryLogo ||
+        siteMeta.twitter.image
+          ? [
+              logos?.primaryLogo ||
+                logos?.secondaryLogo ||
+                siteMeta.twitter.primaryLogo ||
+                siteMeta.twitter.secondaryLogo ||
+                siteMeta.twitter.image,
+            ]
+          : []),
+      ],
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}`,
@@ -140,7 +166,7 @@ export default async function RootLayout({
               "@type": "Organization",
               name: siteMeta.siteName,
               url: process.env.NEXT_PUBLIC_BASE_URL,
-              logo: logos?.primaryLogo || `${process.env.NEXT_PUBLIC_BASE_URL}/fevicon.png`,
+              logo: logos?.primaryLogo || "",
             }),
           }}
         />
@@ -158,7 +184,7 @@ export default async function RootLayout({
         </Script>
       </head>
       <body
-        className={`${openSans.className}  antialiased`}
+        className={`${openSans.className} ${openSans.variable} antialiased`}
       >
        
         <TopLoadingBar />

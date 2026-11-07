@@ -46,7 +46,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   )
   
     const headerLogo =
-      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "/logo.svg";
+      logos?.data?.primaryLogo?.trim() || logos?.data?.secondaryLogo?.trim() || "";
   
 
   const getStatusColor = (status: string) => {
@@ -73,11 +73,7 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
   const handlePrint = () => {
     if (!invoiceRef.current) return;
 
-
-    const img = new Image();
-    img.src = headerLogo;
-
-    img.onload = () => {
+    const executePrint = () => {
       const printContent = invoiceRef.current!.innerHTML;
       const printWindow = window.open("", "_blank", "width=800,height=600");
       if (!printWindow) return;
@@ -111,6 +107,15 @@ export const InvoiceOrder = ({ order, hideButton = false }: Props) => {
         }, 500);
       };
     };
+
+    if (headerLogo) {
+      const img = new Image();
+      img.src = headerLogo;
+      img.onload = executePrint;
+      img.onerror = executePrint;
+    } else {
+      executePrint();
+    }
   };
 
   return (

@@ -49,12 +49,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       siteName: siteMeta.siteName,
       images: [
-        {
-          url: blog.desktopCoverImage || "/banners/hillora-meta.jpg",
-          width: 1200,
-          height: 630,
-          alt: blog.title,
-        },
+        ...((blog.desktopCoverImage || blog.mobileCoverImage)
+          ? [
+              {
+                url: blog.desktopCoverImage || blog.mobileCoverImage || "",
+                width: 1200,
+                height: 630,
+                alt: blog.title,
+              },
+            ]
+          : []),
       ],
       locale: "bn_BD",
       publishedTime: formatDateForSchema(blog.createdAt),
@@ -65,7 +69,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: blog.metaTitle || blog.title,
       description: blog.metaDescription || blog.content.substring(0, 160),
-      images: [blog.desktopCoverImage || "/banners/hillora-meta.jpg"],
+      images: [
+        ...((blog.desktopCoverImage || blog.mobileCoverImage)
+          ? [blog.desktopCoverImage || blog.mobileCoverImage || ""]
+          : []),
+      ],
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_BASE_WWW_URL}/blogs/${blog.url}`,

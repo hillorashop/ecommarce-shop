@@ -26,8 +26,9 @@ export const BlogPageClient = ({ blog }: Props) => {
   };
 
   const date = formatDate(blog.createdAt);
-  const desktopCover = blog.desktopCoverImage?.trim() || blog.mobileCoverImage?.trim() || "/banners/hillora-meta.jpg";
-  const mobileCover = blog.mobileCoverImage?.trim() || blog.desktopCoverImage?.trim() || "/banners/hillora-meta.jpg";
+  const placeholderCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23f3f4f6'/%3E%3C/svg%3E";
+  const desktopCover = blog.desktopCoverImage?.trim() || blog.mobileCoverImage?.trim() || placeholderCover;
+  const mobileCover = blog.mobileCoverImage?.trim() || blog.desktopCoverImage?.trim() || placeholderCover;
 
   return (
     <article className="mx-auto max-w-5xl w-full px-4 py-8">

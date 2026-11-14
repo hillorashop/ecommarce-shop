@@ -23,17 +23,7 @@ import { OrderSummary } from "./order-summary";
 import { getDeliveryCharges, DeliveryChargeResponse } from "@/actions/delivery";
 import { getBusinessInfo, BusinessResponse } from "@/actions/business-info";
 import { CheckoutSecurityAlert } from "./checkout-security-alert";
-
-function getCookie(name: string) {
-  if (typeof document === "undefined") return null;
-
-  return (
-    document.cookie
-      .split("; ")
-      .find((row) => row.startsWith(`${name}=`))
-      ?.split("=")[1] ?? null
-  );
-}
+import { getTrackingCookie, getTrackingValue } from "@/lib/cookies-tracking";
 
 export const CheckoutContent = () => {
   const [mounted, setMounted] = useState(false);
@@ -146,27 +136,27 @@ export const CheckoutContent = () => {
 
 
   useEffect(() => {
-    setFbp(getCookie("_fbp"));
-    setFbc(getCookie("_fbc"));
-    setttpCookie(getCookie("_ttp"));
-    setTtclidValue(getCookie("ttclid"));
-    setGclid(getCookie("gclid"));
-    setLi_fat_id(getCookie("li_fat_id"));
-    setGbraid(getCookie("gbraid"));
-    setWbraid(getCookie("wbraid"));
-    setDclid(getCookie("dclid"));
-    setUuid(getCookie("uuid"));
-    setMsclkid(getCookie("msclkid"));
-    setFbclid(getCookie("fbclid"));
-    setTwclid(getCookie("twclid"));
-    setRdt_cid(getCookie("rdt_cid"));
-    setEpik(getCookie("epik"));
-    setScCid(getCookie("ScCid"));
-    setSccid(getCookie("sccid"));
-    setQclid(getCookie("qclid"));
-    setIrclickid(getCookie("irclickid"));
-    setAwc(getCookie("awc"));
-  }, []);
+    setFbp(getTrackingCookie("_fbp"));
+    setFbc(getTrackingCookie("_fbc"));
+    setttpCookie(getTrackingCookie("_ttp"));
+    setTtclidValue(getTrackingValue("ttclid", searchParams));
+    setGclid(getTrackingValue("gclid", searchParams));
+    setLi_fat_id(getTrackingValue("li_fat_id", searchParams));
+    setGbraid(getTrackingValue("gbraid", searchParams));
+    setWbraid(getTrackingValue("wbraid", searchParams));
+    setDclid(getTrackingValue("dclid", searchParams));
+    setUuid(getTrackingValue("uuid", searchParams));
+    setMsclkid(getTrackingValue("msclkid", searchParams));
+    setFbclid(getTrackingValue("fbclid", searchParams));
+    setTwclid(getTrackingValue("twclid", searchParams));
+    setRdt_cid(getTrackingValue("rdt_cid", searchParams));
+    setEpik(getTrackingValue("epik", searchParams));
+    setScCid(getTrackingValue("ScCid", searchParams));
+    setSccid(getTrackingValue("sccid", searchParams));
+    setQclid(getTrackingValue("qclid", searchParams));
+    setIrclickid(getTrackingValue("irclickid", searchParams));
+    setAwc(getTrackingValue("awc", searchParams));
+  }, [searchParams]);
 
   const checkoutItems: CartItem[] = useMemo(() => {
     if (productId && products) {
@@ -386,7 +376,7 @@ const hasFreeDelivery = useMemo(() => {
 
     const ecommerce = {
       order_id: orderResponse.orderId,
-      transaction_id: orderResponse.transactionId,
+      transaction_id: orderResponse.transactionId || null,
       currency: "BDT",
       value: total,
       affiliation: siteMeta?.siteName || "Online Store",
@@ -497,23 +487,23 @@ const hasFreeDelivery = useMemo(() => {
           fbc,
           fbp,
           ttpCookie,
-          ttclidValue,
-          gclid,
-          li_fat_id,
-          gbraid,
-          wbraid,
-          dclid,
-          uuid,
-          msclkid,
-          fbclid,
-          twclid,
-          rdt_cid,
-          epik,
-          ScCid,
-          sccid,
-          qclid,
-          irclickid,
-          awc,
+          ttclidValue: ttclidValue || getTrackingValue("ttclid", searchParams),
+          gclid: gclid || getTrackingValue("gclid", searchParams),
+          li_fat_id: li_fat_id || getTrackingValue("li_fat_id", searchParams),
+          gbraid: gbraid || getTrackingValue("gbraid", searchParams),
+          wbraid: wbraid || getTrackingValue("wbraid", searchParams),
+          dclid: dclid || getTrackingValue("dclid", searchParams),
+          uuid: uuid || getTrackingValue("uuid", searchParams),
+          msclkid: msclkid || getTrackingValue("msclkid", searchParams),
+          fbclid: fbclid || getTrackingValue("fbclid", searchParams),
+          twclid: twclid || getTrackingValue("twclid", searchParams),
+          rdt_cid: rdt_cid || getTrackingValue("rdt_cid", searchParams),
+          epik: epik || getTrackingValue("epik", searchParams),
+          ScCid: ScCid || getTrackingValue("ScCid", searchParams),
+          sccid: sccid || getTrackingValue("sccid", searchParams),
+          qclid: qclid || getTrackingValue("qclid", searchParams),
+          irclickid: irclickid || getTrackingValue("irclickid", searchParams),
+          awc: awc || getTrackingValue("awc", searchParams),
           orderItems: checkoutItems.map((item) => {
             const variant =
               item.selectedUnit && item.unitLabel
@@ -626,23 +616,23 @@ const hasFreeDelivery = useMemo(() => {
       fbc,
       fbp,
       ttpCookie,
-      ttclidValue,
-      gclid,
-      li_fat_id,
-      gbraid,
-      wbraid,
-      dclid,
-      uuid,
-      msclkid,
-      fbclid,
-      twclid,
-      rdt_cid,
-      epik,
-      ScCid,
-      sccid,
-      qclid,
-      irclickid,
-      awc,
+      ttclidValue: ttclidValue || getTrackingValue("ttclid", searchParams),
+      gclid: gclid || getTrackingValue("gclid", searchParams),
+      li_fat_id: li_fat_id || getTrackingValue("li_fat_id", searchParams),
+      gbraid: gbraid || getTrackingValue("gbraid", searchParams),
+      wbraid: wbraid || getTrackingValue("wbraid", searchParams),
+      dclid: dclid || getTrackingValue("dclid", searchParams),
+      uuid: uuid || getTrackingValue("uuid", searchParams),
+      msclkid: msclkid || getTrackingValue("msclkid", searchParams),
+      fbclid: fbclid || getTrackingValue("fbclid", searchParams),
+      twclid: twclid || getTrackingValue("twclid", searchParams),
+      rdt_cid: rdt_cid || getTrackingValue("rdt_cid", searchParams),
+      epik: epik || getTrackingValue("epik", searchParams),
+      ScCid: ScCid || getTrackingValue("ScCid", searchParams),
+      sccid: sccid || getTrackingValue("sccid", searchParams),
+      qclid: qclid || getTrackingValue("qclid", searchParams),
+      irclickid: irclickid || getTrackingValue("irclickid", searchParams),
+      awc: awc || getTrackingValue("awc", searchParams),
       name: data.name,
       mobileNumber: data.mobileNumber,
       orderFor:data.orderFor,

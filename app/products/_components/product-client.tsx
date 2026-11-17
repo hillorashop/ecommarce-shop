@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX, CheckCircle2, Truck, ChevronRight } from "lucide-react";
+import { ShoppingBag, PlayCircle, MinusIcon, PlusIcon, ShoppingCart, Star, Volume2, VolumeX, CheckCircle2, Truck, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { FaWhatsapp } from "react-icons/fa";
 import { SiMessenger } from "react-icons/si";
 import Link from "next/link";
@@ -115,6 +116,16 @@ export const ProductClient = ({
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("description");
+  const [isDescExpanded, setIsDescExpanded] = useState(false);
+  const [showDescToggle, setShowDescToggle] = useState(false);
+  const descContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (descContentRef.current) {
+      const hasOverflow = descContentRef.current.scrollHeight > 300;
+      setShowDescToggle(hasOverflow);
+    }
+  }, [product?.data?.description]);
 
   const handleOpenReviewsTab = () => {
     setActiveTab("reviews");
@@ -619,12 +630,43 @@ const isInCart = isMounted && cartItems.some((item) => item.cartKey === cartKey)
         </TabsList>
 
         <TabsContent value="description" className="mt-6">
-          <Card className="border-primary">
-            <CardContent className="p-6">
-              <div
-                className="prose max-w-none text-gray-700 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: product.data.description || "" }}
-              />
+          <Card className="border-border bg-card text-card-foreground overflow-hidden rounded-xl shadow-xs">
+            <CardContent className="p-0">
+              <div className="relative">
+                <div
+                  ref={descContentRef}
+                  className={cn(
+                    "p-5 sm:p-6 transition-all duration-300 overflow-hidden",
+                    !isDescExpanded && showDescToggle ? "max-h-[300px]" : "max-h-none"
+                  )}
+                >
+                  <div
+                    className="prose max-w-none text-card-foreground leading-relaxed text-sm sm:text-base space-y-3"
+                    dangerouslySetInnerHTML={{ __html: product.data.description || "" }}
+                  />
+                </div>
+
+                {/* Gradient fade overlay when collapsed */}
+                {!isDescExpanded && showDescToggle && (
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-card via-card/85 to-transparent" />
+                )}
+              </div>
+
+              {/* Expand / Collapse Toggle Button */}
+              {showDescToggle && (
+                <button
+                  type="button"
+                  onClick={() => setIsDescExpanded((prev) => !prev)}
+                  className="w-full py-3.5 px-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors border-t border-border/70 bg-card hover:bg-muted/40 cursor-pointer select-none"
+                >
+                  <span>{isDescExpanded ? "কম দেখুন" : "আরও দেখুন"}</span>
+                  {isDescExpanded ? (
+                    <ChevronUp className="size-4 shrink-0 transition-transform duration-200" />
+                  ) : (
+                    <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+                  )}
+                </button>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

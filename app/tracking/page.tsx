@@ -12,7 +12,7 @@ import { CustomForm } from "@/components/ui/custom-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InvoiceOrder } from "../checkout/_components/invoice-order";
 import { dbOrder } from "@/types/type";
-import { getOrders } from "@/actions/order";
+import { getOrderById } from "@/actions/order";
 import { Zap } from "lucide-react";
 import { OrderTimeline } from "./_components/order-timeline";
 import { useSearchParams } from "next/navigation";
@@ -49,25 +49,10 @@ const TrackingPage = () => {
     setIsLoading(true);
     setOrder(null);
     try {
-      let page = 1;
-      let found = false;
-      let fetchedOrder: dbOrder | null = null;
-
-      while (!found) {
-        const res = await getOrders(page, 20); // pageSize = 20
-        fetchedOrder = res.data.find((o) => o.orderId === values.orderId.trim()) || null;
-
-        if (fetchedOrder) {
-          found = true;
-          setOrder(fetchedOrder);
-          break;
-        }
-
-        if (page >= res.pagination.totalPages) break;
-        page++;
-      }
-
-      if (!found) {
+      const res = await getOrderById(values.orderId.trim());
+      if (res.success && res.data) {
+        setOrder(res.data);
+      } else {
         toast.error("Order not found. Please check your Order ID.");
       }
     } catch (err) {
